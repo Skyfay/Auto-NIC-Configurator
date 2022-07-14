@@ -1,11 +1,12 @@
 # creator: Skyfay
-# Last edit: 13.07.2022
+# Last edit: 14.07.2022
 
 # Auto Network Interface Card Script
 
 ################
 ## Funktionen ##
 ################
+
 
 function dhcp {
     Remove-NetIPAddress -InterfaceIndex $network_adapter -confirm:$false
@@ -30,7 +31,6 @@ function custom {
     $cidr = Read-Host "Welche Subnetzmaske möchtest du vergeben? (z.B 24)"
     $gateway = Read-Host "Welchen Gateway möchtest du vergeben?"
     $dns = Read-Host "Welche IP möchtest du als DNS Adresse"
-    # Securepoint Settings
     New-Netipaddress -InterfaceIndex $network_adapter -IPAddress $ip_adress -PrefixLength $cidr -DefaultGateway $gateway -confirm:$false
     Set-DnsClientServerAddress -InterfaceIndex $network_adapter -ServerAddresses $dns -confirm:$false
 }
