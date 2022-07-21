@@ -5,7 +5,7 @@ Jetzt auch neu mit GUI!
 **Voraussetzung:**
 - Du brauchst ein Windows System mit einem Admin berechteten User.
 ----------------------------------------------------------------------------------------------
-<h1>How to use?</h1>
+**How to use?**<br/><br/>
 **Shell Version:**
 1. Lade den letzen Release herunter. 
 2. Entpacke die Dateien und lege diese an einem gewünschten Ort ab.
