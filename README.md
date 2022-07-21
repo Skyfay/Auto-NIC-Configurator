@@ -5,15 +5,14 @@ Jetzt auch neu mit GUI!
 **Voraussetzung:**
 - Du brauchst ein Windows System mit einem Admin berechteten User.
 ----------------------------------------------------------------------------------------------
-**How to use?**<br/><br/>
-**Shell Version:**
+**How to use? / Shell Version:**<br/>
 1. Lade den letzen Release herunter. 
 2. Entpacke die Dateien und lege diese an einem gewünschten Ort ab.
 3. Wichtig: Die Datei "Shell NIC Configurator.bat" muss sich immer am gleichen Ort befinden wie die
 "Auto-NIC-Configurator.ps1" datei, ansonsten funktioniert es nicht!
 4. Starte die Datei "NIC Configurator.bat" und beginne mit dem Script.
 ----------------------------------------------------------------------------------------------
-**GUI Version:**
+**How to use? / GUI Version:**<br/>
 1. Lade den letzen Release herunter.
 2. Entpacke die Dateien und lege diese an einem gewünschten Ort ab.
 3. Wichtig: Die Datei "GUI NIC Configurator.bat" muss sich immer am gleichen Ort befinden wie die
