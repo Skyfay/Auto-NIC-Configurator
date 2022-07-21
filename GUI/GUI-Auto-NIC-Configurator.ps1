@@ -1,5 +1,17 @@
 cls
 
+##############################
+## Script als Admin Starten ##
+##############################
+
+if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
+    if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
+        $Command = "-File `"" + $MyInvocation.MyCommand.Path + "`" " + $MyInvocation.UnboundArguments
+        Start-Process -FilePath PowerShell.exe -Verb RunAs -ArgumentList $Command
+        Exit
+ }
+}
+
 #####################
 ## Ordner Struktur ##
 #####################
@@ -23,8 +35,10 @@ else {}
 ###########################
 
 # Er liest die Adapter von unten nach oben
+# Die Function identify wurde deaktiviert und wird bei jedem Neustart automatisch ausgeführt da es sonst beim ersten Starten Fehler gibt.
+# Der Button wurde aus dem User Interface entfernt
 
-function identify {
+#function identify {
     
     $Test_Path_identify_1 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
     if ($Test_Path_identify_1 -ne "False") {
@@ -87,7 +101,7 @@ function identify {
     $adapter6_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
 
 
-}
+#}
 
 
 ################
@@ -158,8 +172,6 @@ Add-Type -AssemblyName PresentationFramework
             <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
             <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
         </ComboBox>
-        <ProgressBar HorizontalAlignment="Center" Height="9" Margin="0,272,0,0" VerticalAlignment="Top" Width="207" Background="#FF252424"/>
-        <Button x:Name="ValidateButton" Content="Indentifizieren" HorizontalAlignment="Center" Margin="0,45,290,0" VerticalAlignment="Top" Width="87" Height="22" Background="#FF252424" Foreground="White"/>
     </Grid>
 </Window>
 "@
@@ -173,7 +185,6 @@ $window = [Windows.Markup.XamlReader]::Load($reader)
 $DhcpButton = $window.FindName("DhcpButton")
 $CustomButton = $window.FindName("CustomButton")
 $SecurepointButton = $window.FindName("SecurepointButton")
-$ValidateButton = $window.FindName("ValidateButton")
 $NetAdapterSelect = $window.FindName("NetAdapterSelect")
 
 #--Erstellt die Datei selected.sky für die Speicherung des aktuell ausgewählten Netzwerk Adapters--##
@@ -219,9 +230,6 @@ $CustomButton.Add_Click({
 })
 $SecurepointButton.Add_Click({
     securepoint
-})
-$ValidateButton.Add_Click({
-    identify
 })
 $window.ShowDialog() | Out-Null
 
