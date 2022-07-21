@@ -4,6 +4,8 @@ Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
 **Voraussetzung:**
 - Du brauchst ein Windows System mit einem Admin berechteten User.
+- Falls dein Gerät das Ausführen von Scripts verhindert, führe in Powershell (Als Admin) folgenden Befehl aus:
+```Set-ExecutionPolicy RemoteSigned -Scope CurrentUser```
 ----------------------------------------------------------------------------------------------
 **How to use? / Shell Version:**<br/>
 1. Lade den letzen Release herunter. 
