@@ -31,3 +31,6 @@ Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
 **Einschränkungen?**
 - Aktuell kann man mit der GUI Version nur 6 Schnittstellen anzeigen lassen. Das ganze wir bald für mehr ausgegt sein!
+----------------------------------------------------------------------------------------------
+**Kontakt & Hilfe**
+- Wenn du Probleme mit dem Script hast oder gerne einen weiteren Shortcut einer anderen Firma hättest, kannst du gerne auf Github ein "Issues" erstellen.
