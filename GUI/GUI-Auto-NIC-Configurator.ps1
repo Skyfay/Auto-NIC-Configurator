@@ -171,7 +171,7 @@ Add-Type -AssemblyName PresentationFramework
             <Grid Background="#FF161719">
                 <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
                 <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator"/></TextBlock>
-                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Foreground="#FFCE8484"><Run Language="de-ch" Text="Welche Aktion möchtest du starten?"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Foreground="#FFCE8484"><Run Language="de-ch" Text="Welche Aktion moechtest du starten?"/></TextBlock>
                 <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,203,0,0"/>
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
