@@ -1,8 +1,8 @@
 cls
 
-##############################
-## Script als Admin Starten ##
-##############################
+################################################################
+## Script als Admin Starten und Powershell Console Verstecken ##
+################################################################
 
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
     if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -74,7 +74,6 @@ else {}
     if ($Test_Path_identify_6 -ne "False") {
         New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
     }
-    else {}
 
 
     $adapter1 = Get-NetAdapter | Sort-Object | Select-Object -Skip 0 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
@@ -113,11 +112,16 @@ function set_to_default {
     Remove-NetRoute -InterfaceIndex $network_adapter -confirm:$false
 }
 
+function ip_release_renew {
+    ipadress /release
+    ipadress /renew
+}
+
 
 function dhcp {
     $network_adapter = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected.sky
     set_to_default
-    Set-DnsClientServerAddress -InterfaceIndex $network_adapter -AddressFamily IPv4 -confirm:$false -ResetServerAddresses
+    Set-DnsClientServerAddress -InterfaceIndex $network_adapter -confirm:$false -ResetServerAddresses
     Set-NetIPInterface -InterfaceIndex $network_adapter -AddressFamily IPv4 -Dhcp Enabled -confirm:$false
 }
 
@@ -127,9 +131,7 @@ function securepoint {
     # Securepoint Settings
     Set-NetIPInterface -InterfaceIndex $network_adapter -AddressFamily IPv4 -Dhcp Disabled
     New-Netipaddress -InterfaceIndex $network_adapter -AddressFamily IPv4 -IPAddress 192.168.175.5 -PrefixLength 24 -DefaultGateway 192.168.175.1 -confirm:$false
-    Set-DnsClientServerAddress -InterfaceIndex $network_adapter -AddressFamily IPv4 -ServerAddresses 192.168.175.1 -confirm:$false
-    ipconfig /release
-    ipconfig /renew
+    Set-DnsClientServerAddress -InterfaceIndex $network_adapter -ServerAddresses 192.168.175.1 -confirm:$false
 }
 
 function custom {
@@ -165,13 +167,14 @@ Add-Type -AssemblyName PresentationFramework
         <Button x:Name="CustomButton" Content="Custom" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424" RenderTransformOrigin="1.05,0.55"/>
         <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="34" Margin="0,157,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
         <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-            <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>  
-            <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>  
+            <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+            <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
             <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-            <ComboBoxItem Content="$adapter4_content"></ComboBoxItem> 
+            <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
             <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
             <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
         </ComboBox>
+        <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" Margin="0,232,0,0" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
     </Grid>
 </Window>
 "@
@@ -186,6 +189,7 @@ $DhcpButton = $window.FindName("DhcpButton")
 $CustomButton = $window.FindName("CustomButton")
 $SecurepointButton = $window.FindName("SecurepointButton")
 $NetAdapterSelect = $window.FindName("NetAdapterSelect")
+$IpAdressRenewButton = $window.FindName("ip_release_renew")
 
 #--Erstellt die Datei selected.sky für die Speicherung des aktuell ausgewählten Netzwerk Adapters--##
 
@@ -231,5 +235,7 @@ $CustomButton.Add_Click({
 $SecurepointButton.Add_Click({
     securepoint
 })
+$IpAdressRenewButton.Add_Click({
+    ip_release_renew
+})
 $window.ShowDialog() | Out-Null
-
