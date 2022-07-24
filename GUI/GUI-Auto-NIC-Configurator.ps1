@@ -76,6 +76,9 @@ else {}
     }
 
 
+    # Identifizierung #
+
+
     $adapter1 = Get-NetAdapter | Sort-Object | Select-Object -Skip 0 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
     $adapter2 = Get-NetAdapter | Sort-Object | Select-Object -Skip 1 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
     $adapter3 = Get-NetAdapter | Sort-Object | Select-Object -Skip 2 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
@@ -99,8 +102,6 @@ else {}
     $adapter5_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
     $adapter6_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
 
-
-#}
 
 
 ################
@@ -134,17 +135,24 @@ function securepoint {
     Set-DnsClientServerAddress -InterfaceIndex $network_adapter -ServerAddresses 192.168.175.1 -confirm:$false
 }
 
-function custom {
-    dhcp
-    cls
-    $ip_adress = Read-Host "Welche IP Adresse möchtest du vergeben?"
-    $cidr = Read-Host "Welche Subnetzmaske möchtest du vergeben? (z.B 24)"
-    $gateway = Read-Host "Welchen Gateway möchtest du vergeben?"
-    $dns = Read-Host "Welche IP möchtest du als DNS Adresse"
-    New-Netipaddress $network_adapter -IPAddress $ip_adress -PrefixLength $cidr -DefaultGateway $gateway -confirm:$false
-    Set-DnsClientServerAddress $network_adapter -ServerAddresses $dns -confirm:$false
+function set_to_default_custom {
+    Remove-NetIPAddress -InterfaceIndex $network_adapter_custom -confirm:$false
+    Remove-NetRoute -InterfaceIndex $network_adapter_custom -confirm:$false
 }
 
+function custom {
+    $network_adapter_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected.sky
+
+    #set_to_default_custom
+
+    $ipadress_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_ipadress.sky
+    $subnetz_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_subnetz.sky
+    $gateway_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_gateway.sky
+    $dns_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_dns.sky
+
+    New-Netipaddress -InterfaceIndex $network_adapter_custom -AddressFamily IPv4 -IPAddress $ipadress_custom -PrefixLength $subnetz_custom -DefaultGateway $gateway_custom -confirm:$false
+    Set-DnsClientServerAddress -InterfaceIndex $network_adapter_custom -ServerAddresses $dns_custom -confirm:$false
+}
 
 ###############
 ##    GUI    ##
@@ -186,7 +194,25 @@ Add-Type -AssemblyName PresentationFramework
         </TabItem>
         <TabItem Header="Custom" Background="#FFD47E7E">
             <Grid Background="#FF161719">
-                <Label Content="In Arbeit" HorizontalAlignment="Center" VerticalAlignment="Center" Background="#FF272424" Foreground="White" Height="76" Width="186" FontSize="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" Text="Windows Netzwerk Konfigurator&#xD;&#xA;Custom Setup&#xD;&#xA;" TextAlignment="Center"/>
+                <ComboBox x:Name="NetAdapterSelect_Custom" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <TextBox x:Name="InputIPAdress_Custom" HorizontalAlignment="Center" Margin="0,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="192.168.1.1"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" Text="Trage die IP-Adresse ein"/>
+                <StackPanel/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,135,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" Text="Trage die Subnetzmaske ein" IsEnabled="False"/>
+                <TextBox x:Name="InputSubnetz_Custom" HorizontalAlignment="Center" Margin="0,159,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="24"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,188,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" IsEnabled="False"><Run Text="Trage "/><Run Language="de-ch" Text="den"/><Run Text=" "/><Run Language="de-ch" Text="Gateway"/><Run Text=" ein"/></TextBlock>
+                <TextBox x:Name="InputGateway_Custom" HorizontalAlignment="Center" Margin="0,212,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="192.168.1.1"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" IsEnabled="False"><Run Text="Trage die "/><Run Language="de-ch" Text="DNS Adresse"/><Run Text=" ein"/></TextBlock>
+                <TextBox x:Name="InputDNS_Custom" HorizontalAlignment="Center" Margin="0,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="1.1.1.1"/>
+                <Button x:Name="Done_Custom" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
             </Grid>
         </TabItem>
     </TabControl>
@@ -195,10 +221,11 @@ Add-Type -AssemblyName PresentationFramework
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
+#---------------------------------------------------------------------------------------------------------------------------------#
+                                                    #ShortCuts#
 
 
 #--Sucht nach dem Button und führt darunter die Aktion aus--##
-
 $DhcpButton = $window.FindName("DhcpButton")
 $CustomButton = $window.FindName("CustomButton")
 $SecurepointButton = $window.FindName("SecurepointButton")
@@ -237,14 +264,10 @@ $NetAdapterSelect.add_SelectionChanged( {
 })
 
 
-
 ##--Buton Action--##
 
 $DhcpButton.Add_Click({
     dhcp
-})
-$CustomButton.Add_Click({
-    custom
 })
 $SecurepointButton.Add_Click({
     securepoint
@@ -252,4 +275,102 @@ $SecurepointButton.Add_Click({
 $IpAdressRenewButton.Add_Click({
     ip_release_renew
 })
+
+                                                    #ShortCuts End#
+#---------------------------------------------------------------------------------------------------------------------------------#
+#---------------------------------------------------------------------------------------------------------------------------------#
+                                                        #Custom#
+
+# Erstellt die notwendigen Dateien als Datenablage #
+
+$Selected_Custom_Path_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+if ($Selected_Custom_Path_identify -eq "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+
+
+
+$custom_ipadress_Path_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\custom_ipadress.sky
+if ($custom_ipadress_Path_identify -ne "False") {
+    New-Item C:\Sky-Scripts\Net-Adapter-Config\custom_ipadress.sky
+}
+else {}
+
+$custom_subnetz_Path_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\custom_subnetz.sky
+if ($custom_subnetz_Path_identify -ne "False") {
+    New-Item C:\Sky-Scripts\Net-Adapter-Config\custom_subnetz.sky
+}
+else {}
+
+$custom_gateway_Path_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\custom_gateway.sky
+if ($custom_gateway_Path_identify -ne "False") {
+    New-Item C:\Sky-Scripts\Net-Adapter-Config\custom_gateway.sky
+}
+else {}
+
+$custom_DNS_Path_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\custom_DNS.sky
+if ($custom_DNS_Path_identify -ne "False") {
+    New-Item C:\Sky-Scripts\Net-Adapter-Config\custom_DNS.sky
+}
+else {}
+
+
+# Sucht nach dem Button und führt darunter die Aktion aus #
+
+$NetAdapterSelect_Custom = $window.FindName("NetAdapterSelect_Custom")
+$Done_Custom = $window.FindName("Done_Custom")
+$InputIPAdress_Custom = $window.FindName("InputIPAdress_Custom")
+$InputSubnetz_Custom = $window.FindName("InputSubnetz_Custom")
+$InputGateway_Custom = $window.FindName("InputGateway_Custom")
+$InputDNS_Custom = $window.FindName("InputDNS_Custom")
+
+
+# Nimmt die Werte aus den Textboxen in die Dateien und führt dann das Script durch #
+
+$Done_Custom.Add_Click({
+
+    $InputIPAdress_Custom_Var = $InputIPAdress_Custom.Text.ToString()
+    $InputSubnetz_Custom_Var = $InputSubnetz_Custom.Text.ToString()
+    $InputGateway_Custom_var = $InputGateway_Custom.Text.ToString()
+    $InputDNS_Custom_Var = $InputDNS_Custom.Text.ToString()
+
+    $InputIPAdress_Custom_Var | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_ipadress.sky
+    $InputSubnetz_Custom_Var | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_subnetz.sky
+    $InputGateway_Custom_var | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_gateway.sky
+    $InputDNS_Custom_Var | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\custom_dns.sky
+
+    custom
+})
+
+# Liest den aktuell ausgewählten Wert aus dem Dropdown Menu aus #
+
+
+$NetAdapterSelect_Custom.add_SelectionChanged( {
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # Die Leerzeichen vor und danach entfernen
+
+    $selected_trim = $selected.trimstart().trimend()
+    """$selected_trim""" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+
+
+    #Schreibt den Wert in die IfIndex Nummer um und schreibt den Wert dann wieder in die Datei selected.sky #
+    $content_get = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+    $IfIndex = (get-netadapter -name "$selected_trim").IfIndex | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_custom.sky
+
+
+})
+
+
+#---------------------------------------------------------------------------------------------------------------------------------#
+
+
+
+
 $window.ShowDialog() | Out-Null
