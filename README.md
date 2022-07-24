@@ -15,7 +15,7 @@ Jetzt auch neu mit GUI!
 4. Starte die Datei "NIC Configurator.bat" und beginne mit dem Script.
 ----------------------------------------------------------------------------------------------
 **How to use? / GUI Version:**<br/>
-1. Lade den letzen Release herunter.
+1. Lade den letzen Release herunter. (Du kannst auch direkt das Script herunterladen es ist Attached)
 2. Entpacke die Dateien und lege diese an einem gewünschten Ort ab.
 4. Klicke mit einem Rechten Mausklick auf "GUI-Auto-NIC-Configurator.ps1" und klicke auf "Mit Powershell Ausführen".
 ----------------------------------------------------------------------------------------------
