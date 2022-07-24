@@ -113,8 +113,8 @@ function set_to_default {
 }
 
 function ip_release_renew {
-    ipadress /release
-    ipadress /renew
+    ipconfig /release
+    ipconfig /renew
 }
 
 
