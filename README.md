@@ -18,6 +18,9 @@ Jetzt auch neu mit GUI!
 1. Lade den letzen Release herunter. (Du kannst auch direkt das Script herunterladen es ist Attached)
 2. Entpacke die Dateien und lege diese an einem gewünschten Ort ab.
 4. Klicke mit einem Rechten Mausklick auf "GUI-Auto-NIC-Configurator.ps1" und klicke auf "Mit Powershell Ausführen".
+5. Das Powershell Script startet nun und geht automatisch in den Administrator Modus. Klicke auf "Ja".
+**Debugging:**
+- Wenn nach dem Ausführen und dem bestätigen mit "Ja" kein Fenster erscheint, liegt das ev. an den Berechtigungen. Öffne dafür eine Powershell Instanze (Als Administrator) und führe folgenden Befehl aus: ```Set-ExecutionPolicy RemoteSigned -Scope CurrentUser``` versuche es dann erneut!
 ----------------------------------------------------------------------------------------------
 **Was kann das Script?**
 - Es gibt ein Grafisches Interface um die Netzwerk Schnittstellen zu konfigurieren!
