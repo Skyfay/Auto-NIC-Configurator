@@ -182,6 +182,7 @@ Add-Type -AssemblyName PresentationFramework
                 <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7E84D4"><Run Text="Welche Aktion m"/><Run Language="de-ch" Text="oe"/><Run Text="chtest du starten?"/></TextBlock>
                 <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,203,0,0"/>
+                <Button x:Name="settings_button" Content="Einstellungen" HorizontalAlignment="Center" Height="35" Margin="0,242,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
                     <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
@@ -231,6 +232,7 @@ $CustomButton = $window.FindName("CustomButton")
 $SecurepointButton = $window.FindName("SecurepointButton")
 $NetAdapterSelect = $window.FindName("NetAdapterSelect")
 $IpAdressRenewButton = $window.FindName("ip_release_renew")
+$settings_button = $window.FindName("settings_button")
 
 #--Erstellt die Datei selected.sky für die Speicherung des aktuell ausgewählten Netzwerk Adapters--##
 
@@ -274,6 +276,9 @@ $SecurepointButton.Add_Click({
 })
 $IpAdressRenewButton.Add_Click({
     ip_release_renew
+})
+$settings_button.Add_Click({
+    ncpa.cpl
 })
 
                                                     #ShortCuts End#
