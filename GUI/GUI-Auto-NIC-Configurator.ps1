@@ -1,4 +1,7 @@
 cls
+# Script von Skyfay
+# Support auf Githup oder support@skyfay.ch
+$curent_version = "3.2"
 
 ################################################################
 ## Script als Admin Starten und Powershell Console Verstecken ##
@@ -11,6 +14,53 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
         Exit
  }
 }
+
+###########################
+##     Github Release    ##
+###########################
+
+# Fragt meine Website nach den neusten Daten von Github ab #
+
+$curent_tag = $curent_version
+$releases = "https://skyfay.ch/wp-content/uploads/2022/07/Auto_Nic_Configurator_Github_Api.txt"
+$tag = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].tag_name # -Headers $headers
+
+function gitrelease {
+
+if ($curent_tag -lt $tag) {
+    echo "Es ist ein neuer Release bereit ($tag)"
+}
+else {
+    echo "Du nutzt die neuste Version $curent_tag"
+}
+
+}
+
+$gitrelease_function = gitrelease
+
+
+function gitrelease_color {
+    if ($curent_tag -lt $tag) {
+        echo "#FFDC855C"
+    }
+    else {
+        echo "#FF827D7D"
+    }
+}
+
+$gitrelease_function_color = gitrelease_color
+
+function gitrelease_download {
+    if ($curent_tag -lt $tag) {
+        echo '<Button x:Name="new_version_download" Content="Download" HorizontalAlignment="Center" Height="30" Margin="0,351,0,0" VerticalAlignment="Top" Width="98" FontWeight="Bold" Foreground="White" Background="#FF252424" FontStyle="Normal"/>'
+    }
+    else {
+        ""
+    }
+}
+
+$new_github_release_download_button = gitrelease_download
+
 
 #####################
 ## Ordner Struktur ##
@@ -104,6 +154,8 @@ else {}
 
 
 
+
+
 ################
 ## Funktionen ##
 ################
@@ -183,6 +235,9 @@ Add-Type -AssemblyName PresentationFramework
                 <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,203,0,0"/>
                 <Button x:Name="settings_button" Content="Einstellungen" HorizontalAlignment="Center" Height="35" Margin="0,242,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
+                <TextBlock HorizontalAlignment="Center" Margin="354,310,354,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FF827D7D" TextAlignment="Center"><Run Language="de-ch" Text="Script by Skyfay"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="247,330,247,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="$gitrelease_function_color" TextAlignment="Center"><Run Language="de-ch" Text="$gitrelease_function"/></TextBlock>
+                $new_github_release_download_button
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
                     <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
@@ -233,6 +288,7 @@ $SecurepointButton = $window.FindName("SecurepointButton")
 $NetAdapterSelect = $window.FindName("NetAdapterSelect")
 $IpAdressRenewButton = $window.FindName("ip_release_renew")
 $settings_button = $window.FindName("settings_button")
+$new_version_download = $window.FindName("new_version_download")
 
 #--Erstellt die Datei selected.sky für die Speicherung des aktuell ausgewählten Netzwerk Adapters--##
 
@@ -279,6 +335,9 @@ $IpAdressRenewButton.Add_Click({
 })
 $settings_button.Add_Click({
     ncpa.cpl
+})
+$new_version_download.Add_Click({
+    Start "https://github.com/Skyfay/Auto-NIC-Configurator/releases/latest"
 })
 
                                                     #ShortCuts End#
