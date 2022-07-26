@@ -1,11 +1,11 @@
 cls
 # Script von Skyfay
 # Support auf Githup oder support@skyfay.ch
-$curent_version = "3.2"
+$curent_version = "3.3"
 
-################################################################
-## Script als Admin Starten und Powershell Console Verstecken ##
-################################################################
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                       Script als Admin Starten und Powershell Console Verstecken                                            <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator')) {
     if ([int](Get-CimInstance -Class Win32_OperatingSystem | Select-Object -ExpandProperty BuildNumber) -ge 6000) {
@@ -15,15 +15,17 @@ if (-Not ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdent
  }
 }
 
-###########################
-##     Github Release    ##
-###########################
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                 Github Release                                                              <-#
+#_________________________________________________________________________________________________________________________________________________#
 
-# Fragt meine Website nach den neusten Daten von Github ab #
+# Fragt meine Website nach den neusten Daten von Github ab
 
 $curent_tag = $curent_version
 $releases = "https://skyfay.ch/wp-content/uploads/2022/07/Auto_Nic_Configurator_Github_Api.txt"
 $tag = (Invoke-WebRequest $releases | ConvertFrom-Json)[0].tag_name # -Headers $headers
+
+# Ist für den Text im Script verantwortlich
 
 function gitrelease {
 
@@ -39,6 +41,9 @@ else {
 $gitrelease_function = gitrelease
 
 
+# Ist für die Farbe im Script verantwortlich
+
+
 function gitrelease_color {
     if ($curent_tag -lt $tag) {
         echo "#FFDC855C"
@@ -49,6 +54,8 @@ function gitrelease_color {
 }
 
 $gitrelease_function_color = gitrelease_color
+
+# Ist für den Download Button im Script verantwortlich
 
 function gitrelease_download {
     if ($curent_tag -lt $tag) {
@@ -61,10 +68,28 @@ function gitrelease_download {
 
 $new_github_release_download_button = gitrelease_download
 
+# Ist für die Internet Connetion Abfrage verantwortlich
+function test_internet_connectivity {
+if (Test-Connection -ComputerName www.google.com -Count 1 -ea SilentlyContinue) {
 
-#####################
-## Ordner Struktur ##
-#####################
+        #internet OK"
+        $internet_connectivity = "Server OK"
+        echo '<TextBlock HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC855C" TextAlignment="Center"><Run Language="de-ch" Text=""/></TextBlock>'
+        
+}
+Else {
+        #cannot ping google"
+        $internet_connectivity = "Server FAILED"
+        echo '<TextBlock HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC5C5C" TextAlignment="Center"><Run Language="de-ch" Text="Keine Verbindung zum Internet!"/></TextBlock>'
+}
+}
+
+$internet_connectivity_startup = test_internet_connectivity
+
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                Ordner Strucktur                                                             <-#
+#_________________________________________________________________________________________________________________________________________________#
+
 
 # Wird für die Identifizierung gebraucht, ansonsten funktioniert diese nicht weil die Ordner nicht vorhanden sind.
 
@@ -80,9 +105,9 @@ if ($Test_Path_folder_2 -ne "False") {
 }
 else {}
 
-###########################
-##    Identifizierung    ##
-###########################
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                Identifizierung                                                              <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 # Er liest die Adapter von unten nach oben
 # Die Function identify wurde deaktiviert und wird bei jedem Neustart automatisch ausgeführt da es sonst beim ersten Starten Fehler gibt.
@@ -156,9 +181,9 @@ else {}
 
 
 
-################
-## Funktionen ##
-################
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                   Funktionen                                                                <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 function set_to_default {
     Remove-NetIPAddress -InterfaceIndex $network_adapter -confirm:$false
@@ -206,9 +231,9 @@ function custom {
     Set-DnsClientServerAddress -InterfaceIndex $network_adapter_custom -ServerAddresses $dns_custom -confirm:$false
 }
 
-###############
-##    GUI    ##
-###############
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                              Grapical Interface                                                             <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 Add-Type -AssemblyName PresentationFramework
 
@@ -238,6 +263,7 @@ Add-Type -AssemblyName PresentationFramework
                 <TextBlock HorizontalAlignment="Center" Margin="354,310,354,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FF827D7D" TextAlignment="Center"><Run Language="de-ch" Text="Script by Skyfay"/></TextBlock>
                 <TextBlock HorizontalAlignment="Center" Margin="247,330,247,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="$gitrelease_function_color" TextAlignment="Center"><Run Language="de-ch" Text="$gitrelease_function"/></TextBlock>
                 $new_github_release_download_button
+                $internet_connectivity_startup
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
                     <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
@@ -277,8 +303,9 @@ Add-Type -AssemblyName PresentationFramework
 $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
-#---------------------------------------------------------------------------------------------------------------------------------#
-                                                    #ShortCuts#
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                  ShortCuts                                                                  <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 
 #--Sucht nach dem Button und führt darunter die Aktion aus--##
@@ -340,10 +367,10 @@ $new_version_download.Add_Click({
     Start "https://github.com/Skyfay/Auto-NIC-Configurator/releases/latest"
 })
 
-                                                    #ShortCuts End#
-#---------------------------------------------------------------------------------------------------------------------------------#
-#---------------------------------------------------------------------------------------------------------------------------------#
-                                                        #Custom#
+
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                    Custom                                                                   <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 # Erstellt die notwendigen Dateien als Datenablage #
 
@@ -432,7 +459,9 @@ $NetAdapterSelect_Custom.add_SelectionChanged( {
 })
 
 
-#---------------------------------------------------------------------------------------------------------------------------------#
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                     Team                                                                    <-#
+#_________________________________________________________________________________________________________________________________________________#
 
 
 
