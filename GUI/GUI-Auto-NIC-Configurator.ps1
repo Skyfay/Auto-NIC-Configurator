@@ -1,7 +1,7 @@
 cls
 # Script von Skyfay
 # Support auf Githup oder support@skyfay.ch
-$curent_version = "3.3"
+$curent_version = "4.0"
 
 #‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
 #->                                       Script als Admin Starten und Powershell Console Verstecken                                            <-#
@@ -185,6 +185,8 @@ else {}
 #->                                                                   Funktionen                                                                <-#
 #_________________________________________________________________________________________________________________________________________________#
 
+#Shortcut
+
 function set_to_default {
     Remove-NetIPAddress -InterfaceIndex $network_adapter -confirm:$false
     Remove-NetRoute -InterfaceIndex $network_adapter -confirm:$false
@@ -217,6 +219,8 @@ function set_to_default_custom {
     Remove-NetRoute -InterfaceIndex $network_adapter_custom -confirm:$false
 }
 
+#Custom
+
 function custom {
     $network_adapter_custom = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected.sky
 
@@ -230,6 +234,10 @@ function custom {
     New-Netipaddress -InterfaceIndex $network_adapter_custom -AddressFamily IPv4 -IPAddress $ipadress_custom -PrefixLength $subnetz_custom -DefaultGateway $gateway_custom -confirm:$false
     Set-DnsClientServerAddress -InterfaceIndex $network_adapter_custom -ServerAddresses $dns_custom -confirm:$false
 }
+
+#Team
+
+
 
 #‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
 #->                                                              Grapical Interface                                                             <-#
@@ -255,7 +263,7 @@ Add-Type -AssemblyName PresentationFramework
         <TabItem Header="Shortcut" Background="#FF7E84D4">
             <Grid Background="#FF161719">
                 <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" TextAlignment="Center"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator Shortcut"/></TextBlock>
                 <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7E84D4"><Run Text="Welche Aktion m"/><Run Language="de-ch" Text="oe"/><Run Text="chtest du starten?"/></TextBlock>
                 <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,203,0,0"/>
@@ -295,6 +303,54 @@ Add-Type -AssemblyName PresentationFramework
                 <TextBlock HorizontalAlignment="Center" Margin="0,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" IsEnabled="False"><Run Text="Trage die "/><Run Language="de-ch" Text="DNS Adresse"/><Run Text=" ein"/></TextBlock>
                 <TextBox x:Name="InputDNS_Custom" HorizontalAlignment="Center" Margin="0,265,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="1.1.1.1"/>
                 <Button x:Name="Done_Custom" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Nic_Team" Background="#FF89D47A">
+            <Grid Background="#FF161719">
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="243" FontWeight="Bold" Foreground="White" Text="Windows Netzwerk Konfigurator&#xA;Nic Teaming (Hyper-V - Virtual Switch)" TextAlignment="Center"/>
+                <TextBlock x:Name="Team_Adapter_Value" HorizontalAlignment="Center" Margin="0,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Foreground="#FF89D47A" Text="Anzahl Adapter im Nic Team"/>
+                <ComboBox x:Name="Adapter_Value_Team" HorizontalAlignment="Center" Margin="0,70,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                <ComboBoxItem Content="2"></ComboBoxItem>
+                <ComboBoxItem Content="3"></ComboBoxItem>
+                <ComboBoxItem Content="4"></ComboBoxItem>
+                </ComboBox>
+                <TextBlock x:Name="Team_Select_Adapter" HorizontalAlignment="Center" Margin="0,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FF89D47A" TextAlignment="Center" Text="Selektiere die Adapter "/>
+                <ComboBox x:Name="NetAdapterSelect_Team" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <ComboBox x:Name="NetAdapterSelect_Team_2" HorizontalAlignment="Center" Margin="0,150,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <ComboBox x:Name="NetAdapterSelect_Team_3" HorizontalAlignment="Center" Margin="0,180,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <ComboBox x:Name="NetAdapterSelect_Team_4" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <Button x:Name="Done_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
+                <TextBlock x:Name="NIC_Team_Name_Text" HorizontalAlignment="Center" Margin="0,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FF89D47A" TextAlignment="Center" Text="Wie soll das NIC Teaming heissen?"/>
+                <TextBox x:Name="Input_NIC_Team_Name" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="NIC-TEAM" Margin="0,262,0,0"/>
+                <TextBlock x:Name="Hyper_V_not_installed" HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC5C5C" TextAlignment="Center"><Run Language="de-ch" Text="Hyper-V ist nicht installiert!"/></TextBlock>
             </Grid>
         </TabItem>
     </TabControl>
@@ -463,7 +519,269 @@ $NetAdapterSelect_Custom.add_SelectionChanged( {
 #->                                                                     Team                                                                    <-#
 #_________________________________________________________________________________________________________________________________________________#
 
+# Erstellt die Datei value_team.sky für die Speicherung der Anzahl Adapter (Wird jedes mal neu erstellt)
+
+$team_value_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+if ($team_value_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+
+$team_netadapter_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
+if ($team_netadapter_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
+
+$team_netadapter_2_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_2_team.sky
+if ($team_netadapter_2_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_2_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_2_team.sky
+
+$team_netadapter_3_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_3_team.sky
+if ($team_netadapter_3_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_3_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_3_team.sky
+
+$team_netadapter_4_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
+if ($team_netadapter_4_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
+
+# Sucht nach dem Button und führt darunter die Aktion aus
+
+$Adapter_Value_Team = $window.FindName("Adapter_Value_Team")
+$NetAdapterSelect_Team = $window.FindName("NetAdapterSelect_Team")
+$NetAdapterSelect_Team_2 = $window.FindName("NetAdapterSelect_Team_2")
+$NetAdapterSelect_Team_3 = $window.FindName("NetAdapterSelect_Team_3")
+$NetAdapterSelect_Team_4 = $window.FindName("NetAdapterSelect_Team_4")
+$Team_Select_Adapter = $window.FindName("Team_Select_Adapter")
+$NIC_Team_Name_Text = $window.FindName("NIC_Team_Name_Text")
+$Input_NIC_Team_Name = $window.FindName("Input_NIC_Team_Name")
+$Done_Team = $window.FindName("Done_Team")
+$Hyper_V_not_installed = $window.FindName("Hyper_V_not_installed")
+
+
+# FUNCTIONS
+
+# ZEIGT AN, OB HYPER-V INSTALLIERT IST ODER NICHT
+
+function Hyper_V_Installed {
+    $hyperv = Get-WindowsOptionalFeature -FeatureName Microsoft-Hyper-V -Online
+    # Check if Hyper-V is enabled
+    if($hyperv.State -eq "Enabled") {
+
+        #Hyper-V is enabled.
+        $Hyper_V_not_installed.Visibility = "Hidden"
+
+    } else {
+
+        #Hyper-V is disabled.
+        $Hyper_V_not_installed.Visibility = "Visible"
+    }
+}
+Hyper_V_Installed
+
+
+# STANDARD EIGENSCHAFTEN VON CONTROLS
+
+$Team_Select_Adapter.Visibility = "Hidden"
+$NetAdapterSelect_Team.Visibility = "Hidden"
+$NetAdapterSelect_Team_2.Visibility = "Hidden"
+$NetAdapterSelect_Team_3.Visibility = "Hidden"
+$NetAdapterSelect_Team_4.Visibility = "Hidden"
+$NIC_Team_Name_Text.Visibility = "Hidden"
+$Input_NIC_Team_Name.Visibility = "Hidden"
+
+# Funktion zur Entfernung von Adaptern über die ausgewählte Anzahl
+
+
+ 
+ function team_adapter_live_update {
+
+ $value_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+
+ if ($value_team -eq "2"){
+    $Team_Select_Adapter.Visibility = "Visible"
+    $NetAdapterSelect_Team.Visibility = "Visible"
+    $NetAdapterSelect_Team_2.Visibility = "Visible"
+    $NetAdapterSelect_Team_3.Visibility = "Hidden"
+    $NetAdapterSelect_Team_4.Visibility = "Hidden"
+ }
+ if ($value_team -eq "3"){
+    $Team_Select_Adapter.Visibility = "Visible"
+    $NetAdapterSelect_Team.Visibility = "Visible"
+    $NetAdapterSelect_Team_2.Visibility = "Visible"
+    $NetAdapterSelect_Team_3.Visibility = "Visible"
+    $NetAdapterSelect_Team_4.Visibility = "Hidden"
+ }
+ if ($value_team -eq "4"){
+    $Team_Select_Adapter.Visibility = "Visible"
+    $NetAdapterSelect_Team.Visibility = "Visible"
+    $NetAdapterSelect_Team_2.Visibility = "Visible"
+    $NetAdapterSelect_Team_3.Visibility = "Visible"
+    $NetAdapterSelect_Team_4.Visibility = "Visible"
+ }
+ else{}
+ }
+
+ # ZEIGT DIE NAMEN EINGABE ERST, WENN DIE SPEZIFISCHEN FELDER AUSGEFÜLLT SIND
+
+ function team_name_live_update {
+    $value_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+
+    $teams = @(
+        'netadapter_team.sky'
+        'netadapter_2_team.sky'
+        'netadapter_3_team.sky'
+        'netadapter_4_team.sky'
+    ) | Join-Path -Path 'C:\Sky-Scripts\Net-Adapter-Config' -ChildPath { $_ } |
+        Get-Content -Path { $_ } -Raw |
+        ForEach-Object Trim
+    if ($value_team -eq "2"){
+    
+        if ($teams.Count -ge 2) {
+        $NIC_Team_Name_Text.Visibility = "Visible"
+        $Input_NIC_Team_Name.Visibility = "Visible"
+        } else {
+        $NIC_Team_Name_Text.Visibility = "Hidden"
+        $Input_NIC_Team_Name.Visibility = "Hidden"
+    }
+    }
+    if ($value_team -eq "3"){
+
+        if ($teams.Count -ge 3) {
+        $NIC_Team_Name_Text.Visibility = "Visible"
+        $Input_NIC_Team_Name.Visibility = "Visible"
+        } else {
+        $NIC_Team_Name_Text.Visibility = "Hidden"
+        $Input_NIC_Team_Name.Visibility = "Hidden"
+    }
+    }
+    if ($value_team -eq "4"){
+
+        if ($teams.Count -ge 4) {
+        $NIC_Team_Name_Text.Visibility = "Visible"
+        $Input_NIC_Team_Name.Visibility = "Visible"
+        } else {
+        $NIC_Team_Name_Text.Visibility = "Hidden"
+        $Input_NIC_Team_Name.Visibility = "Hidden"
+    }
+    }
+}
+
+# Liest den aktuell ausgewählten Wert aus dem Dropdown Menu "Adapter_Value_Team" aus
+
+
+$Adapter_Value_Team.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+
+    # FÜHRT DIE FUNKTION AUS, WELCHE DIE CONTROLS ANZEIGT ODER VERSTECKT
+
+    team_adapter_live_update
+})
+
+$NetAdapterSelect_Team.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
+
+    team_name_live_update
+})
+$NetAdapterSelect_Team_2.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_2_team.sky
+    
+    team_name_live_update
+})
+$NetAdapterSelect_Team_3.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_3_team.sky
+
+    team_name_live_update
+})
+$NetAdapterSelect_Team_4.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
+
+    team_name_live_update
+})
+
+$Done_Team.Add_Click({
+
+        $value_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+        $value_netadater_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
+        $value_netadater_2_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_2_team.sky
+        $value_netadater_3_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_3_team.sky
+        $value_netadater_4_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
+        $Input_NIC_Team_Name_Var = $Input_NIC_Team_Name.Text.ToString()
+
+        if ($value_team -eq "2"){
+            New-VMSwitch -Name $Input_NIC_Team_Name_Var -NetAdapterName "$value_netadater_team","$value_netadater_2_team" -EnableEmbeddedTeaming $true
+            Set-VMSwitchTeam -Name $Input_NIC_Team_Name_Var -LoadBalancingAlgorithm Dynamic
+        }
+        if ($value_team -eq "3"){
+            New-VMSwitch -Name $Input_NIC_Team_Name_Var -NetAdapterName "$value_netadater_team","$value_netadater_2_team","$value_netadater_3_team" -EnableEmbeddedTeaming $true
+            Set-VMSwitchTeam -Name $Input_NIC_Team_Name_Var -LoadBalancingAlgorithm Dynamic
+        }
+        if ($value_team -eq "4"){
+            New-VMSwitch -Name $Input_NIC_Team_Name_Var -NetAdapterName "$value_netadater_team","$value_netadater_2_team","$value_netadater_3_team","$value_netadater_4_team" -EnableEmbeddedTeaming $true
+            Set-VMSwitchTeam -Name $Input_NIC_Team_Name_Var -LoadBalancingAlgorithm Dynamic
+        }
+        else{}
+})
 
 
 
-$window.ShowDialog() | Out-Null
+
+
+ $window.ShowDialog() | Out-Null
+
