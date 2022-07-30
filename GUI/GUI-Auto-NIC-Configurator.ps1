@@ -1,7 +1,7 @@
 cls
 # Script von Skyfay
 # Support auf Githup oder support@skyfay.ch
-$curent_version = "4.0"
+$curent_version = "4.1"
 
 #‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
 #->                                       Script als Admin Starten und Powershell Console Verstecken                                            <-#
@@ -347,10 +347,23 @@ Add-Type -AssemblyName PresentationFramework
                     <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
                 </ComboBox>
-                <Button x:Name="Done_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
+                <Button x:Name="Done_Add_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
                 <TextBlock x:Name="NIC_Team_Name_Text" HorizontalAlignment="Center" Margin="0,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FF89D47A" TextAlignment="Center" Text="Wie soll das NIC Teaming heissen?"/>
                 <TextBox x:Name="Input_NIC_Team_Name" HorizontalAlignment="Center" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="NIC-TEAM" Margin="0,262,0,0"/>
                 <TextBlock x:Name="Hyper_V_not_installed" HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC5C5C" TextAlignment="Center"><Run Language="de-ch" Text="Hyper-V ist nicht installiert!"/></TextBlock>
+                <RadioButton x:Name="Add_Team" Content="Erstellen&#xD;&#xA;" HorizontalAlignment="Center" Height="18" Margin="0,68,350,0" VerticalAlignment="Top" Width="74" Foreground="White" Background="White"/>
+                <RadioButton x:Name="Remove_Team" Content="Löschen&#xD;&#xA;&#xA;" HorizontalAlignment="Center" Height="18" Margin="0,88,350,0" VerticalAlignment="Top" Width="74" Foreground="White" Background="White"/>
+                <Rectangle HorizontalAlignment="Center" Height="50" Margin="0,60,350,0" Stroke="White" VerticalAlignment="Top" Width="102"/>
+                <TextBlock x:Name="Team_Adapter_Value_Remove" HorizontalAlignment="Center" Margin="0,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="243" Height="19" TextAlignment="Center" Foreground="#FF89D47A" Text="Welches NIC-Teaming soll entfernt werden?"/>
+                <ComboBox x:Name="Adapter_Value_Team_Remove" HorizontalAlignment="Center" Margin="0,70,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+                <Button x:Name="Done_Remove_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
             </Grid>
         </TabItem>
     </TabControl>
@@ -527,7 +540,13 @@ if ($team_value_identify -eq "True") {
 }
 else {}
 
-New-Item C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
+$team_remove_value_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\value_remove_team.sky
+if ($team_remove_value_identify -eq "True") { 
+    Remove-Item C:\Sky-Scripts\Net-Adapter-Config\value_remove_team.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\value_remove_team.sky
 
 $team_netadapter_identify = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
 if ($team_netadapter_identify -eq "True") { 
@@ -563,6 +582,9 @@ New-Item C:\Sky-Scripts\Net-Adapter-Config\netadapter_4_team.sky
 
 # Sucht nach dem Button und führt darunter die Aktion aus
 
+#Add
+
+$Team_Adapter_Value = $window.FindName("Team_Adapter_Value")
 $Adapter_Value_Team = $window.FindName("Adapter_Value_Team")
 $NetAdapterSelect_Team = $window.FindName("NetAdapterSelect_Team")
 $NetAdapterSelect_Team_2 = $window.FindName("NetAdapterSelect_Team_2")
@@ -571,9 +593,16 @@ $NetAdapterSelect_Team_4 = $window.FindName("NetAdapterSelect_Team_4")
 $Team_Select_Adapter = $window.FindName("Team_Select_Adapter")
 $NIC_Team_Name_Text = $window.FindName("NIC_Team_Name_Text")
 $Input_NIC_Team_Name = $window.FindName("Input_NIC_Team_Name")
-$Done_Team = $window.FindName("Done_Team")
+$Done_Add_Team = $window.FindName("Done_Add_Team")
 $Hyper_V_not_installed = $window.FindName("Hyper_V_not_installed")
+$Add_Team = $window.FindName("Add_Team")
+$Remove_Team = $window.FindName("Remove_Team")
 
+#Remove$
+
+$Team_Adapter_Value_Remove = $window.FindName("Team_Adapter_Value_Remove")
+$Adapter_Value_Team_Remove = $window.FindName("Adapter_Value_Team_Remove")
+$Done_Remove_Team = $window.FindName("Done_Remove_Team")
 
 # FUNCTIONS
 
@@ -605,6 +634,7 @@ $NetAdapterSelect_Team_3.Visibility = "Hidden"
 $NetAdapterSelect_Team_4.Visibility = "Hidden"
 $NIC_Team_Name_Text.Visibility = "Hidden"
 $Input_NIC_Team_Name.Visibility = "Hidden"
+$Team_Adapter_Value_Remove.Visibility = "Hidden"
 
 # Funktion zur Entfernung von Adaptern über die ausgewählte Anzahl
 
@@ -702,6 +732,18 @@ $Adapter_Value_Team.add_SelectionChanged({
     team_adapter_live_update
 })
 
+$Adapter_Value_Team_Remove.add_SelectionChanged({
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # DIE LEERZEICHEN VOR UND DANACH ENTFERNEN
+
+    $selected_trim = $selected.trimstart().trimend()
+    "$selected_trim" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_remove_team.sky
+})
+
 $NetAdapterSelect_Team.add_SelectionChanged({
 
     param($sender, $args)
@@ -755,7 +797,7 @@ $NetAdapterSelect_Team_4.add_SelectionChanged({
     team_name_live_update
 })
 
-$Done_Team.Add_Click({
+$Done_Add_Team.Add_Click({
 
         $value_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_team.sky
         $value_netadater_team = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\netadapter_team.sky
@@ -780,6 +822,44 @@ $Done_Team.Add_Click({
 })
 
 
+ # WECHSELT ZWISCHEN "ADD UND REMOVE" TEAM SWITCH
+
+$Add_Team.add_Checked({
+    #Ausblenden
+    $Team_Adapter_Value_Remove.Visibility = "Hidden"
+    $Adapter_Value_Team_Remove.Visibility = "Hidden"
+    $Done_Remove_Team.Visibility = "Hidden"
+    #Einblenden
+    $Team_Adapter_Value.Visibility = "Visible"
+    $Adapter_Value_Team.Visibility = "Visible"
+    $Done_Add_Team.Visibility = "Visible"
+})
+
+
+
+$Remove_Team.add_Checked({
+    #Ausblenden
+    $Team_Adapter_Value.Visibility = "Hidden"
+    $Adapter_Value_Team.Visibility = "Hidden"
+    $Done_Add_Team.Visibility = "Hidden"
+    $Team_Select_Adapter.Visibility = "Hidden"
+    $NetAdapterSelect_Team.Visibility = "Hidden"
+    $NetAdapterSelect_Team_2.Visibility = "Hidden"
+    $NetAdapterSelect_Team_3.Visibility = "Hidden"
+    $NetAdapterSelect_Team_4.Visibility = "Hidden"
+    $NIC_Team_Name_Text.Visibility = "Hidden"
+    $Input_NIC_Team_Name.Visibility = "Hidden"
+    #Einblenden
+    $Team_Adapter_Value_Remove.Visibility = "Visible"
+    $Adapter_Value_Team_Remove.Visibility = "Visible"
+    $Done_Remove_Team.Visibility = "Visible"
+
+})
+
+$Done_Remove_Team.Add_Click({
+    $value_team_remove = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\value_remove_team.sky
+    Remove-VMSwitch $value_team_remove
+})
 
 
 
