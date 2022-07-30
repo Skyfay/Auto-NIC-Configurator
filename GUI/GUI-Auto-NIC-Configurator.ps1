@@ -363,7 +363,7 @@ Add-Type -AssemblyName PresentationFramework
                     <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
                 </ComboBox>
-                <Button x:Name="Done_Remove_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
+                <Button x:Name="Done_Remove_Team" Content="Löschen" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
             </Grid>
         </TabItem>
     </TabControl>
