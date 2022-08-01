@@ -3,9 +3,9 @@ Mit diesem Script kannst du ganz einfach deine Netzwerk Schnittstelle auf einen 
 Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
 **Vorschau:**
-![Shortcut-5 0](https://user-images.githubusercontent.com/76796007/182175735-e17d9faa-39dd-4c36-99ff-79027e29cc30.png)
-![Custom-5 0](https://user-images.githubusercontent.com/76796007/182175749-78637b47-ba47-4600-a73e-f7b4832013ff.png)
-![Nic-Team-5 0](https://user-images.githubusercontent.com/76796007/182175768-913ac84c-eb53-4317-841e-976b257c6df9.png)
+![Shortcut-5 0-Github](https://user-images.githubusercontent.com/76796007/182176378-22d61ace-8d43-45c0-a792-9d8f86d71277.png)
+![Custom-5 0-Github](https://user-images.githubusercontent.com/76796007/182176445-f94772ae-1894-40b0-8e42-f77983e523e5.png)
+![Nic-Team-5 0-Github](https://user-images.githubusercontent.com/76796007/182176426-a135b8a3-6869-4add-9818-4e7d0b659359.png)
 ----------------------------------------------------------------------------------------------
 **Voraussetzung:**
 - Du brauchst ein Windows System mit einem Admin berechteten User.
