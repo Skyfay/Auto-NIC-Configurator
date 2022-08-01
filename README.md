@@ -29,7 +29,7 @@ Jetzt auch neu mit GUI!
 - Das Script kann vordefinierte Einstellungen auf deine Netzwerk Karte laden oder du kannst selber welche in einem Guide bestimmen.
 - Du kannst die Netzwerk Karte auf "DHCP" stellen, also den Standard Wert.
 - Nun ist es auch möglich NIC-Teaming für Hyper-V zu erstellen und zu löschen.
-- Du bekommst benachrichtigungen ob ein Befehl funktioniert hat oder nicht.
+- Du bekommst Benachrichtigungen ob ein Befehl funktioniert hat oder nicht.
 ----------------------------------------------------------------------------------------------
 **Einschränkungen?**
 - Aktuell kann man mit der GUI Version nur 6 Schnittstellen anzeigen lassen.
