@@ -2,6 +2,11 @@
 Mit diesem Script kannst du ganz einfach deine Netzwerk Schnittstelle auf einen bestimmten Wert setzen!
 Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
+**Vorschau:**
+![Shortcut-5 0](https://user-images.githubusercontent.com/76796007/182175735-e17d9faa-39dd-4c36-99ff-79027e29cc30.png)
+![Custom-5 0](https://user-images.githubusercontent.com/76796007/182175749-78637b47-ba47-4600-a73e-f7b4832013ff.png)
+![Nic-Team-5 0](https://user-images.githubusercontent.com/76796007/182175768-913ac84c-eb53-4317-841e-976b257c6df9.png)
+----------------------------------------------------------------------------------------------
 **Voraussetzung:**
 - Du brauchst ein Windows System mit einem Admin berechteten User.
 - Falls dein Gerät das Ausführen von Scripts verhindert, führe in Powershell (Als Admin) folgenden Befehl aus:<br/>
