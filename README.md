@@ -31,6 +31,7 @@ Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
 **Was kann das Script?**
 - Es gibt ein Grafisches Interface um die Netzwerk Schnittstellen zu konfigurieren!
+- Du kannst Informationen über die einzelnen Schnittstellen abrufen.
 - Das Script kann vordefinierte Einstellungen auf deine Netzwerk Karte laden oder du kannst selber welche in einem Guide bestimmen.
 - Du kannst die Netzwerk Karte auf "DHCP" stellen, also den Standard Wert.
 - Nun ist es auch möglich NIC-Teaming für Hyper-V zu erstellen und zu löschen.
