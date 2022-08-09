@@ -1,7 +1,7 @@
 cls
 # Script von Skyfay
 # Support auf Githup oder support@skyfay.ch
-$curent_version = "5.0"
+$curent_version = "6.0"
 
 #‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
 #->                                       Script als Admin Starten und Powershell Console Verstecken                                            <-#
@@ -700,6 +700,48 @@ else {}
 #->                                                                   Funktionen                                                                <-#
 #_________________________________________________________________________________________________________________________________________________#
 
+#GUI
+
+function shortcut_list {
+
+#Nicht mehr in Verwendung 
+
+[xml]$xaml = @"
+<Window
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    x:Name="Window">
+            <Grid Background="#FF161719">
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" TextAlignment="Center"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator Shortcut List"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7E84D4"><Run Text="Welche Aktion m"/><Run Language="de-ch" Text="oe"/><Run Text="chtest du starten?"/></TextBlock>
+                <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
+                <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                </ComboBox>
+            </Grid>
+</Window>
+"@
+$window = [Windows.Markup.XamlReader]::Load((New-Object System.Xml.XmlNodeReader $xaml))
+$window.ShowDialog()
+
+}
+
+#Start
+
+function Adapter_Information_Field_Update {
+
+    function Adapter_Information_Field_Update_Initial {
+    Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky | echo
+    }
+    $NetInformation_Name = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky
+    $NetInformation_Description = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Description.sky
+    $NetInformation_Status = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Status.sky
+    $NetInformation_MacAddress = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_MacAddress.sky
+    $NetInformation_LinkSpeed = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_LinkSpeed.sky
+
+    $Adapter_Information_Field.Text= "$NetInformation_Name`n$NetInformation_Description`n$NetInformation_Status`n$NetInformation_MacAddress`n$NetInformation_LinkSpeed"
+}
+
 #Shortcut
 
 function set_to_default {
@@ -764,6 +806,7 @@ Add-Type -AssemblyName PresentationFramework
 
 # Der Grid Teil muss jeweils von Visual Studio importiert werden und den "Click="Button_Click" entfernet werden
 
+# Default
 
 [xml]$xaml = @"
 <Window
@@ -777,18 +820,33 @@ Add-Type -AssemblyName PresentationFramework
         <TabControl.FocusVisualStyle>
             <Style/>
         </TabControl.FocusVisualStyle>
-        <TabItem Header="Shortcut" Background="#FF7E84D4">
+        <TabItem Header="Start" Background="#FF7ED2D4">
             <Grid Background="#FF161719">
-                <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
-                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" TextAlignment="Center"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator Shortcut"/></TextBlock>
-                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7E84D4"><Run Text="Welche Aktion m"/><Run Language="de-ch" Text="oe"/><Run Text="chtest du starten?"/></TextBlock>
-                <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" TextAlignment="Center"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator Start"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7ED2D4" Text="Infos zum Adapter anzeigen lassen" TextAlignment="Center"/>
                 <Button x:Name="ip_release_renew" Content="IP Adresse erneuern" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,203,0,0"/>
                 <Button x:Name="settings_button" Content="Einstellungen" HorizontalAlignment="Center" Height="35" Margin="0,242,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <TextBlock HorizontalAlignment="Center" Margin="354,310,354,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FF827D7D" TextAlignment="Center"><Run Language="de-ch" Text="Script by Skyfay"/></TextBlock>
                 <TextBlock HorizontalAlignment="Center" Margin="247,330,247,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="$gitrelease_function_color" TextAlignment="Center"><Run Language="de-ch" Text="$gitrelease_function"/></TextBlock>
                 $new_github_release_download_button
                 <TextBlock x:Name="No_Internet_Connection" HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC5C5C" TextAlignment="Center"><Run Language="de-ch" Text="Keine Verbindung zum Internet"/></TextBlock>
+                <TextBox x:Name="Adapter_Information_Field" HorizontalAlignment="Center" Height="81" Margin="0,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="276" Background="#FF252424" Foreground="White" TextAlignment="Center"/>
+                <ComboBox x:Name="NetAdapterSelect_Start" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
+                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
+                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
+                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                </ComboBox>
+            </Grid>
+        </TabItem>
+        <TabItem Header="Shortcut" Background="#FF7E84D4">
+            <Grid Background="#FF161719">
+                <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" TextAlignment="Center"><Run Language="de-ch" Text="Windows Netzwerk Konfigurator Shortcut"/></TextBlock>
+                <TextBlock HorizontalAlignment="Center" Margin="0,90,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="198" Foreground="#FF7E84D4"><Run Text="Welche Aktion m"/><Run Language="de-ch" Text="oe"/><Run Text="chtest du starten?"/></TextBlock>
+                <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
+                <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
                     <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
                     <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
@@ -890,6 +948,119 @@ $reader = (New-Object System.Xml.XmlNodeReader $xaml)
 $window = [Windows.Markup.XamlReader]::Load($reader)
 
 #‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
+#->                                                                    Start                                                                    <-#
+#_________________________________________________________________________________________________________________________________________________#
+
+#--Sucht nach dem Button und führt darunter die Aktion aus--##
+$IpAdressRenewButton = $window.FindName("ip_release_renew")
+$settings_button = $window.FindName("settings_button")
+$new_version_download = $window.FindName("new_version_download")
+$No_Internet_Connection = $window.FindName("No_Internet_Connection")
+$Adapter_Information_Field = $window.FindName("Adapter_Information_Field")
+$NetAdapterSelect_Start = $window.FindName("NetAdapterSelect_Start")
+
+#--Erstellt die Datei selected_start.sky und die anderen Dateien für die Speicherung des aktuell ausgewählten Netzwerk Adapters und weiteren Infos--##
+
+$Selected_Path_identify_Start = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+if ($Test_Path_identify_Start -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+
+$NetInformation_Name = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky
+if ($NetInformation_Name -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky
+
+$NetInformation_Description = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Description.sky
+if ($NetInformation_Description -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Description.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Description.sky
+
+$NetInformation_Status = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Status.sky
+if ($NetInformation_Status -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Status.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Status.sky
+
+$NetInformation_MacAddress = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_MacAddress.sky
+if ($NetInformation_MacAddress -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_MacAddress.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_MacAddress.sky
+
+$NetInformation_LinkSpeed = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetInformation_LinkSpeed.sky
+if ($NetInformation_LinkSpeed -ne "True") {
+Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_LinkSpeed.sky
+}
+else {}
+
+New-Item C:\Sky-Scripts\Net-Adapter-Config\NetInformation_LinkSpeed.sky
+
+#--Liest den aktuell ausgewählten Wert aus dem Dropdown Menu aus--##
+
+$NetAdapterSelect_Start.add_SelectionChanged( {
+
+    param($sender, $args)
+
+    $selected = $sender.SelectedItem.Content
+
+    # Die Leerzeichen vor und danach entfernen
+
+    $selected_trim = $selected.trimstart().trimend()
+    """$selected_trim""" | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+
+
+    #Schreibt den Wert in die IfIndex Nummer um und schreibt den Wert dann wieder in die Datei selected.sky #
+    $content_get = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected.sky
+    $IfIndex = (get-netadapter -name "$selected_trim").IfIndex | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+    $IfIndex_Info = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\selected_start.sky
+
+    #Werte für die Informationsbox bereitstellen
+    Get-NetAdapter -InterfaceIndex $IfIndex_Info | Select-Object -ExpandProperty 'Name' | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Name.sky
+    Get-NetAdapter -InterfaceIndex $IfIndex_Info | Select-Object -ExpandProperty 'InterfaceDescription' | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Description.sky
+    Get-NetAdapter -InterfaceIndex $IfIndex_Info | Select-Object -ExpandProperty 'Status' | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetInformation_Status.sky
+    Get-NetAdapter -InterfaceIndex $IfIndex_Info | Select-Object -ExpandProperty 'MacAddress' | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetInformation_MacAddress.sky
+    Get-NetAdapter -InterfaceIndex $IfIndex_Info | Select-Object -ExpandProperty 'LinkSpeed' | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetInformation_LinkSpeed.sky
+
+    Adapter_Information_Field_Update
+
+})
+
+##--Buton Action--##
+$IpAdressRenewButton.Add_Click({
+    $error.clear()
+    try {
+       ip_release_renew
+    }
+    catch {
+       New-WPFMessageBox @ErrorMsgParams -Content "Die IP-Adresse konnt nicht neu bezogen werden"
+    }
+    if (!$error) {
+       New-WPFMessageBox @WorkedParams -Content "Die IP-Adresse wurde erfolgreich neu bezogen"
+    }
+    
+})
+$settings_button.Add_Click({
+    ncpa.cpl
+})
+$new_version_download.Add_Click({
+    Start "https://github.com/Skyfay/Auto-NIC-Configurator/releases/latest"
+})
+
+#‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾#
 #->                                                                  ShortCuts                                                                  <-#
 #_________________________________________________________________________________________________________________________________________________#
 
@@ -899,10 +1070,7 @@ $DhcpButton = $window.FindName("DhcpButton")
 $CustomButton = $window.FindName("CustomButton")
 $SecurepointButton = $window.FindName("SecurepointButton")
 $NetAdapterSelect = $window.FindName("NetAdapterSelect")
-$IpAdressRenewButton = $window.FindName("ip_release_renew")
-$settings_button = $window.FindName("settings_button")
-$new_version_download = $window.FindName("new_version_download")
-$No_Internet_Connection = $window.FindName("No_Internet_Connection")
+
 
 #INTERNET CONNECTION FUNCTION
 
@@ -966,25 +1134,6 @@ $SecurepointButton.Add_Click({
     if (!$error) {
        New-WPFMessageBox @WorkedParams -Content "Der Netzwerk Adapter wurde erfolgreich auf die Werte von Securepoint umgestellt"
     }
-})
-$IpAdressRenewButton.Add_Click({
-    $error.clear()
-    try {
-       ip_release_renew
-    }
-    catch {
-       New-WPFMessageBox @ErrorMsgParams -Content "Die IP-Adresse konnt nicht neu bezogen werden"
-    }
-    if (!$error) {
-       New-WPFMessageBox @WorkedParams -Content "Die IP-Adresse wurde erfolgreich neu bezogen"
-    }
-    
-})
-$settings_button.Add_Click({
-    ncpa.cpl
-})
-$new_version_download.Add_Click({
-    Start "https://github.com/Skyfay/Auto-NIC-Configurator/releases/latest"
 })
 
 
