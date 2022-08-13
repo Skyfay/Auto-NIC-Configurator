@@ -624,73 +624,39 @@ else {}
 #->                                                                Identifizierung                                                              <-#
 #_________________________________________________________________________________________________________________________________________________#
 
-# Er liest die Adapter von unten nach oben
-# Die Function identify wurde deaktiviert und wird bei jedem Neustart automatisch ausgeführt da es sonst beim ersten Starten Fehler gibt.
-# Der Button wurde aus dem User Interface entfernt
-
-#function identify {
-    
-    $Test_Path_identify_1 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
-    if ($Test_Path_identify_1 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
-    }
-    else {}
-
-    $Test_Path_identify_2 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
-    if ($Test_Path_identify_2 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
-    }
-    else {}
-
-    $Test_Path_identify_3 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
-    if ($Test_Path_identify_3 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
-    }
-    else {}
-
-    $Test_Path_identify_4 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky
-    if ($Test_Path_identify_4 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky
-    }
-    else {}
-
-    $Test_Path_identify_5 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
-    if ($Test_Path_identify_5 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
-    }
-    else {}
-
-    $Test_Path_identify_6 = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
-    if ($Test_Path_identify_6 -ne "False") {
-        New-Item C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
-    }
-
-
     # Identifizierung #
 
 
-    $adapter1 = Get-NetAdapter | Sort-Object | Select-Object -Skip 0 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
-    $adapter2 = Get-NetAdapter | Sort-Object | Select-Object -Skip 1 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
-    $adapter3 = Get-NetAdapter | Sort-Object | Select-Object -Skip 2 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
-    $adapter4 = Get-NetAdapter | Sort-Object | Select-Object -Skip 3 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky
-    $adapter5 = Get-NetAdapter | Sort-Object | Select-Object -Skip 4 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
-    $adapter6 = Get-NetAdapter | Sort-Object | Select-Object -Skip 5 | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
+$NetAdapter_measure = Get-NetAdapter | measure # Anzahl Adapter messen
 
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
-    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
+# Für die Anzahl Adapter eine Datei erstellen
+1..$NetAdapter_measure.Count | foreach {
 
-    # Die Ergebnise von identify werden in eine Variable eingelesen 
+    $Test_Path_NetAdapter_File = Test-Path -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky
+    if ($Test_Path_NetAdapter_File = $true) {
+        Remove-Item C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky
+    }
+    else {
+    }
 
-    $adapter1_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter1.sky
-    $adapter2_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter2.sky
-    $adapter3_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter3.sky
-    $adapter4_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter4.sky
-    $adapter5_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter5.sky
-    $adapter6_content = Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\adapter6.sky
+    New-Item -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky
+
+    # Namen in die Adapter Files schreiben
+    Get-NetAdapter | Select-Object -Skip ($_-1) | Select-Object -First 1 | Format-List -Property "Name" | Out-File C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky
+
+    # Ausgabe in der Datei Formatieren
+    (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky -Raw) -replace 'Name : ','' | Set-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky
+
+    # Ergebnise in eine neue Variable laden
+    New-Variable -Name adapter$_ -Value (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky) -ErrorAction SilentlyContinue
+}
+
+# Jeweils pro Anzahl Adapter ein Combobox Item für die GUI erstellen
+
+$ComboBoxItem = 1..$NetAdapter_measure.Count | foreach {
+    $ComboBoxItem_temp = (Get-Content -Path C:\Sky-Scripts\Net-Adapter-Config\NetAdapter_$_.sky)
+    echo ('<ComboBoxItem Content="'+$ComboBoxItem_temp+'"></ComboBoxItem>')
+}
 
 
 
@@ -832,12 +798,7 @@ Add-Type -AssemblyName PresentationFramework
                 <TextBlock x:Name="No_Internet_Connection" HorizontalAlignment="Center" Margin="0,350,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="18" Foreground="#FFDC5C5C" TextAlignment="Center"><Run Language="de-ch" Text="Keine Verbindung zum Internet"/></TextBlock>
                 <TextBox x:Name="Adapter_Information_Field" HorizontalAlignment="Center" Height="81" Margin="0,111,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="276" Background="#FF252424" Foreground="White" TextAlignment="Center"/>
                 <ComboBox x:Name="NetAdapterSelect_Start" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
             </Grid>
         </TabItem>
@@ -848,12 +809,7 @@ Add-Type -AssemblyName PresentationFramework
                 <Button x:Name="DhcpButton" Content="DHCP (Default)" Margin="0,120,100,0" FontWeight="Normal" Foreground="White" BorderBrush="#FF707070" Background="#FF252424" HorizontalAlignment="Center" Width="98" Height="35" VerticalAlignment="Top"/>
                 <Button x:Name="SecurepointButton" Content="Securepoint" HorizontalAlignment="Center" Height="35" Margin="100,120,0,0" VerticalAlignment="Top" Width="98" FontWeight="Normal" Foreground="White" Background="#FF252424"/>
                 <ComboBox x:Name="NetAdapterSelect" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
             </Grid>
         </TabItem>
@@ -861,12 +817,7 @@ Add-Type -AssemblyName PresentationFramework
             <Grid Background="#FF161719">
                 <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="30" Width="196" FontWeight="Bold" Foreground="White" Text="Windows Netzwerk Konfigurator&#xD;&#xA;Custom Setup&#xD;&#xA;" TextAlignment="Center"/>
                 <ComboBox x:Name="NetAdapterSelect_Custom" HorizontalAlignment="Center" Margin="0,45,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <TextBox x:Name="InputIPAdress_Custom" HorizontalAlignment="Center" Margin="0,105,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="196" Height="19" TextAlignment="Center" Background="#FF252424" Foreground="White" Text="192.168.1.1"/>
                 <TextBlock HorizontalAlignment="Center" Margin="0,81,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FFD47E7E" TextAlignment="Center" Text="Trage die IP-Adresse ein"/>
@@ -891,36 +842,16 @@ Add-Type -AssemblyName PresentationFramework
                 </ComboBox>
                 <TextBlock x:Name="Team_Select_Adapter" HorizontalAlignment="Center" Margin="0,100,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FF89D47A" TextAlignment="Center" Text="Selektiere die Adapter "/>
                 <ComboBox x:Name="NetAdapterSelect_Team" HorizontalAlignment="Center" Margin="0,120,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <ComboBox x:Name="NetAdapterSelect_Team_2" HorizontalAlignment="Center" Margin="0,150,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <ComboBox x:Name="NetAdapterSelect_Team_3" HorizontalAlignment="Center" Margin="0,180,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <ComboBox x:Name="NetAdapterSelect_Team_4" HorizontalAlignment="Center" Margin="0,210,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <Button x:Name="Done_Add_Team" Content="Anwenden" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
                 <TextBlock x:Name="NIC_Team_Name_Text" HorizontalAlignment="Center" Margin="0,241,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="19" Width="196" FontWeight="Normal" Foreground="#FF89D47A" TextAlignment="Center" Text="Wie soll das NIC Teaming heissen?"/>
@@ -931,12 +862,7 @@ Add-Type -AssemblyName PresentationFramework
                 <Rectangle HorizontalAlignment="Center" Height="50" Margin="0,60,350,0" Stroke="White" VerticalAlignment="Top" Width="102"/>
                 <TextBlock x:Name="Team_Adapter_Value_Remove" HorizontalAlignment="Center" Margin="0,50,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="243" Height="19" TextAlignment="Center" Foreground="#FF89D47A" Text="Welches NIC-Teaming soll entfernt werden?"/>
                 <ComboBox x:Name="Adapter_Value_Team_Remove" HorizontalAlignment="Center" Margin="0,70,0,0" VerticalAlignment="Top" Width="196" Text="Wähle deinen Adapter" BorderBrush="#FF707070" Foreground="Black" Background="#FF252424">
-                    <ComboBoxItem Content="$adapter1_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter2_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter3_content"></ComboBoxItem> 
-                    <ComboBoxItem Content="$adapter4_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter5_content"></ComboBoxItem>
-                    <ComboBoxItem Content="$adapter6_content"></ComboBoxItem>
+                    $ComboBoxItem
                 </ComboBox>
                 <Button x:Name="Done_Remove_Team" Content="Löschen" HorizontalAlignment="Center" Height="34" VerticalAlignment="Top" Width="196" FontWeight="Normal" Foreground="White" Background="#FF252424" Margin="0,307,0,0"/>
             </Grid>
