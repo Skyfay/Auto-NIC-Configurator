@@ -38,7 +38,6 @@ Jetzt auch neu mit GUI!
 - Du bekommst Benachrichtigungen ob ein Befehl funktioniert hat oder nicht.
 ----------------------------------------------------------------------------------------------
 **Einschränkungen?**
-- Aktuell kann man mit der GUI Version nur 6 Schnittstellen anzeigen lassen.
 - Beim NIC-Teaming kann man nur bis zu 4 Adapter zusammenschliessen.
 ----------------------------------------------------------------------------------------------
 **Kontakt & Hilfe**
