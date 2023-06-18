@@ -1,12 +1,36 @@
 import customtkinter
 import os
+import json
 from PIL import Image
 
+from network import get_network_adapters_info # import the network funktion
+from network import network_adapter_select_function # import the network funktion
+
+# Aufruf der Funktion, um die Informationen abzurufen
+get_network_adapters_info()
 
 class App(customtkinter.CTk):
     def __init__(window):
         super().__init__()
 
+        # Get Network Adapter for dropdown menu to select
+        def get_network_adapter_names(window):
+            # Load network adapters from JSON file
+            with open(json_file_path) as file:
+                adapters = json.load(file)
+
+            # Extract adapter names
+            adapter_names = [adapter['name'] for adapter in adapters]
+
+            return adapter_names
+
+        # Definiere den Pfad zur network_adapters.json-Datei
+        json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator',
+                                      'network_adapters.json')
+
+        adapter_names = get_network_adapter_names(window)
+
+        # Gui
         window.title("") # Windows titel
         window.minsize(700, 450) # minimum size from the window
         window.geometry("700x450") # startup size from the window
@@ -27,6 +51,8 @@ class App(customtkinter.CTk):
                                                  dark_image=Image.open(os.path.join(image_path, "chat_light.png")), size=(20, 20))
         window.add_user_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "add_user_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "add_user_light.png")), size=(20, 20))
+        window.settings_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "settings_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "settings_light.png")), size=(20, 20))
 
         # create navigation frame left side
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
@@ -54,7 +80,7 @@ class App(customtkinter.CTk):
 
         window.settings_frame_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Settings",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=window.add_user_image, anchor="w", command=window.settings_frame_button_event)
+                                                      image=window.settings_image, anchor="w", command=window.settings_frame_button_event)
         window.settings_frame_button.grid(row=4, column=0, sticky="ew")
 
         window.appearance_mode_menu = customtkinter.CTkOptionMenu(window.navigation_frame, values=["Light", "Dark", "System"],
@@ -68,14 +94,13 @@ class App(customtkinter.CTk):
         window.home_frame_large_image_label = customtkinter.CTkLabel(window.home_frame, text="", image=window.large_test_image)
         window.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
-        window.home_frame_button_1 = customtkinter.CTkButton(window.home_frame, text="", image=window.image_icon_image)
-        window.home_frame_button_1.grid(row=1, column=0, padx=20, pady=10)
+        window.home_frame_adapter_select = customtkinter.CTkOptionMenu(window.home_frame, values=adapter_names,
+                                                                       command=window.change_appearance_mode_event)
+        window.home_frame_adapter_select.grid(row=1, column=0, padx=20, pady=10)
         window.home_frame_button_2 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="right")
         window.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
         window.home_frame_button_3 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="top")
         window.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
-        window.home_frame_button_4 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="bottom", anchor="w")
-        window.home_frame_button_4.grid(row=4, column=0, padx=20, pady=10)
 
         # create second frame
         window.second_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
@@ -127,7 +152,6 @@ class App(customtkinter.CTk):
 
     def change_appearance_mode_event(window, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
-
 
 if __name__ == "__main__":
     app = App()

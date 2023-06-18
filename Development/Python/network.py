@@ -46,3 +46,21 @@ def get_network_adapters_info():
     output_file = os.path.join(output_dir, 'network_adapters.json')
     with open(output_file, 'w') as file:
         json.dump(adapters, file, indent=4)
+
+
+def network_adapter_select_function():
+    def get_network_adapter_names(window):
+        # Load network adapters from JSON file
+        with open(json_file_path) as file:
+            adapters = json.load(file)
+
+        # Extract adapter names
+        adapter_names = [adapter['name'] for adapter in adapters]
+
+        return adapter_names
+
+    # Definiere den Pfad zur network_adapters.json-Datei
+    json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator',
+                                  'network_adapters.json')
+
+    adapter_names = get_network_adapter_names(window)
