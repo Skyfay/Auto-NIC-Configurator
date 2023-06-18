@@ -33,7 +33,7 @@ class App(customtkinter.CTk):
         # Gui
         window.title("") # Windows titel
         window.minsize(700, 450) # minimum size from the window
-        window.geometry("700x450") # startup size from the window
+        window.geometry("750x450") # startup size from the window
         window.iconbitmap("assets/icon/transparent.ico") # header icon
 
         # set grid layout 1x2
