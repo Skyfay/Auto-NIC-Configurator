@@ -4,7 +4,6 @@ import json
 from PIL import Image
 
 from network import get_network_adapters_info # import the network funktion
-from network import network_adapter_select_function # import the network funktion
 
 # Aufruf der Funktion, um die Informationen abzurufen
 get_network_adapters_info()
