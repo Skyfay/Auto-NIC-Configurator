@@ -4,10 +4,17 @@ import json
 from PIL import Image
 
 from network_collector import get_network_adapters_info
-from network_viewer import network_adapter_select_event
+from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
+def initialize_adapter_select_placeholder(window):
+    placeholder_text = "Select Adapter"
+    window.home_frame_adapter_select.set(placeholder_text)
+    window.home_frame_adapter_select.configure(state="readonly")
+
+def update_adapter_select_values(window, adapter_names):
+     window.home_frame_adapter_select.configure(values=adapter_names)
 
 class App(customtkinter.CTk):
     def __init__(window):
@@ -99,6 +106,9 @@ class App(customtkinter.CTk):
                                                                            adapter: network_adapter_select_event(window,
                                                                                                                  adapter))
         window.home_frame_adapter_select.grid(row=1, column=0, padx=20, pady=10)
+
+        # Aufruf der Funktion zum Initialisieren des Platzhalterss
+        initialize_adapter_select_placeholder(window)
 
         window.adapter_info_label = customtkinter.CTkLabel(window.home_frame, text="", font=customtkinter.CTkFont(size=12))
         window.adapter_info_label.grid(row=2, column=0, padx=20, pady=10)
