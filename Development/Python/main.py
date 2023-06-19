@@ -3,17 +3,19 @@ import os
 import json
 from PIL import Image
 
-from network import get_network_adapters_info # import the network funktion
+from network_collector import get_network_adapters_info
+from network_viewer import network_adapter_select_event
 
-# Aufruf der Funktion, um die Informationen abzurufen
+# Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
+print("Network information collected.")
 
 class App(customtkinter.CTk):
     def __init__(window):
         super().__init__()
 
         # Get Network Adapter for dropdown menu to select
-        def get_network_adapter_names(window):
+        def get_network_adapter_names():
             # Load network adapters from JSON file
             with open(json_file_path) as file:
                 adapters = json.load(file)
@@ -27,7 +29,7 @@ class App(customtkinter.CTk):
         json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator',
                                       'network_adapters.json')
 
-        adapter_names = get_network_adapter_names(window)
+        adapter_names = get_network_adapter_names()
 
         # Gui
         window.title("") # Windows titel
@@ -94,12 +96,18 @@ class App(customtkinter.CTk):
         window.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
         window.home_frame_adapter_select = customtkinter.CTkOptionMenu(window.home_frame, values=adapter_names,
-                                                                       command=window.change_appearance_mode_event)
+                                                                       command=lambda
+                                                                           adapter: network_adapter_select_event(window,
+                                                                                                                 adapter))
         window.home_frame_adapter_select.grid(row=1, column=0, padx=20, pady=10)
+
+        window.adapter_info_label = customtkinter.CTkLabel(window.home_frame, text="", font=customtkinter.CTkFont(size=12))
+        window.adapter_info_label.grid(row=2, column=0, padx=20, pady=10)
+
         window.home_frame_button_2 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="right")
-        window.home_frame_button_2.grid(row=2, column=0, padx=20, pady=10)
+        window.home_frame_button_2.grid(row=3, column=0, padx=20, pady=10)
         window.home_frame_button_3 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="top")
-        window.home_frame_button_3.grid(row=3, column=0, padx=20, pady=10)
+        window.home_frame_button_3.grid(row=4, column=0, padx=20, pady=10)
 
         # create second frame
         window.second_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
