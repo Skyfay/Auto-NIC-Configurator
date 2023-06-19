@@ -8,7 +8,6 @@ from network_viewer import network_adapter_select_event
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
-print("Network information collected.")
 
 class App(customtkinter.CTk):
     def __init__(window):
