@@ -5,6 +5,7 @@ from PIL import Image
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
+from support import send_discord_webhook, send_message_to_webhook
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -50,6 +51,7 @@ class App(customtkinter.CTk):
         # load images with light and dark mode image
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/icon")
         window.logo_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "ethernet.png")), size=(26, 26))
+        window.support_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "support.png")), size=(26, 26))
         window.large_test_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "large_test_image.png")), size=(500, 150))
         window.image_icon_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20))
         window.home_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "home_dark.png")),
@@ -126,6 +128,32 @@ class App(customtkinter.CTk):
 
         # create settings frame
         window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+
+        # create settings frame support label
+        window.settings_frame_support_label = customtkinter.CTkLabel(window.settings_frame, text="Support",
+                                                                     image=window.support_image,
+                                                                     compound="left",
+                                                                     font=customtkinter.CTkFont(size=15, weight="bold"))
+        window.settings_frame_support_label.grid(row=0, column=0, padx=20, pady=10)
+
+        # create input boxes
+        window.name_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.name_entry.grid(row=1, column=0, padx=20, pady=5)
+
+        window.email_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.email_entry.grid(row=2, column=0, padx=20, pady=5)
+
+        window.subject_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.subject_entry.grid(row=3, column=0, padx=20, pady=5)
+
+        window.message_textbox = customtkinter.CTkTextbox(window.settings_frame, width=125, height=125, wrap="word")
+        window.message_textbox.grid(row=4, column=0, padx=20, pady=5)
+
+        window.message_entry = customtkinter.CTkButton(window.settings_frame, text="Senden", command=lambda: send_message_to_webhook(window))
+        window.message_entry.grid(row=5, column=0, padx=20, pady=10)
+
+        # select default frame
+        window.select_frame_by_name("home")
 
         # select default frame
         window.select_frame_by_name("home")
