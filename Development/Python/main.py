@@ -137,16 +137,16 @@ class App(customtkinter.CTk):
         window.settings_frame_support_label.grid(row=0, column=0, padx=20, pady=10)
 
         # create input boxes
-        window.name_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.name_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
         window.name_entry.grid(row=1, column=0, padx=20, pady=5)
 
-        window.email_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.email_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
         window.email_entry.grid(row=2, column=0, padx=20, pady=5)
 
-        window.subject_entry = customtkinter.CTkEntry(window.settings_frame, width=125)
+        window.subject_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
         window.subject_entry.grid(row=3, column=0, padx=20, pady=5)
 
-        window.message_textbox = customtkinter.CTkTextbox(window.settings_frame, width=125, height=125, wrap="word")
+        window.message_textbox = customtkinter.CTkTextbox(window.settings_frame, width=200, height=200, wrap="word")
         window.message_textbox.grid(row=4, column=0, padx=20, pady=5)
 
         window.message_entry = customtkinter.CTkButton(window.settings_frame, text="Senden", command=lambda: send_message_to_webhook(window))
