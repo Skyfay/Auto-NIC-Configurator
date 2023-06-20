@@ -40,8 +40,8 @@ class App(customtkinter.CTk):
 
         # Gui
         window.title("") # Windows titel
-        window.minsize(700, 450) # minimum size from the window
-        window.geometry("750x450") # startup size from the window
+        window.minsize(700, 475) # minimum size from the window
+        window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/transparent.ico") # header icon
 
         # set grid layout 1x2
@@ -115,11 +115,6 @@ class App(customtkinter.CTk):
         window.adapter_info_label = customtkinter.CTkLabel(window.home_frame, text="", font=customtkinter.CTkFont(size=12))
         window.adapter_info_label.grid(row=2, column=0, padx=20, pady=10)
 
-        window.home_frame_button_2 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="right")
-        window.home_frame_button_2.grid(row=3, column=0, padx=20, pady=10)
-        window.home_frame_button_3 = customtkinter.CTkButton(window.home_frame, text="CTkButton", image=window.image_icon_image, compound="top")
-        window.home_frame_button_3.grid(row=4, column=0, padx=20, pady=10)
-
         # create second frame
         window.second_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
 
@@ -128,26 +123,29 @@ class App(customtkinter.CTk):
 
         # create settings frame
         window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+        window.settings_frame.grid_columnconfigure(0, weight=1)  # Zentriert die Spalte
 
         # create settings frame support label
         window.settings_frame_support_label = customtkinter.CTkLabel(window.settings_frame, text="Support",
                                                                      image=window.support_image,
                                                                      compound="left",
-                                                                     font=customtkinter.CTkFont(size=15, weight="bold"))
+                                                                     font=customtkinter.CTkFont(size=15, weight="bold"),
+                                                                     padx=10) # Abstand zwischen Bild und Text
         window.settings_frame_support_label.grid(row=0, column=0, padx=20, pady=10)
 
         # create input boxes
-        window.name_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
+        window.name_entry = customtkinter.CTkEntry(window.settings_frame, width=200, placeholder_text="Your Name")
         window.name_entry.grid(row=1, column=0, padx=20, pady=5)
 
-        window.email_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
+        window.email_entry = customtkinter.CTkEntry(window.settings_frame, width=200, placeholder_text="Email Adress")
         window.email_entry.grid(row=2, column=0, padx=20, pady=5)
 
-        window.subject_entry = customtkinter.CTkEntry(window.settings_frame, width=200)
+        window.subject_entry = customtkinter.CTkEntry(window.settings_frame, width=200, placeholder_text="Subject")
         window.subject_entry.grid(row=3, column=0, padx=20, pady=5)
 
-        window.message_textbox = customtkinter.CTkTextbox(window.settings_frame, width=200, height=200, wrap="word")
+        window.message_textbox = customtkinter.CTkTextbox(window.settings_frame, width=200, height=200, wrap="word", fg_color="#343638", border_width=2, border_color="#565b5e")
         window.message_textbox.grid(row=4, column=0, padx=20, pady=5)
+        # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
 
         window.message_entry = customtkinter.CTkButton(window.settings_frame, text="Senden", command=lambda: send_message_to_webhook(window))
         window.message_entry.grid(row=5, column=0, padx=20, pady=10)

@@ -13,13 +13,14 @@ def check_internet_connection():
     except (urllib.error.URLError, socket.timeout):
         return False
 
-if check_internet_connection():
-    print("Es besteht eine Internetverbindung.")
-else:
-    print("Es besteht keine Internetverbindung.")
+check_internet_connection()
+
+#if check_internet_connection():
+    #print("Es besteht eine Internetverbindung.")
+#else:
+   # print("Es besteht keine Internetverbindung.")
 
 # Support
-
 def send_discord_webhook(webhook_url, name, email, subject, message):
     embed = {
         "title": f"Neue Nachricht von {name}",
@@ -41,6 +42,14 @@ def send_discord_webhook(webhook_url, name, email, subject, message):
 
 
 def send_message_to_webhook(window):
+    # Überprüfe die Internetverbindung
+    if not check_internet_connection():
+        error_label = customtkinter.CTkLabel(window.settings_frame, text="No internet connection.", text_color="#ff4155")
+        error_label.grid(row=6, column=0, padx=20, pady=5)
+
+        window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
+        return
+
     webhook_url = "https://discord.com/api/webhooks/1120714355261067346/HtIrVWGpdeAwMu9OQ002kWw7QlKO3Zr-tGzDvD0aeFuYpTXwXnw6zHYAQEGKJ4PEaGo5"
 
     name = window.name_entry.get()
@@ -50,15 +59,16 @@ def send_message_to_webhook(window):
 
     # Überprüfe, ob alle Felder ausgefüllt sind
     if not name or not email or not subject or not message:
-        error_label = customtkinter.CTkLabel(window.settings_frame, text="Bitte füllen Sie alle Felder aus.", fg="red")
+        error_label = customtkinter.CTkLabel(window.settings_frame, text="Please fill in all fields.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
+
         window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
         return
 
     send_discord_webhook(webhook_url, name, email, subject, message)
 
     # Success Label
-    success_label = customtkinter.CTkLabel(window.settings_frame, text="Webhook-Nachricht erfolgreich gesendet.",
+    success_label = customtkinter.CTkLabel(window.settings_frame, text="Support message sent successfully.", text_color="#44ff41",
                                            font=("TkDefaultFont", 12, "bold"))
     success_label.grid(row=6, column=0, padx=20, pady=5)
     window.after(3000, success_label.destroy)  # Entferne die Erfolgsmeldung nach 3 Sekunden

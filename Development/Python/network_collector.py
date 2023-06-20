@@ -27,7 +27,7 @@ def get_default_gateway():
                 gateway_match = re.search(r'Standardgateway[.:]\s+(\d+\.\d+\.\d+\.\d+)', adapter)
                 if gateway_match:
                     gateway = gateway_match.group(1)
-                    print(f"Adapter: {adapter_description}, Gateway: {gateway}")
+                   # print(f"Adapter: {adapter_description}, Gateway: {gateway}")
 
 get_default_gateway()
 
