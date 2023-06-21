@@ -22,8 +22,8 @@ def network_adapter_select_event(window, selected_adapter):
     else:
         window.adapter_info_label.config(text="No information available")
 
-   # timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-   # print(f"Log: [{timestamp}] - Selected other network adapter")
+    timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"Log: [{timestamp}] - Selected other network adapter")
 
 # Placeholder Network adapter select
 
