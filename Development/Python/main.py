@@ -6,19 +6,7 @@ from PIL import Image
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 from support import send_discord_webhook, send_message_to_webhook
-from appearance import change_appearance_mode_event_textbox_support
-
-
-# Write color settings to the json file.
-def save_color_mode_settings(window, color_mode):
-    settings_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
-    os.makedirs(settings_dir, exist_ok=True)
-    settings_file = os.path.join(settings_dir, 'system.json')
-
-    # Speichern der Farbeinstellungen
-    settings_data = {'color_mode': color_mode}
-    with open(settings_file, 'w') as file:
-        json.dump(settings_data, file)
+from appearance import change_appearance_mode_event_textbox_support, save_color_mode_settings
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -137,6 +125,7 @@ class App(customtkinter.CTk):
 
         window.appearance_mode_menu = customtkinter.CTkOptionMenu(window.navigation_frame, values=["Light", "Dark", "System"],
                                                                 command=window.change_appearance_mode_event)
+        window.appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
         window.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
         # create home frame
