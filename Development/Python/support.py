@@ -43,7 +43,7 @@ if check_internet_connection():
 else:
     print(f"Log: [{timestamp}] - There is no internet connection.")
 
-# Check if the user has entered a valid email address (support entry
+# Check if the user has entered a valid email address (support entry)
 def is_valid_email(email):
     email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
     return re.match(email_pattern, email)
@@ -100,7 +100,7 @@ def send_message_to_webhook(window):
 
     # Check if the user has entered a valid email address if not then display an error message (check 3/4)
     if not is_valid_email(email):
-        error_label = customtkinter.CTkLabel(window.settings_frame, text="Bitte gib eine richtige E-Mail Adresse an.", text_color="#ff4155")
+        error_label = customtkinter.CTkLabel(window.settings_frame, text="Please enter a correct e-mail address.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
         window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
         return
