@@ -52,9 +52,9 @@ class App(customtkinter.CTk):
                 color_mode = 'Dark'
 
             if color_mode == 'Light':
-                appearance_mode = 'lightmode'
+                appearance_mode = 'light'
             elif color_mode == 'Dark':
-                appearance_mode = 'darkmode'
+                appearance_mode = 'dark'
             else:
                 appearance_mode = 'system'
 
