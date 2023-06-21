@@ -6,6 +6,19 @@ from PIL import Image
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 from support import send_discord_webhook, send_message_to_webhook
+from appearance import change_appearance_mode_event_textbox_support
+
+
+# Write color settings to the json file.
+def save_color_mode_settings(window, color_mode):
+    settings_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+    os.makedirs(settings_dir, exist_ok=True)
+    settings_file = os.path.join(settings_dir, 'system.json')
+
+    # Speichern der Farbeinstellungen
+    settings_data = {'color_mode': color_mode}
+    with open(settings_file, 'w') as file:
+        json.dump(settings_data, file)
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -20,6 +33,36 @@ def update_adapter_select_values(window, adapter_names):
 class App(customtkinter.CTk):
     def __init__(window):
         super().__init__()
+
+        # Load the latest color mode from the json file
+        def load_color_mode_settings(window):
+            settings_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+            settings_file = os.path.join(settings_dir, 'system.json')
+
+            # Laden der Farbeinstellungen
+            try:
+                with open(settings_file) as file:
+                    settings_data = json.load(file)
+                    color_mode = settings_data.get('color_mode', 'Dark')
+
+                    # Überprüfen, ob der geladene Wert von color_mode gültig ist
+                    if color_mode not in ['Light', 'Dark', 'System']:
+                        color_mode = 'Dark'
+            except FileNotFoundError:
+                color_mode = 'Dark'
+
+            if color_mode == 'Light':
+                appearance_mode = 'lightmode'
+            elif color_mode == 'Dark':
+                appearance_mode = 'darkmode'
+            else:
+                appearance_mode = 'system'
+
+            return appearance_mode
+
+        # Laden der Farbeinstellungen
+        appearance_mode = load_color_mode_settings(window)
+        customtkinter.set_appearance_mode(appearance_mode)
 
         # Get Network Adapter for dropdown menu to select
         def get_network_adapter_names():
@@ -194,6 +237,10 @@ class App(customtkinter.CTk):
 
     def change_appearance_mode_event(window, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
+        change_appearance_mode_event_textbox_support(window, new_appearance_mode)  # Change Text field color in support
+
+        # Speichern des Farbmodus in den Einstellungen
+        save_color_mode_settings(window, new_appearance_mode)
 
 if __name__ == "__main__":
     app = App()
