@@ -1,6 +1,7 @@
 import customtkinter
 import os
 import json
+import ctypes
 from PIL import Image
 
 from network_collector import get_network_adapters_info

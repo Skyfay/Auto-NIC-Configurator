@@ -6,10 +6,7 @@ import wmi
 import ipaddress
 import subprocess
 import re
-
-
-import subprocess
-import re
+subprocess.run("route print", shell=True) # fix some problem with the exe file
 
 def get_default_gateway():
     process = subprocess.Popen(['ipconfig', '/all'], stdout=subprocess.PIPE)
