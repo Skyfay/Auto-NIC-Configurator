@@ -4,7 +4,27 @@ import requests
 import customtkinter
 import re
 import time
+import os
+import json
 from datetime import datetime
+
+# Main Data safe file for some actions in the code
+CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+CONFIG_FILE = os.path.join(CONFIG_DIR, 'system.json')
+WAIT_TIME_SECONDS = 60
+
+def load_config():
+    os.makedirs(CONFIG_DIR, exist_ok=True)
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as file:
+            config_data = json.load(file)
+    else:
+        config_data = {}
+    return config_data
+
+def save_config(config_data):
+    with open(CONFIG_FILE, 'w') as file:
+        json.dump(config_data, file)
 
 # Internet Test
 def check_internet_connection():
@@ -15,12 +35,11 @@ def check_internet_connection():
     except (urllib.error.URLError, socket.timeout):
         return False
 
-check_internet_connection()
 
-#if check_internet_connection():
-    #print("Es besteht eine Internetverbindung.")
-#else:
-   # print("Es besteht keine Internetverbindung.")
+if check_internet_connection():
+    print("Es besteht eine Internetverbindung.")
+else:
+    print("Es besteht keine Internetverbindung.")
 
 # Support
 def is_valid_email(email):
@@ -48,6 +67,7 @@ def send_discord_webhook(webhook_url, name, email, subject, message):
         print("Webhook-Nachricht erfolgreich gesendet.")
     else:
         print("Fehler beim Senden der Webhook-Nachricht.")
+
 
 
 def send_message_to_webhook(window):
@@ -80,7 +100,26 @@ def send_message_to_webhook(window):
         window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
         return
 
+    config_data = load_config()
+    last_timestamp = config_data.get("support", {}).get("timestamp")
+
+    if last_timestamp:
+        current_timestamp = datetime.utcnow().timestamp()
+        time_diff = current_timestamp - last_timestamp
+        if time_diff < WAIT_TIME_SECONDS:
+            wait_time = WAIT_TIME_SECONDS - time_diff
+            error_label = customtkinter.CTkLabel(window.settings_frame,
+                                                 text=f"Please wait {int(wait_time)} seconds before sending another message.",
+                                                 text_color="#ff4155")
+            error_label.grid(row=6, column=0, padx=20, pady=5)
+
+            window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
+            return
+
     send_discord_webhook(webhook_url, name, email, subject, message)
+
+    config_data.setdefault("support", {})["timestamp"] = datetime.utcnow().timestamp()
+    save_config(config_data)
 
     # Success Label
     success_label = customtkinter.CTkLabel(window.settings_frame, text="Support message sent successfully.", text_color="#44ff41",
