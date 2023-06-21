@@ -4,6 +4,7 @@ import requests
 import customtkinter
 import re
 import time
+from datetime import datetime
 
 # Internet Test
 def check_internet_connection():
@@ -27,6 +28,7 @@ def is_valid_email(email):
     return re.match(email_pattern, email)
 
 def send_discord_webhook(webhook_url, name, email, subject, message):
+    timestamp = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.%fZ")
     embed = {
         "title": f"Neue Nachricht von {name}",
         "color": 0x1f6aa5,
@@ -35,7 +37,8 @@ def send_discord_webhook(webhook_url, name, email, subject, message):
             {"name": "E-Mail", "value": email},
             {"name": "Betreff", "value": subject},
             {"name": "Nachricht", "value": message}
-        ]
+        ],
+        "timestamp": timestamp  # Füge den Timestamp hinzu
     }
     data = {
         "embeds": [embed]
