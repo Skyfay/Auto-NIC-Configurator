@@ -2,6 +2,7 @@ import urllib.request
 import socket
 import requests
 import customtkinter
+import re
 import time
 
 # Internet Test
@@ -21,9 +22,14 @@ check_internet_connection()
    # print("Es besteht keine Internetverbindung.")
 
 # Support
+def is_valid_email(email):
+    email_pattern = r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+    return re.match(email_pattern, email)
+
 def send_discord_webhook(webhook_url, name, email, subject, message):
     embed = {
         "title": f"Neue Nachricht von {name}",
+        "color": 0x1f6aa5,
         "fields": [
             {"name": "Name", "value": name},
             {"name": "E-Mail", "value": email},
@@ -62,6 +68,12 @@ def send_message_to_webhook(window):
         error_label = customtkinter.CTkLabel(window.settings_frame, text="Please fill in all fields.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
 
+        window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
+        return
+    # Überprüfe, ob es eine gültige E-Mail Adresse ist
+    if not is_valid_email(email):
+        error_label = customtkinter.CTkLabel(window.settings_frame, text="Bitte gib eine richtige E-Mail Adresse an.", text_color="#ff4155")
+        error_label.grid(row=6, column=0, padx=20, pady=5)
         window.after(3000, error_label.destroy)  # Entferne die Fehlermeldung nach 3 Sekunden
         return
 
