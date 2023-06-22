@@ -71,10 +71,10 @@ class App(customtkinter.CTk):
         adapter_names = get_network_adapter_names()
 
         # Gui
-        window.title("") # Windows titel
+        window.title("v.0.1.0 - alpha") # Windows titel
         window.minsize(700, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
-        window.iconbitmap("assets/icon/transparent.ico") # header icon
+        window.iconbitmap("assets/icon/version.ico") # header icon
 
         # set grid layout 1x2
         window.grid_rowconfigure(0, weight=1)
