@@ -1,9 +1,10 @@
 import json
 import os
 import datetime
-import customtkinter
 
+# Get the network adapters information from the json file and view it
 def network_adapter_select_event(window, selected_adapter):
+    # Set the path where the json file is located
     json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator', 'network_adapters.json')
 
     with open(json_file_path) as file:
@@ -11,8 +12,6 @@ def network_adapter_select_event(window, selected_adapter):
     selected_adapter_info = next((adapter for adapter in adapters if adapter['name'] == selected_adapter), None)
     if selected_adapter_info:
         info_text = ""
-        if 'description' in selected_adapter_info and selected_adapter_info['description'] != 'Unknown':
-            info_text += f"{selected_adapter_info['description']}\n"
         info_text += f"IP Address: {selected_adapter_info['ip']}\n"
         info_text += f"Subnet Mask: {selected_adapter_info['subnet_mask']}\n"
         info_text += f"Gateway: {selected_adapter_info['gateway']}\n"
@@ -22,10 +21,10 @@ def network_adapter_select_event(window, selected_adapter):
     else:
         window.adapter_info_label.config(text="No information available")
 
+    # Log when the user selected another network adapter
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"Log: [{timestamp}] - Selected other network adapter")
 
-# Placeholder Network adapter select
 
 def initialize_adapter_select_placeholder(window):
     placeholder_text = "Select Adapter"
