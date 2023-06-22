@@ -11,13 +11,13 @@ def network_adapter_select_event(window, selected_adapter):
     selected_adapter_info = next((adapter for adapter in adapters if adapter['name'] == selected_adapter), None)
     if selected_adapter_info:
         info_text = ""
-        if selected_adapter_info['description'] != 'Unknown':
+        if 'description' in selected_adapter_info and selected_adapter_info['description'] != 'Unknown':
             info_text += f"{selected_adapter_info['description']}\n"
         info_text += f"IP Address: {selected_adapter_info['ip']}\n"
         info_text += f"Subnet Mask: {selected_adapter_info['subnet_mask']}\n"
         info_text += f"Gateway: {selected_adapter_info['gateway']}\n"
         info_text += f"DNS Servers: {', '.join(selected_adapter_info['dns_servers'])}\n"
-        info_text += f"Speed: {selected_adapter_info['speed']}"
+        info_text += f"MAC Address: {selected_adapter_info['mac']}"
         window.adapter_info_label.configure(text=info_text)
     else:
         window.adapter_info_label.config(text="No information available")

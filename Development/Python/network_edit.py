@@ -1,58 +1,30 @@
 import wmi
-import time
 
-def set_network_adapter_config(adapter_name, ip_address=None, subnet_mask=None, gateway=None, dhcp_enabled=True, dns_servers=None):
-    # Verbindung zur WMI-Instanz herstellen
-    c = wmi.WMI()
+# This part need administrator privileges
+# https://learn.microsoft.com/de-de/windows/win32/cimwin32prov/win32-networkadapterconfiguration?redirectedfrom=MSDN
 
-    # Netzwerkadapter finden
-    adapters = c.Win32_NetworkAdapterConfiguration(Index=adapter_name)
-    if len(adapters) == 0:
-        print("Adapter nicht gefunden.")
-        return
+# Obtain network adaptors configurations
+nic_configs = wmi.WMI().Win32_NetworkAdapterConfiguration(IPEnabled=True)
 
-    adapter = adapters[0]
+# First network adaptor
+nic = nic_configs[0]
 
-    # Vorhandene Konfiguration entfernen
-    adapter.EnableDHCP()  # DHCP aktivieren
+# IP address, subnetmask and gateway values should be unicode objects
+ip = u'192.168.0.11'
+subnetmask = u'255.255.255.0'
+gateway = u'192.168.0.1'
 
-    # Statische IP-Adresse setzen
-    if ip_address and subnet_mask:
-        adapter.EnableStatic()
-        adapter.SetIPAddress(IPAddress=[ip_address])
-        adapter.SetIPSubnetMask(SubnetMask=[subnet_mask])
+# DNS server addresses should be unicode objects
+dns_servers = [u'8.8.8.8', u'8.8.4.4']  # Example DNS server addresses
 
-    # Gateway setzen
-    if gateway:
-        adapter.SetGateways(DefaultIPGateway=[gateway])
+# Set IP address, subnetmask and default gateway
+# Note: EnableStatic() and SetGateways() methods require *lists* of values to be passed
+# Set DNS server addresses
+nic.EnableStatic(IPAddress=[ip],SubnetMask=[subnetmask])
+nic.SetGateways(DefaultIPGateway=[gateway])
+nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
 
-    # DNS-Server setzen
-    if dns_servers:
-        adapter.SetDNSServerSearchOrder(dns_servers)
-
-    # DHCP aktivieren/deaktivieren
-    if not dhcp_enabled:
-        adapter.EnableStatic()
-        adapter.SetIPAddress(IPAddress=[ip_address])
-        adapter.SetIPSubnetMask(SubnetMask=[subnet_mask])
-        adapter.SetDNSServerSearchOrder(dns_servers)
-
-    # Kurze Wartezeit, um Änderungen anzuwenden
-    time.sleep(5)
-
-    # IP-Einstellungen abrufen und überprüfen
-    adapter = c.Win32_NetworkAdapterConfiguration(Index=adapter_name)[0]
-    if adapter.IPAddress and adapter.IPAddress[0] == ip_address:
-        print("IP-Einstellungen erfolgreich aktualisiert.")
-    else:
-        print("Fehler beim Aktualisieren der IP-Einstellungen.")
-
-# Beispielaufruf: Netzwerkadapter "Ethernet" konfigurieren
-adapter_name = 0  # Index des Netzwerkadapters
-ip_address = '192.168.0.100'
-subnet_mask = '255.255.255.0'
-gateway = '192.168.0.1'
-dhcp_enabled = False
-dns_servers = ['8.8.8.8', '8.8.4.4']
-
-set_network_adapter_config(adapter_name, ip_address, subnet_mask, gateway, dhcp_enabled, dns_servers)
+# Enable DHCP
+nic.EnableDHCP()
+# Reset DNS server to obtain automatically (DHCP)
+nic.SetDNSServerSearchOrder(DNSServerSearchOrder=[])
