@@ -3,7 +3,7 @@ import os
 import json
 
 # Write color settings to the json file.
-def save_color_mode_settings(window, color_mode):
+def save_color_mode_support(window, color_mode):
     settings_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
     os.makedirs(settings_dir, exist_ok=True)
     settings_file = os.path.join(settings_dir, 'system.json')

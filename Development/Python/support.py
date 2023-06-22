@@ -75,7 +75,7 @@ def send_discord_webhook(webhook_url, name, email, subject, message):
 def send_message_to_webhook(window):
     # Check if the user has an internet connection if not then display an error message (check 1/4)
     if not check_internet_connection():
-        error_label = customtkinter.CTkLabel(window.settings_frame, text="No internet connection.", text_color="#ff4155")
+        error_label = customtkinter.CTkLabel(window.support_frame, text="No internet connection.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
 
         window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
@@ -92,7 +92,7 @@ def send_message_to_webhook(window):
 
     # Check if the user has filled in all fields if not then display an error message (check 2/4)
     if not name or not email or not subject or not message:
-        error_label = customtkinter.CTkLabel(window.settings_frame, text="Please fill in all fields.", text_color="#ff4155")
+        error_label = customtkinter.CTkLabel(window.support_frame, text="Please fill in all fields.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
 
         window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
@@ -100,7 +100,7 @@ def send_message_to_webhook(window):
 
     # Check if the user has entered a valid email address if not then display an error message (check 3/4)
     if not is_valid_email(email):
-        error_label = customtkinter.CTkLabel(window.settings_frame, text="Please enter a correct e-mail address.", text_color="#ff4155")
+        error_label = customtkinter.CTkLabel(window.support_frame, text="Please enter a correct e-mail address.", text_color="#ff4155")
         error_label.grid(row=6, column=0, padx=20, pady=5)
         window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
         return
@@ -114,7 +114,7 @@ def send_message_to_webhook(window):
         time_diff = current_timestamp - last_timestamp
         if time_diff < WAIT_TIME_SECONDS:
             wait_time = WAIT_TIME_SECONDS - time_diff
-            error_label = customtkinter.CTkLabel(window.settings_frame,
+            error_label = customtkinter.CTkLabel(window.support_frame,
                                                  text=f"Please wait {int(wait_time)} seconds before sending another message.",
                                                  text_color="#ff4155")
             error_label.grid(row=6, column=0, padx=20, pady=5)
@@ -130,7 +130,7 @@ def send_message_to_webhook(window):
     save_config(config_data)
 
     # Success message (displayed if the message was sent successfully)
-    success_label = customtkinter.CTkLabel(window.settings_frame, text="Support message sent successfully.", text_color="#44ff41",
+    success_label = customtkinter.CTkLabel(window.support_frame, text="Support message sent successfully.", text_color="#44ff41",
                                            font=("TkDefaultFont", 12, "bold"))
     success_label.grid(row=6, column=0, padx=20, pady=5)
     window.after(3000, success_label.destroy) # Remove the success message after 3 seconds

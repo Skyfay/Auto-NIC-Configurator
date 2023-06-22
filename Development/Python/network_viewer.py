@@ -25,7 +25,7 @@ def network_adapter_select_event(window, selected_adapter):
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"Log: [{timestamp}] - Selected other network adapter")
 
-
+# Functions to make an adapter selection placeholder
 def initialize_adapter_select_placeholder(window):
     placeholder_text = "Select Adapter"
     window.home_frame_adapter_select.set(placeholder_text)
