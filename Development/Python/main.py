@@ -7,6 +7,7 @@ from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
+from settings import delete_database_dir
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -233,7 +234,7 @@ class App(customtkinter.CTk):
         # Button to change the appearance mode
         window.settings_frame_clear_cache = customtkinter.CTkButton(window.settings_pre_frame1,
                                                                 text="Clear Cache",
-                                                                command=window.change_appearance_mode_event)
+                                                                command=delete_database_dir)
         window.settings_frame_clear_cache.grid(row=1, column=0, padx=20, pady=10)
 
         # select default frame
