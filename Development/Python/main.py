@@ -1,12 +1,11 @@
 import customtkinter
 import os
 import json
-import ctypes
 from PIL import Image
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
-from support import send_discord_webhook, send_message_to_webhook
+from support import send_message_to_webhook
 from appearance import change_appearance_mode_event_textbox_support, save_color_mode_support
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
@@ -76,7 +75,7 @@ class App(customtkinter.CTk):
         window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/version.ico") # header icon
 
-        # set grid layout 1x2
+        # set main grid layout 1x2
         window.grid_rowconfigure(0, weight=1)
         window.grid_columnconfigure(1, weight=1)
 
@@ -84,6 +83,7 @@ class App(customtkinter.CTk):
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/icon")
         window.logo_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "ethernet.png")), size=(26, 26))
         window.insupport_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "support.png")), size=(26, 26))
+        window.color_palette_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "color-palette.png")), size=(26, 26))
         window.large_test_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "large_test_image.png")), size=(500, 150))
         window.image_icon_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20))
         window.home_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "home_dark.png")),
@@ -94,8 +94,10 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "add_user_light.png")), size=(20, 20))
         window.support_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "support_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "support_light.png")), size=(20, 20))
+        window.settings_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "settings_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "settings_light.png")), size=(20, 20))
 
-        # create navigation frame left side
+        # create left navigation frame
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
         window.navigation_frame.grid(row=0, column=0, sticky="nsew")
         window.navigation_frame.grid_rowconfigure(5, weight=1)
@@ -114,20 +116,21 @@ class App(customtkinter.CTk):
                                                       image=window.chat_image, anchor="w", command=window.frame_2_button_event)
         window.frame_2_button.grid(row=2, column=0, sticky="ew")
 
-        window.frame_3_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 3",
-                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=window.add_user_image, anchor="w", command=window.frame_3_button_event)
-        window.frame_3_button.grid(row=3, column=0, sticky="ew")
-
-        window.support_frame_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="support",
+        window.support_frame_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Support",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
                                                       image=window.support_image, anchor="w", command=window.support_frame_button_event)
-        window.support_frame_button.grid(row=4, column=0, sticky="ew")
+        window.support_frame_button.grid(row=3, column=0, sticky="ew")
+
+        window.settings_frame_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Settings",
+                                                      fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                      image=window.settings_image, anchor="w", command=window.settings_frame_button_event)
+        window.settings_frame_button.grid(row=4, column=0, sticky="ew")
 
         window.appearance_mode_menu = customtkinter.CTkOptionMenu(window.navigation_frame, values=["Light", "Dark", "System"],
                                                                 command=window.change_appearance_mode_event)
         window.appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
         window.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+
 
         # create home frame
         window.home_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
@@ -151,9 +154,6 @@ class App(customtkinter.CTk):
         # create second frame
         window.second_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
 
-        # create third frame
-        window.third_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
-
         # create support frame
         window.support_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
         window.support_frame.grid_columnconfigure(0, weight=1)  # Zentriert die Spalte
@@ -165,6 +165,7 @@ class App(customtkinter.CTk):
                                                                      font=customtkinter.CTkFont(size=15, weight="bold"),
                                                                      padx=10) # Abstand zwischen Bild und Text
         window.support_frame_support_label.grid(row=0, column=0, padx=20, pady=10)
+
 
         # create input boxes
         window.name_entry = customtkinter.CTkEntry(window.support_frame, width=200, placeholder_text="Your Name")
@@ -180,8 +181,27 @@ class App(customtkinter.CTk):
         window.message_textbox.grid(row=4, column=0, padx=20, pady=5)
         # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
 
-        window.message_entry = customtkinter.CTkButton(window.support_frame, text="Senden", command=lambda: send_message_to_webhook(window))
+        window.message_entry = customtkinter.CTkButton(window.support_frame, text="Send", command=lambda: send_message_to_webhook(window))
         window.message_entry.grid(row=5, column=0, padx=20, pady=10)
+
+        # create settings frame
+        window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+        window.settings_frame.grid_columnconfigure(0, weight=1)
+        window.settings_pre_frame = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
+        window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        # Text change the appearance mode
+        window.settings_frame_appearance_label = customtkinter.CTkLabel(window.settings_pre_frame, text="App Appearance",
+                                                                    font=customtkinter.CTkFont(size=12))
+        window.settings_frame_appearance_label.grid(row=0, column=0, padx=10, pady=0)
+        # Button to change the appearance mode
+        window.settings_frame_appearance_mode_menu = customtkinter.CTkOptionMenu(window.settings_pre_frame,
+                                                                values=["Light", "Dark", "System"],
+                                                                command=window.change_appearance_mode_event,
+                                                                button_color="#975730",
+                                                                fg_color="#d07138",
+                                                                button_hover_color="#603d28")
+        window.settings_frame_appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
+        window.settings_frame_appearance_mode_menu.grid(row=0, column=1, padx=220, pady=10, sticky="ew")
 
         # select default frame
         window.select_frame_by_name("home")
@@ -193,8 +213,9 @@ class App(customtkinter.CTk):
         # set button color for selected button
         window.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
         window.frame_2_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
-        window.frame_3_button.configure(fg_color=("gray75", "gray25") if name == "frame_3" else "transparent")
         window.support_frame_button.configure(fg_color=("gray75", "gray25") if name == "support_frame" else "transparent")
+        window.settings_frame_button.configure(
+            fg_color=("gray75", "gray25") if name == "settings_frame" else "transparent")
 
         # show selected frame
         if name == "home":
@@ -205,25 +226,25 @@ class App(customtkinter.CTk):
             window.second_frame.grid(row=0, column=1, sticky="nsew")
         else:
             window.second_frame.grid_forget()
-        if name == "frame_3":
-            window.third_frame.grid(row=0, column=1, sticky="nsew")
-        else:
-            window.third_frame.grid_forget()
         if name == "support_frame":
             window.support_frame.grid(row=0, column=1, sticky="nsew")
         else:
             window.support_frame.grid_forget()
+        if name == "settings_frame":
+            window.settings_frame.grid(row=0, column=1, sticky="nsew")
+        else:
+            window.settings_frame.grid_forget()
     def home_button_event(window):
         window.select_frame_by_name("home")
 
     def frame_2_button_event(window):
         window.select_frame_by_name("frame_2")
 
-    def frame_3_button_event(window):
-        window.select_frame_by_name("frame_3")
-
     def support_frame_button_event(window):
         window.select_frame_by_name("support_frame")
+
+    def settings_frame_button_event(window):
+        window.select_frame_by_name("settings_frame")
 
     def change_appearance_mode_event(window, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
