@@ -6,7 +6,7 @@ from PIL import Image
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 from support import send_message_to_webhook
-from appearance import change_appearance_mode_event_textbox_support, save_color_mode_support
+from appearance import save_color_mode_support
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -95,6 +95,7 @@ class App(customtkinter.CTk):
         window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/version.ico") # header icon
+        customtkinter.set_default_color_theme("dark-blue") # set default color theme
 
         # set main grid layout 1x2
         window.grid_rowconfigure(0, weight=1)
@@ -198,7 +199,7 @@ class App(customtkinter.CTk):
         window.subject_entry = customtkinter.CTkEntry(window.support_frame, width=200, placeholder_text="Subject")
         window.subject_entry.grid(row=3, column=0, padx=20, pady=5)
 
-        window.message_textbox = customtkinter.CTkTextbox(window.support_frame, width=200, height=200, wrap="word", fg_color="#343638", border_width=2, border_color="#565b5e")
+        window.message_textbox = customtkinter.CTkTextbox(window.support_frame, width=200, height=200, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"))
         window.message_textbox.grid(row=4, column=0, padx=20, pady=5)
         # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
 
@@ -208,36 +209,31 @@ class App(customtkinter.CTk):
         # create settings frame
         window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
         window.settings_frame.grid_columnconfigure(0, weight=1) # 0, weight=1
-        window.settings_pre_frame = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
+        window.settings_pre_frame = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"), fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"))
         window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=5, sticky="news")
         window.settings_pre_frame.grid_columnconfigure(0, weight=1) # 0, weight=1
-        window.settings_pre_frame1 = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
+        window.settings_pre_frame1 = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"), fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"))
         window.settings_pre_frame1.grid(row=1, column=0, padx=10, pady=5, sticky="news")
         window.settings_pre_frame1.grid_columnconfigure(0, weight=1)  # 0, weight=1
         # Text change the appearance mode
         window.settings_frame_appearance_label = customtkinter.CTkLabel(window.settings_pre_frame, text="Set the App Appearance",
                                                                     font=customtkinter.CTkFont(size=12))
-        window.settings_frame_appearance_label.grid(row=0, column=0, padx=10, pady=0)
+        window.settings_frame_appearance_label.grid(row=0, column=0, padx=10, pady=5)
         # Button to change the appearance mode
         window.settings_frame_appearance_mode_menu = customtkinter.CTkOptionMenu(window.settings_pre_frame,
                                                                 values=["Light", "Dark", "System"],
-                                                                command=window.change_appearance_mode_event,
-                                                                button_color="#975730",
-                                                                fg_color="#d07138",
-                                                                button_hover_color="#603d28")
+                                                                command=window.change_appearance_mode_event)
         window.settings_frame_appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
         window.settings_frame_appearance_mode_menu.grid(row=1, column=0, padx=20, pady=10)
 
         # Text change the appearance mode
         window.settings_frame_clear_cache_label = customtkinter.CTkLabel(window.settings_pre_frame1, text="In case of problems it may help to clear the cache",
                                                                     font=customtkinter.CTkFont(size=12))
-        window.settings_frame_clear_cache_label.grid(row=0, column=0, padx=10, pady=0)
+        window.settings_frame_clear_cache_label.grid(row=0, column=0, padx=10, pady=5)
         # Button to change the appearance mode
         window.settings_frame_clear_cache = customtkinter.CTkButton(window.settings_pre_frame1,
                                                                 text="Clear Cache",
-                                                                command=window.change_appearance_mode_event,
-                                                                fg_color="#d07138",
-                                                                hover_color="#603d28")
+                                                                command=window.change_appearance_mode_event)
         window.settings_frame_clear_cache.grid(row=1, column=0, padx=20, pady=10)
 
         # select default frame
@@ -285,7 +281,6 @@ class App(customtkinter.CTk):
 
     def change_appearance_mode_event(window, new_appearance_mode):
         customtkinter.set_appearance_mode(new_appearance_mode)
-        change_appearance_mode_event_textbox_support(window, new_appearance_mode)  # Change Text field color in support
 
         # Speichern des Farbmodus in den Einstellungen
         save_color_mode_support(window, new_appearance_mode)
