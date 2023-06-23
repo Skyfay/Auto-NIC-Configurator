@@ -69,9 +69,30 @@ class App(customtkinter.CTk):
 
         adapter_names = get_network_adapter_names()
 
+
+        # test to add UI elements
+        def create_settings_pre_frame(parent_frame, row, column):
+            pre_frame = customtkinter.CTkFrame(parent_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
+            pre_frame.grid(row=row, column=column, padx=10, pady=10, sticky="w")
+
+            # Text change the appearance mode
+            appearance_label = customtkinter.CTkLabel(pre_frame, text="App Appearance",
+                                                      font=customtkinter.CTkFont(size=12))
+            appearance_label.grid(row=0, column=0, padx=10, pady=0)
+
+            # Button to change the appearance mode
+            appearance_mode_menu = customtkinter.CTkOptionMenu(pre_frame, values=["Light", "Dark", "System"],
+                                                               command=window.change_appearance_mode_event,
+                                                               button_color="#975730", fg_color="#d07138",
+                                                               button_hover_color="#603d28")
+            appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
+            appearance_mode_menu.grid(row=0, column=1, padx=20, pady=10)
+
+            return pre_frame
+
         # Gui
         window.title("v.0.1.0 - alpha") # Windows titel
-        window.minsize(700, 475) # minimum size from the window
+        window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/version.ico") # header icon
 
@@ -186,9 +207,11 @@ class App(customtkinter.CTk):
 
         # create settings frame
         window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
-        window.settings_frame.grid_columnconfigure(0, weight=1)
+        window.settings_frame.grid_columnconfigure(1, weight=3) # 0, weight=1
         window.settings_pre_frame = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
-        window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+        window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        window.settings_pre_frame1 = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
+        window.settings_pre_frame1.grid(row=1, column=0, padx=10, pady=5, sticky="we")
         # Text change the appearance mode
         window.settings_frame_appearance_label = customtkinter.CTkLabel(window.settings_pre_frame, text="App Appearance",
                                                                     font=customtkinter.CTkFont(size=12))
@@ -201,7 +224,21 @@ class App(customtkinter.CTk):
                                                                 fg_color="#d07138",
                                                                 button_hover_color="#603d28")
         window.settings_frame_appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
-        window.settings_frame_appearance_mode_menu.grid(row=0, column=1, padx=220, pady=10, sticky="ew")
+        window.settings_frame_appearance_mode_menu.grid(row=0, column=1, padx=20, pady=10, sticky="e", ipadx=0 )
+
+        # Text change the appearance mode
+        window.settings_frame_appearance_label1 = customtkinter.CTkLabel(window.settings_pre_frame1, text="App Appearance test youg adfsdafsdf asdfsaf",
+                                                                    font=customtkinter.CTkFont(size=12))
+        window.settings_frame_appearance_label1.grid(row=0, column=0, padx=10, pady=0)
+        # Button to change the appearance mode
+        window.settings_frame_appearance_mode_menu1 = customtkinter.CTkOptionMenu(window.settings_pre_frame1,
+                                                                values=["Light", "Dark", "System"],
+                                                                command=window.change_appearance_mode_event,
+                                                                button_color="#975730",
+                                                                fg_color="#d07138",
+                                                                button_hover_color="#603d28")
+        window.settings_frame_appearance_mode_menu1.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
+        window.settings_frame_appearance_mode_menu1.grid(row=0, column=1, padx=20, pady=10, sticky="e", ipadx=0)
 
         # select default frame
         window.select_frame_by_name("home")
