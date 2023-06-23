@@ -207,13 +207,15 @@ class App(customtkinter.CTk):
 
         # create settings frame
         window.settings_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
-        window.settings_frame.grid_columnconfigure(1, weight=3) # 0, weight=1
+        window.settings_frame.grid_columnconfigure(0, weight=1) # 0, weight=1
         window.settings_pre_frame = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
-        window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=5, sticky="we")
+        window.settings_pre_frame.grid(row=0, column=0, padx=10, pady=5, sticky="news")
+        window.settings_pre_frame.grid_columnconfigure(0, weight=1) # 0, weight=1
         window.settings_pre_frame1 = customtkinter.CTkFrame(window.settings_frame, corner_radius=10, bg_color=("#ebebeb", "#242424"))
-        window.settings_pre_frame1.grid(row=1, column=0, padx=10, pady=5, sticky="we")
+        window.settings_pre_frame1.grid(row=1, column=0, padx=10, pady=5, sticky="news")
+        window.settings_pre_frame1.grid_columnconfigure(0, weight=1)  # 0, weight=1
         # Text change the appearance mode
-        window.settings_frame_appearance_label = customtkinter.CTkLabel(window.settings_pre_frame, text="App Appearance",
+        window.settings_frame_appearance_label = customtkinter.CTkLabel(window.settings_pre_frame, text="Set the App Appearance",
                                                                     font=customtkinter.CTkFont(size=12))
         window.settings_frame_appearance_label.grid(row=0, column=0, padx=10, pady=0)
         # Button to change the appearance mode
@@ -224,21 +226,19 @@ class App(customtkinter.CTk):
                                                                 fg_color="#d07138",
                                                                 button_hover_color="#603d28")
         window.settings_frame_appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
-        window.settings_frame_appearance_mode_menu.grid(row=0, column=1, padx=20, pady=10, sticky="e", ipadx=0 )
+        window.settings_frame_appearance_mode_menu.grid(row=1, column=0, padx=20, pady=10)
 
         # Text change the appearance mode
-        window.settings_frame_appearance_label1 = customtkinter.CTkLabel(window.settings_pre_frame1, text="App Appearance test youg adfsdafsdf asdfsaf",
+        window.settings_frame_clear_cache_label = customtkinter.CTkLabel(window.settings_pre_frame1, text="In case of problems it may help to clear the cache",
                                                                     font=customtkinter.CTkFont(size=12))
-        window.settings_frame_appearance_label1.grid(row=0, column=0, padx=10, pady=0)
+        window.settings_frame_clear_cache_label.grid(row=0, column=0, padx=10, pady=0)
         # Button to change the appearance mode
-        window.settings_frame_appearance_mode_menu1 = customtkinter.CTkOptionMenu(window.settings_pre_frame1,
-                                                                values=["Light", "Dark", "System"],
+        window.settings_frame_clear_cache = customtkinter.CTkButton(window.settings_pre_frame1,
+                                                                text="Clear Cache",
                                                                 command=window.change_appearance_mode_event,
-                                                                button_color="#975730",
                                                                 fg_color="#d07138",
-                                                                button_hover_color="#603d28")
-        window.settings_frame_appearance_mode_menu1.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
-        window.settings_frame_appearance_mode_menu1.grid(row=0, column=1, padx=20, pady=10, sticky="e", ipadx=0)
+                                                                hover_color="#603d28")
+        window.settings_frame_clear_cache.grid(row=1, column=0, padx=20, pady=10)
 
         # select default frame
         window.select_frame_by_name("home")
