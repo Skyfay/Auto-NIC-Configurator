@@ -1,4 +1,5 @@
 # Auto-NIC-Configurator (Jetzt auch mit GUI)
+**Currently a new version is in programming (with Python)**
 Mit diesem Script kannst du ganz einfach deine Netzwerk Schnittstelle auf einen bestimmten Wert setzen!
 Jetzt auch neu mit GUI!
 ----------------------------------------------------------------------------------------------
