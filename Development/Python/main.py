@@ -12,6 +12,8 @@ from settings import delete_database_dir
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
 
+#test
+
 # initalize the network adapter select placeholder
 def initialize_adapter_select_placeholder(window):
     placeholder_text = "Select Adapter"
@@ -19,6 +21,8 @@ def initialize_adapter_select_placeholder(window):
     window.network_adapter_select.configure(state="readonly")
 
 class App(customtkinter.CTk):
+    #test
+
     def __init__(window):
         super().__init__()
 
@@ -91,7 +95,7 @@ class App(customtkinter.CTk):
             return pre_frame
 
         # Gui
-        window.title("v.0.2.0 - alpha") # Windows titel
+        window.title("v.0.3.0 - alpha") # Windows titel
         window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/version.ico") # header icon
@@ -100,6 +104,7 @@ class App(customtkinter.CTk):
         # set main grid layout 1x2
         window.grid_rowconfigure(0, weight=1)
         window.grid_columnconfigure(1, weight=1)
+
 
         # load images with light and dark mode image
         image_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "assets/icon")
@@ -126,7 +131,7 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "shortcut_light.png")), size=(20, 20))
 
         # create left navigation frame
-        window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+        window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
         window.navigation_frame.grid(row=0, column=0, sticky="nsew")
         window.navigation_frame.grid_rowconfigure(5, weight=1)
 
@@ -167,11 +172,20 @@ class App(customtkinter.CTk):
         window.home_frame_large_image_label = customtkinter.CTkLabel(window.home_frame, text="", image=window.large_test_image)
         window.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
-        window.home_frame_adapter_select = customtkinter.CTkOptionMenu(window.home_frame, values=adapter_names,
-                                                                       command=lambda
-                                                                           adapter: network_adapter_select_event(window,
-                                                                                                                 adapter))
-        window.home_frame_adapter_select.grid(row=1, column=0, padx=20, pady=10)
+        window.home_frame_network_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=125, width=210, border_spacing=10, text="Network",
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   image=window.network_image, command=window.network_button_event)
+        window.home_frame_network_button.grid(row=1, column=0, padx=30, pady=10, sticky="w")
+
+        window.home_frame_support_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=125, width=210, border_spacing=10, text="Support",
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   image=window.support_image, command=window.support_frame_button_event)
+        window.home_frame_support_button.grid(row=1, column=0, padx=30, pady=10, sticky="e")
+
+        window.home_frame_settings_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=80, width=210, border_spacing=10, text="Settings",
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   image=window.settings_image, command=window.settings_frame_button_event)
+        window.home_frame_settings_button.grid(row=2, column=0, padx=30, pady=10, sticky="we")
 
         # create network navigation frame
 
@@ -195,49 +209,115 @@ class App(customtkinter.CTk):
         window.network_information_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
         window.network_information_frame.grid_columnconfigure(0, weight=1)
 
-        textbox_properties = {
-            "width": 200,
-            "height": 10,
-            "wrap": "word",
-            "fg_color": ("#f9f9fa", "#343638"),
-            "border_width": 2,
-            "border_color": ("#979da2", "#565b5e"),
-            "state": "disabled"
-        }
+        def network_adapter_frame_function(window):
+            textbox_properties = {
+                "width": 200,
+                "height": 10,
+                "wrap": "word",
+                "fg_color": ("#f9f9fa", "#343638"),
+                "border_width": 2,
+                "border_color": ("#979da2", "#565b5e"),
+                "state": "disabled"
+            }
 
-        textbox_names = [
-            "network_information_frame_ipadress_textbox",
-            "network_information_frame_subnetmask_textbox",
-            "network_information_frame_gateway_textbox",
-            "network_information_frame_dns_textbox",
-            "network_information_frame_mac_textbox"
-        ]
+            textbox_names = [
+                "network_information_frame_ipadress_textbox",
+                "network_information_frame_subnetmask_textbox",
+                "network_information_frame_gateway_textbox",
+                "network_information_frame_dns_textbox",
+                "network_information_frame_mac_textbox"
+            ]
 
-        discription_names = [
-            "IP Address",
-            "Subnet Mask",
-            "Default Gateway",
-            "DNS Server",
-            "MAC Address"
-        ]
+            discription_names = [
+                "IP Address",
+                "Subnet Mask",
+                "Default Gateway",
+                "DNS Server",
+                "MAC Address"
+            ]
 
-        for i, textbox_name in enumerate(textbox_names):
-            textbox_description = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
-            textbox_description.grid(row=i + 1, column=0, padx=20, pady=5)
-            setattr(window, textbox_name + "_description", textbox_description)
+            for i, textbox_name in enumerate(textbox_names):
+                textbox_description = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
+                textbox_description.grid(row=i + 1, column=0, padx=20, pady=5)
+                setattr(window, textbox_name + "_description", textbox_description)
 
-            textbox_information = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
-            textbox_information.grid(row=i + 1, column=1, padx=20, pady=5)
-            setattr(window, textbox_name, textbox_information)
+                textbox_information = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
+                textbox_information.grid(row=i + 1, column=1, padx=20, pady=5)
+                setattr(window, textbox_name, textbox_information)
 
-            textbox_description.configure(state="normal")
-            textbox_description.insert("1.0", discription_names[i])
-            textbox_description.configure(state="disabled")
+                textbox_description.configure(state="normal")
+                textbox_description.insert("1.0", discription_names[i])
+                textbox_description.configure(state="disabled")
 
-            textbox_information.configure(state="normal")
-            textbox_information.configure(state="disabled")
+                textbox_information.configure(state="normal")
+                textbox_information.configure(state="disabled")
 
-        # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
+        #network_adapter_frame_function(window)
+
+        # full written code cause loading problems when use loops
+
+        window.network_information_frame_ipadress_textbox_description = customtkinter.CTkTextbox(
+        window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_ipadress_textbox_description.grid(row=2, column=0, padx=20, pady=5)
+        window.network_information_frame_ipadress_textbox_description.configure(state="normal")
+        window.network_information_frame_ipadress_textbox_description.insert("1.0", "IP Address")
+        window.network_information_frame_ipadress_textbox_description.configure(state="disabled")
+
+        window.network_information_frame_ipadress_textbox = customtkinter.CTkTextbox(window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_ipadress_textbox.grid(row=2, column=1, padx=20, pady=5)
+        window.network_information_frame_ipadress_textbox.configure(state="normal")
+        window.network_information_frame_ipadress_textbox.configure(state="disabled")
+
+        window.network_information_frame_subnetmask_textbox_description = customtkinter.CTkTextbox(
+        window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_subnetmask_textbox_description.grid(row=3, column=0, padx=20, pady=5)
+        window.network_information_frame_subnetmask_textbox_description.configure(state="normal")
+        window.network_information_frame_subnetmask_textbox_description.insert("1.0", "Subnet Mask")
+        window.network_information_frame_subnetmask_textbox_description.configure(state="disabled")
+
+        window.network_information_frame_subnetmask_textbox = customtkinter.CTkTextbox(window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_subnetmask_textbox.grid(row=3, column=1, padx=20, pady=5)
+        window.network_information_frame_subnetmask_textbox.configure(state="normal")
+        window.network_information_frame_subnetmask_textbox.configure(state="disabled")
+
+        window.network_information_frame_gateway_textbox_description = customtkinter.CTkTextbox(
+        window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_gateway_textbox_description.grid(row=4, column=0, padx=20, pady=5)
+        window.network_information_frame_gateway_textbox_description.configure(state="normal")
+        window.network_information_frame_gateway_textbox_description.insert("1.0", "Default Gateway")
+        window.network_information_frame_gateway_textbox_description.configure(state="disabled")
+
+        window.network_information_frame_gateway_textbox = customtkinter.CTkTextbox(window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_gateway_textbox.grid(row=4, column=1, padx=20, pady=5)
+        window.network_information_frame_gateway_textbox.configure(state="normal")
+        window.network_information_frame_gateway_textbox.configure(state="disabled")
+
+        window.network_information_frame_dns_textbox_description = customtkinter.CTkTextbox(
+        window.network_information_frame, width=200, height=10, wrap="word" ,fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_dns_textbox_description.grid(row=5, column=0, padx=20, pady=5)
+        window.network_information_frame_dns_textbox_description.configure(state="normal")
+        window.network_information_frame_dns_textbox_description.insert("1.0", "DNS Server")
+        window.network_information_frame_dns_textbox_description.configure(state="disabled")
+
+        window.network_information_frame_dns_textbox = customtkinter.CTkTextbox(window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_dns_textbox.grid(row=5, column=1, padx=20, pady=5)
+        window.network_information_frame_dns_textbox.configure(state="normal")
+        window.network_information_frame_dns_textbox.configure(state="disabled")
+
+        window.network_information_frame_mac_textbox_description = customtkinter.CTkTextbox(
+        window.network_information_frame, width=200, height=10, wrap="word" ,fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_mac_textbox_description.grid(row=6, column=0, padx=20, pady=5)
+        window.network_information_frame_mac_textbox_description.configure(state="normal")
+        window.network_information_frame_mac_textbox_description.insert("1.0", "MAC Address")
+        window.network_information_frame_mac_textbox_description.configure(state="disabled")
+
+        window.network_information_frame_mac_textbox = customtkinter.CTkTextbox(window.network_information_frame, width=200, height=10, wrap="word", fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e"), state="disabled")
+        window.network_information_frame_mac_textbox.grid(row=6, column=1, padx=20, pady=5)
+        window.network_information_frame_mac_textbox.configure(state="normal")
+        window.network_information_frame_mac_textbox.configure(state="disabled")
+
+
+
 
         # custom frame
         window.network_custom_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
