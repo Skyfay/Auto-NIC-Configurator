@@ -11,13 +11,12 @@ from settings import delete_database_dir
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
+
+# initalize the network adapter select placeholder
 def initialize_adapter_select_placeholder(window):
     placeholder_text = "Select Adapter"
-    window.home_frame_adapter_select.set(placeholder_text)
-    window.home_frame_adapter_select.configure(state="readonly")
-
-def update_adapter_select_values(window, adapter_names):
-     window.home_frame_adapter_select.configure(values=adapter_names)
+    window.network_adapter_select.set(placeholder_text)
+    window.network_adapter_select.configure(state="readonly")
 
 class App(customtkinter.CTk):
     def __init__(window):
@@ -181,30 +180,67 @@ class App(customtkinter.CTk):
         window.network_frame.grid_rowconfigure(1, weight=1) # 1, 1
         window.network_frame.grid_columnconfigure(1, weight=1)
 
-        window.network_adapter_select = customtkinter.CTkOptionMenu(window.network_frame,  corner_radius=5, values=["Select Adapter"], anchor="w")
+        window.network_adapter_select = customtkinter.CTkOptionMenu(window.network_frame,  corner_radius=5, values=adapter_names, anchor="w", command=lambda adapter: network_adapter_select_event(window, adapter))
         window.network_adapter_select.grid(row=0, column=1, padx=20, pady=20)
 
-        window.network_information_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.information_image, anchor="w", command=window.information_button_event)
+        window.network_information_button = customtkinter.CTkButton(window.network_frame, hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.information_image, anchor="w", command=window.information_button_event)
         window.network_information_button.grid(row=2, column=0, padx=20, pady=10)
-        window.network_custom_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.custom_image, anchor="w", command=window.custom_button_event)
+        window.network_custom_button = customtkinter.CTkButton(window.network_frame,hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.custom_image, anchor="w", command=window.custom_button_event)
         window.network_custom_button.grid(row=3, column=0, padx=20, pady=10)
-        window.network_shortcut_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.shortcut_image, anchor="w", command=window.shortcut_frame_button_event)
+        window.network_shortcut_button = customtkinter.CTkButton(window.network_frame,hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.shortcut_image, anchor="w", command=window.shortcut_frame_button_event)
         window.network_shortcut_button.grid(row=4, column=0, padx=20, pady=10)
 
         # create network page frames
         # information frame
         window.network_information_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
-        #window.network_information_frame.grid(row=1, column=1, sticky="nsew", rowspan=5) # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
         window.network_information_frame.grid_columnconfigure(0, weight=1)
 
-        window.network_information_frame_button = customtkinter.CTkButton(window.network_information_frame, corner_radius=5, height=40,
-                                                                 width=10, border_spacing=10, text="Information Frame",
-                                                                 image=window.support_image, anchor="w")
-        window.network_information_frame_button.grid(row=0, column=0, padx=20, pady=10)
+        textbox_properties = {
+            "width": 200,
+            "height": 10,
+            "wrap": "word",
+            "fg_color": ("#f9f9fa", "#343638"),
+            "border_width": 2,
+            "border_color": ("#979da2", "#565b5e"),
+            "state": "disabled"
+        }
+
+        textbox_names = [
+            "network_information_frame_ipadress_textbox",
+            "network_information_frame_subnetmask_textbox",
+            "network_information_frame_gateway_textbox",
+            "network_information_frame_dns_textbox",
+            "network_information_frame_mac_textbox"
+        ]
+
+        discription_names = [
+            "IP Address",
+            "Subnet Mask",
+            "Default Gateway",
+            "DNS Server",
+            "MAC Address"
+        ]
+
+        for i, textbox_name in enumerate(textbox_names):
+            textbox_description = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
+            textbox_description.grid(row=i + 1, column=0, padx=20, pady=5)
+            setattr(window, textbox_name + "_description", textbox_description)
+
+            textbox_information = customtkinter.CTkTextbox(window.network_information_frame, **textbox_properties)
+            textbox_information.grid(row=i + 1, column=1, padx=20, pady=5)
+            setattr(window, textbox_name, textbox_information)
+
+            textbox_description.configure(state="normal")
+            textbox_description.insert("1.0", discription_names[i])
+            textbox_description.configure(state="disabled")
+
+            textbox_information.configure(state="normal")
+            textbox_information.configure(state="disabled")
+
+        # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
 
         # custom frame
         window.network_custom_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
-        #window.network_custom_frame.grid(row=1, column=1, sticky="nsew", rowspan=5) # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
         window.network_custom_frame.grid_columnconfigure(0, weight=1)
 
         window.network_custom_frame_button = customtkinter.CTkButton(window.network_custom_frame, corner_radius=5, height=40,
@@ -214,7 +250,6 @@ class App(customtkinter.CTk):
 
         # shortcut frame
         window.network_shortcut_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
-        #window.network_shortcut_frame.grid(row=1, column=1, sticky="nsew", rowspan=5) # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
         window.network_shortcut_frame.grid_columnconfigure(0, weight=1)
 
         window.network_shortcut_frame_button = customtkinter.CTkButton(window.network_shortcut_frame, corner_radius=5, height=40,
