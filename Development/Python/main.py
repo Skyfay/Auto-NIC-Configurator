@@ -176,29 +176,34 @@ class App(customtkinter.CTk):
 
         window.network_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="#fff")
         window.network_frame.grid(row=0, column=0, sticky="nsew")
-        window.network_frame.grid_rowconfigure(1, weight=1)
+        window.network_frame.grid_rowconfigure(1, weight=1) # 1, 1
         window.network_frame.grid_columnconfigure(1, weight=1)
 
+        window.network_adapter_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, border_spacing=10, text="Select Adapter", image=window.home_image, anchor="w")
+        window.network_adapter_button.grid(row=0, column=1, padx=20, pady=10)
+
         window.network_information_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.home_image, anchor="w")
-        window.network_information_button.grid(row=1, column=0, padx=20, pady=10)
+        window.network_information_button.grid(row=2, column=0, padx=20, pady=10)
         window.network_custom_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.network_image, anchor="w")
-        window.network_custom_button.grid(row=2, column=0, padx=20, pady=10)
+        window.network_custom_button.grid(row=3, column=0, padx=20, pady=10)
         window.network_shortcut_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.support_image, anchor="w")
-        window.network_shortcut_button.grid(row=3, column=0, padx=20, pady=10)
+        window.network_shortcut_button.grid(row=4, column=0, padx=20, pady=10)
+        window.tnetwork_shortcut_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.support_image, anchor="w")
+        window.tnetwork_shortcut_button.grid(row=5, column=0, padx=20, pady=10)
 
 
 
         window.network_information_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="#eb4e00")
-        window.network_information_frame.grid(row=1, column=1, sticky="nsew") # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
+        window.network_information_frame.grid(row=1, column=1, sticky="nsew", rowspan=5) # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
         window.network_information_frame.grid_columnconfigure(0, weight=1)
 
         window.home_frame_large_image_label = customtkinter.CTkLabel(window.network_information_frame, text="Das ist ein Test",
                                                                      image=window.large_test_image)
-        window.home_frame_large_image_label.grid(row=0, column=2, padx=20, pady=10)
+        window.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
         window.network_information_frame_button = customtkinter.CTkButton(window.network_information_frame, corner_radius=5, height=40,
                                                                  width=10, border_spacing=10, text="adfsafdfsdf",
                                                                  image=window.support_image, anchor="w")
-        window.network_information_frame_button.grid(row=4, column=3, padx=20, pady=60)
+        window.network_information_frame_button.grid(row=0, column=0, padx=20, pady=10)
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
