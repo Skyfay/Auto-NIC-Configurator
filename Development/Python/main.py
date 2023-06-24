@@ -92,11 +92,11 @@ class App(customtkinter.CTk):
             return pre_frame
 
         # Gui
-        window.title("v.0.1.0 - alpha") # Windows titel
+        window.title("v.0.2.0 - alpha") # Windows titel
         window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         window.iconbitmap("assets/icon/version.ico") # header icon
-        customtkinter.set_default_color_theme("dark-blue") # set default color theme
+        customtkinter.set_default_color_theme("blue") # set default color theme
 
         # set main grid layout 1x2
         window.grid_rowconfigure(0, weight=1)
@@ -111,8 +111,8 @@ class App(customtkinter.CTk):
         window.image_icon_image = customtkinter.CTkImage(Image.open(os.path.join(image_path, "image_icon_light.png")), size=(20, 20))
         window.home_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "home_dark.png")),
                                                  dark_image=Image.open(os.path.join(image_path, "home_light.png")), size=(20, 20))
-        window.chat_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "chat_dark.png")),
-                                                 dark_image=Image.open(os.path.join(image_path, "chat_light.png")), size=(20, 20))
+        window.network_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "network_dark.png")),
+                                                 dark_image=Image.open(os.path.join(image_path, "network_light.png")), size=(20, 20))
         window.add_user_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "add_user_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "add_user_light.png")), size=(20, 20))
         window.support_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "support_dark.png")),
@@ -121,7 +121,7 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "settings_light.png")), size=(20, 20))
 
         # create left navigation frame
-        window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
+        window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="#a13f48")
         window.navigation_frame.grid(row=0, column=0, sticky="nsew")
         window.navigation_frame.grid_rowconfigure(5, weight=1)
 
@@ -134,10 +134,10 @@ class App(customtkinter.CTk):
                                                    image=window.home_image, anchor="w", command=window.home_button_event)
         window.home_button.grid(row=1, column=0, sticky="ew")
 
-        window.frame_2_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Frame 2",
+        window.network_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Network",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
-                                                      image=window.chat_image, anchor="w", command=window.frame_2_button_event)
-        window.frame_2_button.grid(row=2, column=0, sticky="ew")
+                                                      image=window.network_image, anchor="w", command=window.network_button_event)
+        window.network_button.grid(row=2, column=0, sticky="ew")
 
         window.support_frame_button = customtkinter.CTkButton(window.navigation_frame, corner_radius=0, height=40, border_spacing=10, text="Support",
                                                       fg_color="transparent", text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
@@ -156,7 +156,7 @@ class App(customtkinter.CTk):
 
 
         # create home frame
-        window.home_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+        window.home_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="#eb4e00")
         window.home_frame.grid_columnconfigure(0, weight=1)
 
         window.home_frame_large_image_label = customtkinter.CTkLabel(window.home_frame, text="", image=window.large_test_image)
@@ -168,6 +168,39 @@ class App(customtkinter.CTk):
                                                                                                                  adapter))
         window.home_frame_adapter_select.grid(row=1, column=0, padx=20, pady=10)
 
+        # create network frame
+
+        #window.network_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="#404853")
+        #window.network_frame.grid_rowconfigure(1, weight=2)
+        #window.network_frame.grid_columnconfigure(2, weight=2)
+
+        window.network_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="#fff")
+        window.network_frame.grid(row=0, column=0, sticky="nsew")
+        window.network_frame.grid_rowconfigure(1, weight=1)
+        window.network_frame.grid_columnconfigure(1, weight=1)
+
+        window.network_information_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.home_image, anchor="w")
+        window.network_information_button.grid(row=1, column=0, padx=20, pady=10)
+        window.network_custom_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.network_image, anchor="w")
+        window.network_custom_button.grid(row=2, column=0, padx=20, pady=10)
+        window.network_shortcut_button = customtkinter.CTkButton(window.network_frame, corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.support_image, anchor="w")
+        window.network_shortcut_button.grid(row=3, column=0, padx=20, pady=10)
+
+
+
+        window.network_information_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="#eb4e00")
+        window.network_information_frame.grid(row=1, column=1, sticky="nsew") # Muss eingesetzt werden dann wird angezeigt # pady macht den abstand für oben den netzwerk adapter auswäheler
+        window.network_information_frame.grid_columnconfigure(0, weight=1)
+
+        window.home_frame_large_image_label = customtkinter.CTkLabel(window.network_information_frame, text="Das ist ein Test",
+                                                                     image=window.large_test_image)
+        window.home_frame_large_image_label.grid(row=0, column=2, padx=20, pady=10)
+        window.network_information_frame_button = customtkinter.CTkButton(window.network_information_frame, corner_radius=5, height=40,
+                                                                 width=10, border_spacing=10, text="adfsafdfsdf",
+                                                                 image=window.support_image, anchor="w")
+        window.network_information_frame_button.grid(row=4, column=3, padx=20, pady=60)
+
+
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
         initialize_adapter_select_placeholder(window)
 
@@ -175,7 +208,7 @@ class App(customtkinter.CTk):
         window.adapter_info_label.grid(row=2, column=0, padx=20, pady=10)
 
         # create second frame
-        window.second_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
+        window.support_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
 
         # create support frame
         window.support_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
@@ -240,13 +273,10 @@ class App(customtkinter.CTk):
         # select default frame
         window.select_frame_by_name("home")
 
-        # select default frame
-        window.select_frame_by_name("home")
-
     def select_frame_by_name(window, name):
         # set button color for selected button
         window.home_button.configure(fg_color=("gray75", "gray25") if name == "home" else "transparent")
-        window.frame_2_button.configure(fg_color=("gray75", "gray25") if name == "frame_2" else "transparent")
+        window.network_button.configure(fg_color=("gray75", "gray25") if name == "network_frame" else "transparent")
         window.support_frame_button.configure(fg_color=("gray75", "gray25") if name == "support_frame" else "transparent")
         window.settings_frame_button.configure(
             fg_color=("gray75", "gray25") if name == "settings_frame" else "transparent")
@@ -256,10 +286,10 @@ class App(customtkinter.CTk):
             window.home_frame.grid(row=0, column=1, sticky="nsew")
         else:
             window.home_frame.grid_forget()
-        if name == "frame_2":
-            window.second_frame.grid(row=0, column=1, sticky="nsew")
+        if name == "network_frame":
+            window.network_frame.grid(row=0, column=1, sticky="nsew")
         else:
-            window.second_frame.grid_forget()
+            window.network_frame.grid_forget()
         if name == "support_frame":
             window.support_frame.grid(row=0, column=1, sticky="nsew")
         else:
@@ -271,8 +301,8 @@ class App(customtkinter.CTk):
     def home_button_event(window):
         window.select_frame_by_name("home")
 
-    def frame_2_button_event(window):
-        window.select_frame_by_name("frame_2")
+    def network_button_event(window):
+        window.select_frame_by_name("network_frame")
 
     def support_frame_button_event(window):
         window.select_frame_by_name("support_frame")
@@ -285,6 +315,7 @@ class App(customtkinter.CTk):
 
         # Speichern des Farbmodus in den Einstellungen
         save_color_mode_support(window, new_appearance_mode)
+
 
 if __name__ == "__main__":
     app = App()
