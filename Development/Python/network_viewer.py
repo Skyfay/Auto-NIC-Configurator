@@ -50,6 +50,8 @@ def network_adapter_select_event(window, selected_adapter):
             textbox.delete("1.0", "end")
             textbox.configure(state="disabled")
 
+
+
     # Log when the user selected another network adapter
     #timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     #print(f"Log: [{timestamp}] - Selected other network adapter")
