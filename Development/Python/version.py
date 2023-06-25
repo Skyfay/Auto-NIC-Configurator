@@ -4,6 +4,9 @@ import json
 import shutil
 import os
 import urllib.request
+import subprocess
+from pathlib import Path
+import time
 # test check for updates:
 # GitHub Repository-Informationen
 repo_owner = "Skyfay"
@@ -63,6 +66,7 @@ def show_download_button(window):
                                                    command=lambda: download_and_install(window))
     window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
 
+
 def download_and_install(window):
     window.update_button.destroy()
     window.update_progress = customtkinter.CTkProgressBar(window.navigation_frame, width=200, height=25,
@@ -111,23 +115,23 @@ def download_and_install(window):
             print("No executable file found for the latest version.")
             return
 
-        # Herunterladen der ausführbaren Datei
-        print("Downloading the latest version...")
-        urllib.request.urlretrieve(download_url, "latest_version.exe")
-
         # Ermitteln des Versionsnamens
         latest_version = release_info["tag_name"]
-        versioned_exe_filename = f"auto-nic-configurator_{latest_version}.exe"
+        # Herunterladen der ausführbaren Datei in den Download-Ordner des Benutzers
+        download_path = Path.home() / "Downloads" / f"auto-nic-configurator_{latest_version}.exe"
+        print("Downloading the latest version...")
+        urllib.request.urlretrieve(download_url, download_path)
 
         # Ersetzen der aktuellen ausführbaren Datei mit der heruntergeladenen Datei
-        if os.path.exists(versioned_exe_filename):
-            # Sicherstellen, dass die aktuelle ausführbare Datei geschlossen ist
-            # (optional, je nachdem, wie deine Anwendung verwendet wird)
-            # ...
+        if os.path.exists(download_path):
+            print("Download completed successfully!")
 
-            # Die aktuelle ausführbare Datei ersetzen
-            shutil.move("latest_version.exe", versioned_exe_filename)
-            print("Installation completed successfully!")
+            # Ausführen der heruntergeladenen Datei
+            subprocess.Popen([download_path], shell=True)
+
+            # Beenden des Programms
+            window.destroy()
+
         else:
             print("Current executable file not found.")
 
