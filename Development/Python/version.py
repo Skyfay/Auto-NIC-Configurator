@@ -1,13 +1,16 @@
 import customtkinter
 import requests
 import json
+import shutil
+import os
+import urllib.request
 # test check for updates:
 # GitHub Repository-Informationen
 repo_owner = "Skyfay"
 repo_name = "Auto-NIC-Configurator"
 
 # Aktuelle Version des Programms
-current_version = "6.0"
+current_version = "0.7.0"
 
 
 def check_for_updates(window):
@@ -26,8 +29,8 @@ def check_for_updates(window):
         # Überprüfen, ob die neueste Version größer als die aktuelle Version ist
         if latest_version > current_version:
             # Es gibt eine neuere Version verfügbar
-            window.update_button = customtkinter.CTkButton(window.navigation_frame, hover_color=("gray70", "gray30"),
-                                                           corner_radius=5, width=200, height=50,
+            window.update_button = customtkinter.CTkButton(window.navigation_frame, hover_color="#8f3840",
+                                                           corner_radius=5, width=200, height=50, fg_color="#a13f48",
                                                            border_spacing=10, text=("A new version " + latest_version + " is available"),
                                                            command=download_and_install)
             window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
@@ -46,6 +49,59 @@ def check_for_updates(window):
 
 
 def download_and_install():
-    # Funktion zum Herunterladen und Installieren der neuen Version
-    # Hier kannst du deinen eigenen Code einfügen, um die Installation durchzuführen
-    pass
+    # GitHub Repository-Informationen
+    repo_owner = "Skyfay"
+    repo_name = "Auto-NIC-Configurator"
+
+    # GitHub API-Endpunkt für Releases
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+
+    try:
+        # API-Anfrage an GitHub senden
+        response = requests.get(url)
+        response.raise_for_status()
+
+        # JSON-Daten aus der API-Antwort extrahieren
+        release_info = json.loads(response.text)
+        assets = release_info["assets"]
+
+        if len(assets) == 0:
+            # Es sind keine Assets (Dateien) für die neueste Version verfügbar
+            print("No assets found for the latest version.")
+            return
+
+        # Die URL der ersten ausführbaren Datei (Annahme: .exe-Datei)
+        download_url = None
+        for asset in assets:
+            if asset["name"].endswith(".exe"):
+                download_url = asset["browser_download_url"]
+                break
+
+        if not download_url:
+            # Es wurde keine ausführbare Datei (.exe) gefunden
+            print("No executable file found for the latest version.")
+            return
+
+        # Herunterladen der ausführbaren Datei
+        print("Downloading the latest version...")
+        urllib.request.urlretrieve(download_url, "latest_version.exe")
+
+        # Ermitteln des Versionsnamens
+        latest_version = release_info["tag_name"]
+        versioned_exe_filename = f"auto-nic-configurator_{latest_version}.exe"
+
+        # Ersetzen der aktuellen ausführbaren Datei mit der heruntergeladenen Datei
+        if os.path.exists(versioned_exe_filename):
+            # Sicherstellen, dass die aktuelle ausführbare Datei geschlossen ist
+            # (optional, je nachdem, wie deine Anwendung verwendet wird)
+            # ...
+
+            # Die aktuelle ausführbare Datei ersetzen
+            shutil.move("latest_version.exe", versioned_exe_filename)
+            print("Installation completed successfully!")
+        else:
+            print("Current executable file not found.")
+
+    except requests.exceptions.RequestException as e:
+        # Bei Fehlern bei der Anfrage an die GitHub API
+        print("Error connecting to the GitHub API:", e)
