@@ -9,7 +9,7 @@ from network_viewer import network_adapter_select_event, initialize_adapter_sele
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
-from version import check_for_updates, download_and_install
+from version import check_for_updates, download_and_install, show_download_button
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()

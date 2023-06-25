@@ -32,7 +32,7 @@ def check_for_updates(window):
             window.update_button = customtkinter.CTkButton(window.navigation_frame, hover_color="#8f3840",
                                                            corner_radius=5, width=200, height=50, fg_color="#a13f48",
                                                            border_spacing=10, text=("A new version " + latest_version + " is available"),
-                                                           command=download_and_install)
+                                                           command=lambda: download_and_install(window))
             window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         else:
             # Die aktuelle Version ist aktuell
@@ -48,7 +48,27 @@ def check_for_updates(window):
         window.update_check_menu.configure(state="disabled")
 
 
-def download_and_install():
+def show_download_button(window):
+    # GitHub API-Endpunkt für Releases
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
+    response = requests.get(url)
+    response.raise_for_status()
+    release_info = json.loads(response.text)
+    latest_version = release_info["tag_name"]
+
+    window.update_error_label.destroy()
+    window.update_button = customtkinter.CTkButton(window.navigation_frame, hover_color="#8f3840",
+                                                   corner_radius=5, width=200, height=50, fg_color="#a13f48",
+                                                   border_spacing=10, text=("A new version " + latest_version + " is available"),
+                                                   command=lambda: download_and_install(window))
+    window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+
+def download_and_install(window):
+    window.update_button.destroy()
+    window.update_progress = customtkinter.CTkProgressBar(window.navigation_frame, width=200, height=25,
+                                                          fg_color="#57965c", progress_color="#83e28a")
+    window.update_progress.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+
     # GitHub Repository-Informationen
     repo_owner = "Skyfay"
     repo_name = "Auto-NIC-Configurator"
@@ -69,6 +89,15 @@ def download_and_install():
             # Es sind keine Assets (Dateien) für die neueste Version verfügbar
             print("No assets found for the latest version.")
             return
+
+            # Fehlermeldung anzeigen
+            window.update_progress.destroy()
+            window.update_error_label = customtkinter.CTkLabel(window.navigation_frame,
+                                                               text="Error occurred during the process.",
+                                                               fg_color="#a13f48")
+            window.update_error_label.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+            # Nach 3 Sekunden Fehlermeldung entfernen und Download-Button anzeigen
+            window.after(3000, lambda: show_download_button(window))
 
         # Die URL der ersten ausführbaren Datei (Annahme: .exe-Datei)
         download_url = None
@@ -102,6 +131,23 @@ def download_and_install():
         else:
             print("Current executable file not found.")
 
+            # Fehlermeldung anzeigen
+            window.update_progress.destroy()
+            window.update_error_label = customtkinter.CTkLabel(window.navigation_frame,
+                                                               text="Error occurred during the process.",
+                                                               fg_color="#a13f48")
+            window.update_error_label.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+            # Nach 3 Sekunden Fehlermeldung entfernen und Download-Button anzeigen
+            window.after(3000, lambda: show_download_button(window))
+
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
         print("Error connecting to the GitHub API:", e)
+        # Fehlermeldung anzeigen
+        window.update_progress.destroy()
+        window.update_error_label = customtkinter.CTkLabel(window.navigation_frame,
+                                                           text="Error occurred during the process.",
+                                                           fg_color="#a13f48")
+        window.update_error_label.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        # Nach 3 Sekunden Fehlermeldung entfernen und Download-Button anzeigen
+        window.after(3000, lambda: show_download_button(window))
