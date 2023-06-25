@@ -2,12 +2,14 @@ import customtkinter
 import os
 import json
 from PIL import Image
+import requests
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
+from version import check_for_updates, download_and_install
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -25,7 +27,6 @@ class App(customtkinter.CTk):
 
     def __init__(window):
         super().__init__()
-
 
         # Load the latest color mode from the json file
         def load_color_mode_support(window):
@@ -160,10 +161,7 @@ class App(customtkinter.CTk):
                                                       image=window.settings_image, anchor="w", command=window.settings_frame_button_event)
         window.settings_frame_button.grid(row=4, column=0, sticky="ew")
 
-        window.appearance_mode_menu = customtkinter.CTkOptionMenu(window.navigation_frame, values=["Light", "Dark", "System"],
-                                                                command=window.change_appearance_mode_event)
-        window.appearance_mode_menu.set(appearance_mode)  # Set the initial value to the loaded appearance_mode
-        window.appearance_mode_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        check_for_updates(window)
 
 
         # create home frame
@@ -422,6 +420,8 @@ class App(customtkinter.CTk):
 
     def shortcut_frame_button_event(window):
         window.select_network_by_name("network_shortcut_frame")
+
+
 
 
 if __name__ == "__main__":

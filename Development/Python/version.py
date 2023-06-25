@@ -1,38 +1,51 @@
+import customtkinter
 import requests
+import json
+# test check for updates:
+# GitHub Repository-Informationen
+repo_owner = "Skyfay"
+repo_name = "Auto-NIC-Configurator"
+
+# Aktuelle Version des Programms
+current_version = "6.0"
 
 
-def is_application_up_to_date(owner, repo):
-    # GitHub API-Endpunkt für das Repository
-    url = f"https://api.github.com/repos/{owner}/{repo}/releases/latest"
+def check_for_updates(window):
+    # GitHub API-Endpunkt für Releases
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/releases/latest"
 
     try:
-        # GET-Anfrage an die API senden
+        # API-Anfrage an GitHub senden
         response = requests.get(url)
-        response.raise_for_status()  # Fehler werfen, wenn die Anfrage nicht erfolgreich war
-        release_data = response.json()
+        response.raise_for_status()
 
-        # Aktuelle Version des Repositories abrufen
-        latest_version = release_data["tag_name"]
+        # JSON-Daten aus der API-Antwort extrahieren
+        release_info = json.loads(response.text)
+        latest_version = release_info["tag_name"]
 
-        # Hier kannst du die Logik für den Vergleich der aktuellen Version mit der installierten Version implementieren
-        # Zum Beispiel könntest du die installierte Version auslesen und sie mit latest_version vergleichen.
-        # Je nachdem, wie deine Anwendung strukturiert ist, kann dies variieren.
-
-        # Gib True zurück, wenn die Anwendung aktuell ist, andernfalls False
-        return True
-
+        # Überprüfen, ob die neueste Version größer als die aktuelle Version ist
+        if latest_version > current_version:
+            # Es gibt eine neuere Version verfügbar
+            window.update_button = customtkinter.CTkButton(window.navigation_frame, hover_color=("gray70", "gray30"),
+                                                           corner_radius=5, width=200, height=50,
+                                                           border_spacing=10, text=("A new version " + latest_version + " is available"),
+                                                           command=download_and_install)
+            window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        else:
+            # Die aktuelle Version ist aktuell
+            window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=25, wrap="word", fg_color=("#f9f9fa", "#242424"), text_color=("#f9f9fa", "#c7c7c7"))
+            window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+            window.update_check_menu.insert("1.0", "You use the latest version " + current_version)
+            window.update_check_menu.configure(state="disabled")
     except requests.exceptions.RequestException as e:
-        # Fehlerbehandlung, wenn die Anfrage fehlschlägt
-        print("Fehler bei der Verbindung zur GitHub API:", e)
-        return False
+        # Bei Fehlern bei der Anfrage an die GitHub API
+        window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=50, wrap="word") #fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e")
+        window.update_check_menu.grid(row=4, column=0, padx=20, pady=20, sticky="s")
+        window.update_check_menu.insert("1.0", "Error connecting to the GitHub API:\n" + str(e))
+        window.update_check_menu.configure(state="disabled")
 
 
-# Beispielaufruf
-owner = "openai"
-repo = "gpt-3.5-turbo"
-is_up_to_date = is_application_up_to_date(owner, repo)
-
-if is_up_to_date:
-    print("Die Anwendung ist aktuell.")
-else:
-    print("Die Anwendung ist nicht aktuell.")
+def download_and_install():
+    # Funktion zum Herunterladen und Installieren der neuen Version
+    # Hier kannst du deinen eigenen Code einfügen, um die Installation durchzuführen
+    pass
