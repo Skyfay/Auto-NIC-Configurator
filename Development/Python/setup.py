@@ -9,7 +9,7 @@ setup(
     name="Auto Nic Configurator",
     version="1.0",
     description="Automatic Network Configurator",
-    executables=[Executable("main.py", icon="assets/icon/ethernet.ico")], #base="Win32GUI"
+    executables=[Executable("main.py", base="Win32GUI", icon="assets/icon/ethernet.ico")], #base="Win32GUI"
     options={
         "build_exe": {
             "include_files": include_files,
