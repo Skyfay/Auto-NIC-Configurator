@@ -283,10 +283,10 @@ class App(customtkinter.CTk):
         window.network_shortcut_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
         window.network_shortcut_frame.grid_columnconfigure(0, weight=1)
 
-        window.network_shortcut_frame_button = customtkinter.CTkButton(window.network_shortcut_frame, corner_radius=5, height=40,
-                                                                 width=10, border_spacing=10, text="Shortcut Frame",
-                                                                 image=window.support_image, anchor="w")
-        window.network_shortcut_frame_button.grid(row=0, column=0, padx=20, pady=10)
+        window.network_shortcut_frame_info = customtkinter.CTkLabel(window.network_shortcut_frame,
+                                             text="Add your individual shortcuts with custom netzwerk adapter values. \nComing Soon!",
+                                             font=("TkDefaultFont", 12, "bold"))
+        window.network_shortcut_frame_info.grid(row=7, column=0, padx=20, pady=5)
 
 
 
