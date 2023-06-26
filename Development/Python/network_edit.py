@@ -35,7 +35,6 @@ nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
 nic.EnableDHCP()
 # Reset DNS server to obtain automatically (DHCP)
 nic.SetDNSServerSearchOrder(DNSServerSearchOrder=[])
-
 def get_adapter_index_from_json(adapter_name, json_file_path):
     with open(json_file_path, 'r') as json_file:
         data = json.load(json_file)
@@ -49,27 +48,15 @@ def get_adapter_index_from_json(adapter_name, json_file_path):
 # This need Administrator privileges
 
 def selected_adapter_set_custom_values(window, selected_adapter):
-    # Überprüfen, ob die Anwendung mit Administratorrechten gestartet wurde
-    if ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1) != 42:
-        print("Error: The application needs to be run with administrator privileges.")
-        error_label = customtkinter.CTkLabel(window.network_custom_frame,
-                                             text="Error: The application needs to be run with administrator privileges.",
-                                             text_color="#ff4155",
-                                             font=("TkDefaultFont", 12, "bold"))
-        error_label.grid(row=7, column=0, padx=20, pady=5)
-        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+    if ctypes.windll.shell32.IsUserAnAdmin():
+        print("User is admin")
+    else:
+        # Überprüfen, ob die Anwendung mit Administratorrechten gestartet wurde
+        if ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1) != 42:
+            print("Error: The application needs to be run with administrator privileges.")
         window.destroy()
 
-    # Überprüfen, ob der Benutzer Administratorrechte hat
-    if not ctypes.windll.shell32.IsUserAnAdmin():
-        print("Error: You need administrator privileges to perform this operation.")
-        error_label = customtkinter.CTkLabel(window.network_custom_frame,
-                                             text="Error: You need administrator privileges to perform this operation.",
-                                             text_color="#ff4155",
-                                             font=("TkDefaultFont", 12, "bold"))
-        error_label.grid(row=7, column=0, padx=20, pady=5)
-        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
-        return
+
     adapter_name = window.network_adapter_select.get()
     print("Der Adapter welcher ausgewählt wurde war: " + adapter_name)
 

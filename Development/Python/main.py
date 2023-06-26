@@ -30,6 +30,7 @@ class App(customtkinter.CTk):
     def __init__(window):
         super().__init__()
 
+
         # Load the latest color mode from the json file
         def load_color_mode_support(window):
             support_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
@@ -165,7 +166,6 @@ class App(customtkinter.CTk):
 
         check_for_updates(window)
 
-
         # create home frame
         window.home_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
         window.home_frame.grid_columnconfigure(0, weight=1)
@@ -286,6 +286,8 @@ class App(customtkinter.CTk):
                                                                  width=10, border_spacing=10, text="Shortcut Frame",
                                                                  image=window.support_image, anchor="w")
         window.network_shortcut_frame_button.grid(row=0, column=0, padx=20, pady=10)
+
+
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
@@ -437,8 +439,6 @@ class App(customtkinter.CTk):
 
     def shortcut_frame_button_event(window):
         window.select_network_by_name("network_shortcut_frame")
-
-
 
 
 if __name__ == "__main__":
