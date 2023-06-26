@@ -146,7 +146,7 @@ def download_and_install(window):
 
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
-        print("Error connecting to the GitHub API:", e)
+        print("Error connecting to the GitHub API", e)
         # Fehlermeldung anzeigen
         window.update_progress.destroy()
         window.update_error_label = customtkinter.CTkLabel(window.navigation_frame,

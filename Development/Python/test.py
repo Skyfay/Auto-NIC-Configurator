@@ -18,3 +18,5 @@ def test2():
 nic_configs = wmi.WMI().Win32_NetworkAdapterConfiguration(IPEnabled=True)
 nic = nic_configs[0]
 print(nic)
+
+

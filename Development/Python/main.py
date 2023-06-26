@@ -6,6 +6,7 @@ import requests
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
+from network_edit import selected_adapter_set_custom_values
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
@@ -13,6 +14,7 @@ from version import check_for_updates, download_and_install, show_download_butto
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
+
 
 #test
 
@@ -256,10 +258,25 @@ class App(customtkinter.CTk):
         window.network_custom_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
         window.network_custom_frame.grid_columnconfigure(0, weight=1)
 
-        window.network_custom_frame_button = customtkinter.CTkButton(window.network_custom_frame, corner_radius=5, height=40,
-                                                                 width=10, border_spacing=10, text="Custom Frame",
-                                                                 image=window.support_image, anchor="w")
-        window.network_custom_frame_button.grid(row=0, column=0, padx=20, pady=10)
+        # create input boxes
+        window.network_custom_ipadress_entry = customtkinter.CTkEntry(window.network_custom_frame, width=200, placeholder_text="IP Address (192.168.1.2)")
+        window.network_custom_ipadress_entry.grid(row=1, column=0, padx=20, pady=5)
+
+        window.network_custom_subnetmask_entry = customtkinter.CTkEntry(window.network_custom_frame, width=200, placeholder_text="Subnet Mask (255.255.255.0)")
+        window.network_custom_subnetmask_entry.grid(row=2, column=0, padx=20, pady=5)
+
+        window.network_custom_Gateway_entry = customtkinter.CTkEntry(window.network_custom_frame, width=200, placeholder_text="Gateway (192.168.1.1)")
+        window.network_custom_Gateway_entry.grid(row=3, column=0, padx=20, pady=5)
+
+        window.network_custom_DNS_entry = customtkinter.CTkEntry(window.network_custom_frame, width=200, placeholder_text="DNS (1.1.1.1)")
+        window.network_custom_DNS_entry.grid(row=4, column=0, padx=20, pady=5)
+
+        window.network_custom_DNS2_entry = customtkinter.CTkEntry(window.network_custom_frame, width=200, placeholder_text="DNS (8.8.8.8)")
+        window.network_custom_DNS2_entry.grid(row=5, column=0, padx=20, pady=5)
+        # window.message_textbox.insert("1.0", text="Here you can write your message...", tags=None)
+
+        window.network_custom_message_entry = customtkinter.CTkButton(window.network_custom_frame, text="Save", command=lambda: selected_adapter_set_custom_values(window, window.network_adapter_select.get()))
+        window.network_custom_message_entry.grid(row=6, column=0, padx=20, pady=10)
 
         # shortcut frame
         window.network_shortcut_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")

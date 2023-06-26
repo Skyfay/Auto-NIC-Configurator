@@ -1,4 +1,8 @@
+import os
+import json
 import wmi
+from network_collector import get_network_adapters_info
+from network_viewer import network_adapter_select_event
 
 # This part need administrator privileges
 # https://learn.microsoft.com/de-de/windows/win32/cimwin32prov/win32-networkadapterconfiguration?redirectedfrom=MSDN
@@ -28,3 +32,49 @@ nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
 nic.EnableDHCP()
 # Reset DNS server to obtain automatically (DHCP)
 nic.SetDNSServerSearchOrder(DNSServerSearchOrder=[])
+
+def get_adapter_index_from_json(adapter_name, json_file_path):
+    with open(json_file_path, 'r') as json_file:
+        data = json.load(json_file)
+
+        for adapter in data:  # Iteriere direkt über die Adapterobjekte in der Liste
+            if adapter['name'] == adapter_name:
+                return adapter['AdapterIndex']
+
+    return None
+
+
+def selected_adapter_set_custom_values(window, selected_adapter):
+    adapter_name = window.network_adapter_select.get()
+    print("Der Adapter welcher ausgewählt wurde war: " + adapter_name)
+
+    if adapter_name != "Select Adapter":
+        json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator', 'network_adapters.json')
+        adapter_index = get_adapter_index_from_json(adapter_name, json_file_path)
+        print("Hier ist der Adapter Index: " + str(adapter_index))
+
+        if adapter_index is not None:
+            # Adapterindex gefunden
+            nic = nic_configs[adapter_index]
+
+            ip = window.network_custom_ipadress_entry.get()
+            subnetmask = window.network_custom_subnetmask_entry.get()
+            gateway = window.network_custom_Gateway_entry.get()
+            dns_servers = [window.network_custom_DNS_entry.get(), window.network_custom_DNS2_entry.get()]
+
+            print(ip, subnetmask, gateway, dns_servers)
+
+            nic.EnableStatic(IPAddress=[ip], SubnetMask=[subnetmask])
+            nic.SetGateways(DefaultIPGateway=[gateway])
+            nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
+
+            get_network_adapters_info() # Reload the Json file with the Adapter Information
+            network_adapter_select_event(window, selected_adapter) # Get the new Adapter Information from the Json file
+        else:
+            # Adapterindex nicht gefunden
+            print(f"Der Adapter '{adapter_name}' wurde nicht gefunden.")
+    else:
+        # Ungültiger Adaptername ausgewählt
+        print("Bitte wählen Sie einen gültigen Adapter.")
+
+
