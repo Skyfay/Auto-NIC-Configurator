@@ -167,6 +167,7 @@ class App(customtkinter.CTk):
         check_for_updates(window)
 
         # create home frame
+
         window.home_frame = customtkinter.CTkFrame(window, corner_radius=0, fg_color="transparent")
         window.home_frame.grid_columnconfigure(0, weight=1)
 
