@@ -100,10 +100,10 @@ class App(customtkinter.CTk):
             return pre_frame
 
         # Gui
-        window.title("v.0.3.0 - alpha") # Windows titel
+        window.title("Auto Nic Configurator") # Windows titel
         window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
-        window.iconbitmap("assets/icon/version.ico") # header icon
+        window.iconbitmap("assets/icon/ethernet.ico") # header icon
         customtkinter.set_default_color_theme("blue") # set default color theme
 
         # set main grid layout 1x2

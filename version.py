@@ -13,7 +13,7 @@ repo_owner = "Skyfay"
 repo_name = "Auto-NIC-Configurator"
 
 # Aktuelle Version des Programms
-current_version = "0.7.0"
+current_version = "1.0.0"
 
 
 def check_for_updates(window):
@@ -46,8 +46,9 @@ def check_for_updates(window):
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
         window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=50, wrap="word") #fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e")
-        window.update_check_menu.grid(row=4, column=0, padx=20, pady=20, sticky="s")
-        window.update_check_menu.insert("1.0", "Error connecting to the GitHub API:\n" + str(e))
+        window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+        window.update_check_menu.insert("1.0", "You use version " + current_version + ".\nError connecting to Github.")
+        print("Error connecting to the GitHub API:\n" + str(e))
         window.update_check_menu.configure(state="disabled")
 
 
