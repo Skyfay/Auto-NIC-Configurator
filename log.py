@@ -27,3 +27,5 @@ def log_entry(level, message):
             log_file.write(log_line)
     except Exception as e:
         print(f'Failed to write to log file: {e}')
+
+

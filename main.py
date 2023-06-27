@@ -29,7 +29,7 @@ class LogToplevelWindow(customtkinter.CTkToplevel):
     def __init__(window, *args, **kwargs):
         super().__init__(*args, **kwargs)
         # Gui
-        #window.title("Logs") # Windows titel
+        window.title("Logs") # Windows titel
         #window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
@@ -48,12 +48,12 @@ class LogToplevelWindow(customtkinter.CTkToplevel):
                                                    anchor="center")
         window.log_lvl_frame_button_all.grid(row=1, column=0, padx=15, pady=5, sticky="ew")
 
-        window.log_lvl_frame_button_info = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Success",
+        window.log_lvl_frame_button_info = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Information",
                                                       fg_color="#88abc7", text_color=("gray10"), hover_color=("gray70", "gray30"),
                                                       anchor="center")
         window.log_lvl_frame_button_info.grid(row=2, column=0, padx=15, pady=5, sticky="ew")
 
-        window.log_lvl_frame_button_success = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Info",
+        window.log_lvl_frame_button_success = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Success",
                                                       fg_color="#b4c76e", text_color=("gray10"), hover_color=("gray70", "gray30"),
                                                       anchor="center")
         window.log_lvl_frame_button_success.grid(row=3, column=0, padx=15, pady=5, sticky="ew")
