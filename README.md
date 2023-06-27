@@ -2,7 +2,6 @@
 With this script you can easily set your network interface to a certain value!
 Now also new with GUI!
 ----------------------------------------------------------------------------------------------
-**Vorschau:**
 ![main_tdLWQxfTOO](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/1f12ec6f-b5e9-42a6-bee5-7f78ac27d71d)
 ![main_BX0klKg0Rc](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/dbde8364-ca7a-4158-9452-457ed31c9021)
 ![main_70i1DabMrq](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/c537b040-9fe9-4db0-9391-fec149c804a6)
