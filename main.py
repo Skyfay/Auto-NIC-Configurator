@@ -11,7 +11,7 @@ from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
 from version import check_for_updates, download_and_install, show_download_button
-from log import display_log_in_frame, update_log_display, delete_log_file, check_create_log_file
+from log import display_log_in_frame, update_log_display, delete_log_file, check_create_log_file, count_log_entries, log_info
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -35,7 +35,7 @@ class LogToplevelWindow(customtkinter.CTkToplevel):
 
         # Gui
         window.title("Logs") # Windows titel
-        #window.minsize(750, 475) # minimum size from the window
+        window.minsize(750, 475) # minimum size from the window
         window.geometry("750x475") # startup size from the window
         #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
         #customtkinter.set_default_color_theme("blue") # set default color theme
@@ -91,6 +91,10 @@ class LogToplevelWindow(customtkinter.CTkToplevel):
                                                                                                        "[ERROR]"))
         window.log_lvl_frame_button_error.grid(row=5, column=0, padx=15, pady=5, sticky="ew")
 
+        num_entries = count_log_entries()  # Anzahl der Log-Einträge abrufen
+        window.log_lines_counter_label = customtkinter.CTkLabel(window.log_lvl_frame, corner_radius=5, height=25, text=f"Number of log entries is: {num_entries}", fg_color=("#f9f9fa", "#343638"))
+        window.log_lines_counter_label.grid(row=6, column=0, padx=15, pady=5, sticky="ew")
+
         window.log_delete_log_button = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Delete Log File",
                                                       fg_color="#d63e3e", text_color=("gray10"), hover_color="#a63e3e",
                                                       anchor="center", command=lambda: delete_log_file(window))
@@ -114,6 +118,7 @@ class App(customtkinter.CTk):
     def __init__(window):
         super().__init__()
 
+        log_info("Starting AutoNicConfigurator")
 
         # Load the latest color mode from the json file
         def load_color_mode_support(window):

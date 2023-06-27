@@ -84,4 +84,12 @@ def check_create_log_file():
         except Exception as e:
             print(f'Failed to create log file: {e}')
 
+def count_log_entries():
+    try:
+        with open(support_file, 'r') as log_file:
+            log_entries = log_file.readlines()
+            return len(log_entries)
+    except Exception as e:
+        print(f'Failed to read log file: {e}')
+        return 0
 
