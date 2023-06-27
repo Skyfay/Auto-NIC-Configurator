@@ -28,10 +28,46 @@ def initialize_adapter_select_placeholder(window):
 class LogToplevelWindow(customtkinter.CTkToplevel):
     def __init__(window, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        window.geometry("400x300")
+        # Gui
+        #window.title("Logs") # Windows titel
+        #window.minsize(750, 475) # minimum size from the window
+        window.geometry("750x475") # startup size from the window
+        #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
+        #customtkinter.set_default_color_theme("blue") # set default color theme
 
-        window.label = customtkinter.CTkLabel(window, text="ToplevelWindow")
-        window.label.pack(padx=20, pady=20)
+        # set main grid layout 1x2
+        window.grid_rowconfigure(0, weight=1)
+        window.grid_columnconfigure(1, weight=1)
+
+        window.log_lvl_frame = customtkinter.CTkFrame(window, corner_radius=0)
+        window.log_lvl_frame.grid(row=0, column=0, sticky="nsew")
+        window.log_lvl_frame.grid_rowconfigure(6, weight=1)
+
+        window.log_lvl_frame_button_all = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="All logs",
+                                                   fg_color="#363636", text_color=("gray90"), hover_color=("gray70", "gray30"),
+                                                   anchor="center")
+        window.log_lvl_frame_button_all.grid(row=1, column=0, padx=15, pady=5, sticky="ew")
+
+        window.log_lvl_frame_button_info = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Success",
+                                                      fg_color="#88abc7", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      anchor="center")
+        window.log_lvl_frame_button_info.grid(row=2, column=0, padx=15, pady=5, sticky="ew")
+
+        window.log_lvl_frame_button_success = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Info",
+                                                      fg_color="#b4c76e", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      anchor="center")
+        window.log_lvl_frame_button_success.grid(row=3, column=0, padx=15, pady=5, sticky="ew")
+
+        window.log_lvl_frame_button_warning = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Warning",
+                                                      fg_color="#e6c97b", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      anchor="center")
+        window.log_lvl_frame_button_warning.grid(row=4, column=0, padx=15, pady=5, sticky="ew")
+
+        window.log_lvl_frame_button_error = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Error",
+                                                      fg_color="#d69488", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      anchor="center")
+        window.log_lvl_frame_button_error.grid(row=5, column=0, padx=15, pady=5, sticky="ew")
+
 
 
 class App(customtkinter.CTk):
