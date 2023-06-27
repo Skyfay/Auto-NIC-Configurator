@@ -1,6 +1,7 @@
 # Auto-NIC-Configurator
-With this script you can easily set your network interface to a certain value!
-Now also new with GUI!
+
+### With this script you can easily set your network interface to a certain value!
+### Now also new with GUI!
 ----------------------------------------------------------------------------------------------
 ![main_tdLWQxfTOO](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/1f12ec6f-b5e9-42a6-bee5-7f78ac27d71d)
 ![main_BX0klKg0Rc](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/dbde8364-ca7a-4158-9452-457ed31c9021)
