@@ -29,8 +29,8 @@
 - You can contact us via a small support form if you need help.
 - You will be notified if you attempt an incorrect configuration. 
 ----------------------------------------------------------------------------------------------
-**Einschränkungen?**
-- Beim NIC-Teaming kann man nur bis zu 4 Adapter zusammenschliessen.
+**Restrictions?**
+- Currently there are no known restrictions.
 ----------------------------------------------------------------------------------------------
 **Contact & Help**
 - You can use the support area directly in the software to contact us. You will get an answer back by e-mail.
