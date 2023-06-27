@@ -39,13 +39,13 @@ def check_for_updates(window):
             window.update_button.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         else:
             # Die aktuelle Version ist aktuell
-            window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=25, wrap="word", fg_color=("#f9f9fa", "#242424"), text_color=("#f9f9fa", "#c7c7c7"))
+            window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=25, wrap="word", fg_color=("#f9f9fa", "#242424"), text_color=("#707070", "#c7c7c7"))
             window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
             window.update_check_menu.insert("1.0", "You use the latest version " + current_version)
             window.update_check_menu.configure(state="disabled")
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
-        window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=50, wrap="word") #fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e")
+        window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=50, wrap="word", fg_color=("#f9f9fa", "#242424"), text_color=("#707070", "#c7c7c7")) #fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e")
         window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         window.update_check_menu.insert("1.0", "You use version " + current_version + ".\nError connecting to Github.")
         print("Error connecting to the GitHub API:\n" + str(e))
