@@ -11,6 +11,7 @@ from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
 from version import check_for_updates, download_and_install, show_download_button
+from log import display_log_in_frame
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -49,24 +50,39 @@ class LogToplevelWindow(customtkinter.CTkToplevel):
         window.log_lvl_frame_button_all.grid(row=1, column=0, padx=15, pady=5, sticky="ew")
 
         window.log_lvl_frame_button_info = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Information",
-                                                      fg_color="#88abc7", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      fg_color="#88abc7", text_color=("gray10"), hover_color="#6f8ca3",
                                                       anchor="center")
         window.log_lvl_frame_button_info.grid(row=2, column=0, padx=15, pady=5, sticky="ew")
 
         window.log_lvl_frame_button_success = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Success",
-                                                      fg_color="#b4c76e", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      fg_color="#b4c76e", text_color=("gray10"), hover_color="#94a35a",
                                                       anchor="center")
         window.log_lvl_frame_button_success.grid(row=3, column=0, padx=15, pady=5, sticky="ew")
 
         window.log_lvl_frame_button_warning = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Warning",
-                                                      fg_color="#e6c97b", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      fg_color="#e6c97b", text_color=("gray10"), hover_color="#bda564",
                                                       anchor="center")
         window.log_lvl_frame_button_warning.grid(row=4, column=0, padx=15, pady=5, sticky="ew")
 
         window.log_lvl_frame_button_error = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Error",
-                                                      fg_color="#d69488", text_color=("gray10"), hover_color=("gray70", "gray30"),
+                                                      fg_color="#d69488", text_color=("gray10"), hover_color="#ad776d",
                                                       anchor="center")
         window.log_lvl_frame_button_error.grid(row=5, column=0, padx=15, pady=5, sticky="ew")
+
+        window.log_delete_log_button = customtkinter.CTkButton(window.log_lvl_frame, corner_radius=5, height=40, border_spacing=10, text="Delete Log File",
+                                                      fg_color="#d63e3e", text_color=("gray10"), hover_color="#a63e3e",
+                                                      anchor="center")
+        window.log_delete_log_button.grid(row=6, column=0, padx=15, pady=15, sticky="ews")
+
+        window.log_frame = customtkinter.CTkScrollableFrame(window, corner_radius=5, fg_color="transparent")
+        window.log_frame.grid_columnconfigure(0, weight=1)
+        window.log_frame.grid_rowconfigure(0, weight=1)  # Höhe anpassen
+        window.log_frame.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        display_log_in_frame(window)
+
+
+
 
 
 

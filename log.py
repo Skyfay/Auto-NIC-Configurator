@@ -1,11 +1,12 @@
 import os
 import datetime
+import customtkinter
 
 support_dir = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
 support_file = os.path.join(support_dir, 'system.log')
 
 def log_success(message):
-    log_success('[SUCCESS]', message)
+    log_entry('[SUCCESS]', message)
 
 def log_info(message):
     log_entry('[INFO]', message)
@@ -27,5 +28,15 @@ def log_entry(level, message):
             log_file.write(log_line)
     except Exception as e:
         print(f'Failed to write to log file: {e}')
+
+
+def display_log_in_frame(window):
+    with open(support_file, 'r') as log_file:
+        logs = log_file.readlines()
+
+    for row_num, log in enumerate(logs):
+        log_label = customtkinter.CTkLabel(window.log_frame, text=log)
+        log_label.grid(row=row_num, column=0, padx=2, pady=2, sticky='we')
+
 
 
