@@ -1,12 +1,13 @@
 # Auto-NIC-Configurator
-<br>
 With this script you can easily set your network interface to a certain value!
 Now also new with GUI!
 ----------------------------------------------------------------------------------------------
 **Vorschau:**
-![Shortcut-5 0-Blue](https://user-images.githubusercontent.com/76796007/182177099-8a5307e1-0fab-4fa8-801a-a928fc968234.png)
-![Custom-5 0-Red](https://user-images.githubusercontent.com/76796007/182177066-602a68ed-a21d-442d-aac3-b630f104e915.png)
-![Nic-Team-5 0-Green](https://user-images.githubusercontent.com/76796007/182177090-c3ea8667-5c9b-4288-bb3d-fbe4f2b87776.png)
+![main_tdLWQxfTOO](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/1f12ec6f-b5e9-42a6-bee5-7f78ac27d71d)
+![main_BX0klKg0Rc](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/dbde8364-ca7a-4158-9452-457ed31c9021)
+![main_70i1DabMrq](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/c537b040-9fe9-4db0-9391-fec149c804a6)
+![main_ENlu6ATPR0](https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/256ded7e-295e-434c-a803-01885d5a85c4)
+
 ----------------------------------------------------------------------------------------------
 **Requirements:**
 - You need a Windows x64 system. 
