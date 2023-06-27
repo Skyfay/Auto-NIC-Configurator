@@ -1,3 +1,4 @@
+import logging
 import os
 import json
 import wmi
@@ -7,6 +8,7 @@ import sys
 import ipaddress
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event
+from log import log_warning
 
 # This part need administrator privileges
 # https://learn.microsoft.com/de-de/windows/win32/cimwin32prov/win32-networkadapterconfiguration?redirectedfrom=MSDN
@@ -54,7 +56,7 @@ def selected_adapter_set_custom_values(window, selected_adapter):
     else:
         # Überprüfen, ob die Anwendung mit Administratorrechten gestartet wurde
         if ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1) != 42:
-            print("Error: The application needs to be run with administrator privileges.")
+            log_warning("Error: The application needs to be run with administrator privileges.")
         window.destroy()
 
 

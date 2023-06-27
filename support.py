@@ -7,6 +7,7 @@ import os
 import json
 import datetime
 from datetime import datetime
+from log import log_info
 
 # Main Data safe file for some actions in the code, the path as "CONFIG_DIR" and the file as "CONFIG_File".
 CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
@@ -39,9 +40,9 @@ def check_internet_connection():
         return False
 # Console output if there is an internet connection or not (use to debug)
 if check_internet_connection():
-    print(f"Log: [{timestamp}] - There is an Internet connection.")
+    log_info("There is an Internet connection.")
 else:
-    print(f"Log: [{timestamp}] - There is no internet connection.")
+    log_info("There is no internet connection.")
 
 # Check if the user has entered a valid email address (support entry)
 def is_valid_email(email):
