@@ -29,8 +29,9 @@ def initialize_adapter_select_placeholder(window):
 class LogToplevelWindow(customtkinter.CTkToplevel):
     def __init__(window, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        window.attributes("-topmost", True) # set the window always on top
 
-        check_create_log_file()
+        check_create_log_file() # check if the log file exists and create it if not
 
 
         # Gui
