@@ -6,6 +6,7 @@ import os
 import urllib.request
 import subprocess
 from pathlib import Path
+from log import log_info, log_error, log_success
 import time
 # test check for updates:
 # GitHub Repository-Informationen
@@ -43,12 +44,13 @@ def check_for_updates(window):
             window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
             window.update_check_menu.insert("1.0", "You use the latest version " + current_version)
             window.update_check_menu.configure(state="disabled")
+            log_info("You use the latest version " + current_version)
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
         window.update_check_menu = customtkinter.CTkTextbox(window.navigation_frame, width=200, height=50, wrap="word", fg_color=("#f9f9fa", "#242424"), text_color=("#707070", "#c7c7c7")) #fg_color=("#f9f9fa", "#343638"), border_width=2, border_color=("#979da2", "#565b5e")
         window.update_check_menu.grid(row=6, column=0, padx=20, pady=20, sticky="s")
         window.update_check_menu.insert("1.0", "You use version " + current_version + ".\nError connecting to Github.")
-        print("Error connecting to the GitHub API:\n" + str(e))
+        log_error("Error connecting to the GitHub API:\n" + str(e))
         window.update_check_menu.configure(state="disabled")
 
 
@@ -92,7 +94,7 @@ def download_and_install(window):
 
         if len(assets) == 0:
             # Es sind keine Assets (Dateien) für die neueste Version verfügbar
-            print("No assets found for the latest version.")
+            log_error("No assets found for the latest version.")
             return
 
             # Fehlermeldung anzeigen
@@ -113,19 +115,19 @@ def download_and_install(window):
 
         if not download_url:
             # Es wurde keine ausführbare Datei (.exe) gefunden
-            print("No executable file found for the latest version.")
+            log_error("No executable file found for the latest version.")
             return
 
         # Ermitteln des Versionsnamens
         latest_version = release_info["tag_name"]
         # Herunterladen der ausführbaren Datei in den Download-Ordner des Benutzers
         download_path = Path.home() / "Downloads" / f"auto-nic-configurator_{latest_version}.exe"
-        print("Downloading the latest version...")
+        log_info("Downloading the latest version...")
         urllib.request.urlretrieve(download_url, download_path)
 
         # Ersetzen der aktuellen ausführbaren Datei mit der heruntergeladenen Datei
         if os.path.exists(download_path):
-            print("Download completed successfully!")
+            log_success("Download completed successfully!")
 
             # Ausführen der heruntergeladenen Datei
             subprocess.Popen([download_path], shell=True)
@@ -134,7 +136,7 @@ def download_and_install(window):
             window.destroy()
 
         else:
-            print("Current executable file not found.")
+            log_error("Current executable file not found.")
 
             # Fehlermeldung anzeigen
             window.update_progress.destroy()
@@ -147,7 +149,7 @@ def download_and_install(window):
 
     except requests.exceptions.RequestException as e:
         # Bei Fehlern bei der Anfrage an die GitHub API
-        print("Error connecting to the GitHub API", e)
+        log_error("Error connecting to the GitHub API", e)
         # Fehlermeldung anzeigen
         window.update_progress.destroy()
         window.update_error_label = customtkinter.CTkLabel(window.navigation_frame,

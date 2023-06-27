@@ -7,7 +7,7 @@ import os
 import json
 import datetime
 from datetime import datetime
-from log import log_info
+from log import log_info, log_error, log_success
 
 # Main Data safe file for some actions in the code, the path as "CONFIG_DIR" and the file as "CONFIG_File".
 CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
@@ -40,9 +40,9 @@ def check_internet_connection():
         return False
 # Console output if there is an internet connection or not (use to debug)
 if check_internet_connection():
-    log_info("There is an Internet connection.")
+    log_info("There was an Internet connection at startup.")
 else:
-    log_info("There is no internet connection.")
+    log_info("There was no internet connection at startup.")
 
 # Check if the user has entered a valid email address (support entry)
 def is_valid_email(email):
@@ -68,9 +68,9 @@ def send_discord_webhook(webhook_url, name, email, subject, message):
     }
     response = requests.post(webhook_url, json=data)
     if response.status_code == 204:
-        print(f"Log: [{timestamp}] - Webhook message sent successfully.")
+        log_success("Webhook message sent successfully.")
     else:
-        print(f"Log: [{timestamp}] - Error sending the webhook message.")
+        log_error("Error sending the webhook message.")
 
 # Code that runs when the user clicks the "Send" button
 def send_message_to_webhook(window):
