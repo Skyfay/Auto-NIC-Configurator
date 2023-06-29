@@ -266,6 +266,8 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "shortcut_light.png")), size=(20, 20))
         window.add_box_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "add_box_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "add_box_light.png")), size=(20, 20))
+        window.remove_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "remove_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "remove_light.png")), size=(20, 20))
 
         # create left navigation frame
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
@@ -416,8 +418,11 @@ class App(customtkinter.CTk):
         window.network_shortcut_frame.grid_columnconfigure(1, weight=1)
         window.network_shortcut_frame.grid_rowconfigure(0, weight=1)
 
-        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
-        window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
+        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5)
+
+        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
 
         create_buttons_from_entries(window, window.network_adapter_select.get())
 
