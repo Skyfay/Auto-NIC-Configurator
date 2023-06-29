@@ -12,6 +12,7 @@ from appearance import save_color_mode_support
 from settings import delete_database_dir
 from version import check_for_updates, download_and_install, show_download_button
 from log import display_log_in_frame, update_log_display, delete_log_file, check_create_log_file, count_log_entries, log_info
+from shortcuts import write_entries_to_json
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -24,6 +25,44 @@ def initialize_adapter_select_placeholder(window):
     placeholder_text = "Select Adapter"
     window.network_adapter_select.set(placeholder_text)
     window.network_adapter_select.configure(state="readonly")
+
+class ShortcutAddToplevelWindow(customtkinter.CTkToplevel):
+    def __init__(window, adapter, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        window.attributes("-topmost", True) # set the window always on top
+
+        # Gui
+        window.title("Add Shortcut") # Windows titel
+        window.minsize(300, 300) # minimum size from the window
+        window.geometry("300x300") # startup size from the window
+        #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
+        #customtkinter.set_default_color_theme("blue") # set default color theme
+
+        # set main grid layout 1x2
+        window.grid_rowconfigure(0, weight=1)
+        window.grid_columnconfigure(0, weight=1)
+
+        window.shortcut_description_label = customtkinter.CTkLabel(window, text="Here you can add your network adapter\n info for your shortcut")
+        window.shortcut_description_label.grid(row=0, column=0, padx=20, pady=5)
+
+        window.shortcut_ipadress_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="IP Address (192.168.1.2)")
+        window.shortcut_ipadress_entry.grid(row=1, column=0, padx=20, pady=5)
+
+        window.shortcut_subnetmask_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="Subnet Mask (255.255.255.0)")
+        window.shortcut_subnetmask_entry.grid(row=2, column=0, padx=20, pady=5)
+
+        window.shortcut_Gateway_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="Gateway (192.168.1.1)")
+        window.shortcut_Gateway_entry.grid(row=3, column=0, padx=20, pady=5)
+
+        window.shortcut_DNS_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="DNS (1.1.1.1)")
+        window.shortcut_DNS_entry.grid(row=4, column=0, padx=20, pady=5)
+
+        window.shortcut_DNS2_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="DNS (8.8.8.8)")
+        window.shortcut_DNS2_entry.grid(row=5, column=0, padx=20, pady=5)
+
+        window.shortcut_entry_button = customtkinter.CTkButton(window, text="Add Shortcut", command=lambda: write_entries_to_json(window))
+        window.shortcut_entry_button.grid(row=6, column=0, padx=20, pady=10)
+
 
 
 class LogToplevelWindow(customtkinter.CTkToplevel):
@@ -224,6 +263,8 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "custom_light.png")), size=(20, 20))
         window.shortcut_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "shortcut_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "shortcut_light.png")), size=(20, 20))
+        window.add_box_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "add_box_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "add_box_light.png")), size=(20, 20))
 
         # create left navigation frame
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
@@ -373,12 +414,8 @@ class App(customtkinter.CTk):
         window.network_shortcut_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
         window.network_shortcut_frame.grid_columnconfigure(0, weight=1)
 
-        window.network_shortcut_frame_info = customtkinter.CTkLabel(window.network_shortcut_frame,
-                                             text="Add your individual shortcuts with custom netzwerk adapter values. \nComing Soon!",
-                                             font=("TkDefaultFont", 12, "bold"))
-        window.network_shortcut_frame_info.grid(row=7, column=0, padx=20, pady=5)
-
-
+        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_add_button.grid(row=7, column=0, padx=20, pady=5, sticky="we")
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
@@ -474,6 +511,12 @@ class App(customtkinter.CTk):
     def open_log_window(window):
         if window.toplevel_window is None or not window.toplevel_window.winfo_exists():
             window.toplevel_window = LogToplevelWindow(window)  # create window if its None or destroyed
+        else:
+            window.toplevel_window.focus()  # if window exists focus it
+
+    def open_shortcut_add_window(window):
+        if window.toplevel_window is None or not window.toplevel_window.winfo_exists():
+            window.toplevel_window = ShortcutAddToplevelWindow(window)  # create window if its None or destroyed
         else:
             window.toplevel_window.focus()  # if window exists focus it
 
