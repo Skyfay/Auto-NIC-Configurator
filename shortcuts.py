@@ -86,6 +86,7 @@ def write_entries_to_json(window):
     window.destroy()
 
     update_entry_numbers()
+    #create_buttons_from_entries(window)
 
 def create_buttons_from_entries(window):
     # Pfad zur JSON-Datei
@@ -106,9 +107,24 @@ def create_buttons_from_entries(window):
         for index, entry in enumerate(entries.values()):
             # Extrahiere den Namen des Eintrags
             name = entry.get('name')
+            ip_address = entry.get('ip_address')
+            subnet_mask = entry.get('subnet_mask')
+            gateway = entry.get('gateway')
+            dns = entry.get('dns')
+            dns2 = entry.get('dns2')
+
+            # Erstelle eine Funktion, die die Netzwerkeinstellungen mit den gegebenen Werten ändert
+            def change_network_settings(ip, mask, gw, dns1, dns2):
+                # Hier kommt der Code, um die Netzwerkeinstellungen zu ändern
+                print("IP:", ip)
+                print("Subnet Mask:", mask)
+                print("Gateway:", gw)
+                print("DNS 1:", dns1)
+                print("DNS 2:", dns2)
+
 
             # Erstelle einen benutzerdefinierten Button mit dem Platzhaltertext
-            button = customtkinter.CTkButton(window.network_shortcut_frame, text=name, height=100, width=150)
+            button = customtkinter.CTkButton(window.network_shortcut_frame, text=(name + "\n" + ip_address + "\n" + subnet_mask + "\n" + gateway + "\n" + dns + "\n" + dns2), height=100, width=150, command=lambda ip=ip_address, mask=subnet_mask, gw=gateway, dns1=dns, dns2=dns2: change_network_settings(ip, mask, gw, dns1, dns2))
             button.grid(row=index // 2 + start_row, column=start_column, padx=20, pady=10)
 
             # Überprüfe, ob die row-Position erhöht werden muss
