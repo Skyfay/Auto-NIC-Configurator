@@ -419,7 +419,7 @@ class App(customtkinter.CTk):
         window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
         window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
 
-        create_buttons_from_entries(window)
+        create_buttons_from_entries(window, window.network_adapter_select.get())
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
