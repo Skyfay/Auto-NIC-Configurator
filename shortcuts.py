@@ -43,7 +43,9 @@ def write_entries_to_json(window):
     # Pfad zur JSON-Datei
     CONFIG_FILE = os.path.join(CONFIG_DIR, 'shortcuts.json')
 
+
     # Lese die Werte aus den Entry-Feldern aus
+    name = window.shortcut_name_entry.get()
     ip_address = window.shortcut_ipadress_entry.get()
     subnet_mask = window.shortcut_subnetmask_entry.get()
     gateway = window.shortcut_Gateway_entry.get()
@@ -60,6 +62,7 @@ def write_entries_to_json(window):
     # Erstelle ein Dictionary mit den ausgelesenen Werten und der nächsten Nummer
     entry_number = str(max_number + 1)
     entry = {
+        'name': name,
         'ip_address': ip_address,
         'subnet_mask': subnet_mask,
         'gateway': gateway,
@@ -84,3 +87,39 @@ def write_entries_to_json(window):
 
     update_entry_numbers()
 
+def create_buttons_from_entries(window):
+    # Pfad zur JSON-Datei
+    CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+    CONFIG_FILE = os.path.join(CONFIG_DIR, 'shortcuts.json')
+
+    # Überprüfe, ob die Datei shortcuts.json existiert
+    if os.path.exists(CONFIG_FILE):
+        # Lade die Einträge aus der JSON-Datei
+        with open(CONFIG_FILE, 'r') as file:
+            entries = json.load(file)
+
+        # Definiere den Startwert für die row- und column-Position
+        start_row = 2
+        start_column = 0
+
+        # Iteriere über die Einträge und erstelle Buttons
+        for index, entry in enumerate(entries.values()):
+            # Extrahiere den Namen des Eintrags
+            name = entry.get('name')
+
+            # Erstelle einen benutzerdefinierten Button mit dem Platzhaltertext
+            button = customtkinter.CTkButton(window.network_shortcut_frame, text=name, height=100, width=150)
+            button.grid(row=index // 2 + start_row, column=start_column, padx=20, pady=10)
+
+            # Überprüfe, ob die row-Position erhöht werden muss
+            if index % 2 != 0:
+                start_row += 1
+
+            # Überprüfe, ob die column-Position erhöht werden muss
+            if start_column == 0:
+                start_column = 1
+            else:
+                start_column = 0
+                start_row += 1
+    else:
+        print("Es gibt derzeit keine Shortcuts.")

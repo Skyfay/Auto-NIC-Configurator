@@ -12,12 +12,10 @@ from appearance import save_color_mode_support
 from settings import delete_database_dir
 from version import check_for_updates, download_and_install, show_download_button
 from log import display_log_in_frame, update_log_display, delete_log_file, check_create_log_file, count_log_entries, log_info
-from shortcuts import write_entries_to_json
+from shortcuts import write_entries_to_json, create_buttons_from_entries
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
-
-
 #test
 
 # initalize the network adapter select placeholder
@@ -33,7 +31,7 @@ class ShortcutAddToplevelWindow(customtkinter.CTkToplevel):
 
         # Gui
         window.title("Add Shortcut") # Windows titel
-        window.minsize(300, 300) # minimum size from the window
+        window.minsize(300, 350) # minimum size from the window length, height
         window.geometry("300x300") # startup size from the window
         #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
         #customtkinter.set_default_color_theme("blue") # set default color theme
@@ -45,23 +43,26 @@ class ShortcutAddToplevelWindow(customtkinter.CTkToplevel):
         window.shortcut_description_label = customtkinter.CTkLabel(window, text="Here you can add your network adapter\n info for your shortcut")
         window.shortcut_description_label.grid(row=0, column=0, padx=20, pady=5)
 
+        window.shortcut_name_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="Shortcut Name")
+        window.shortcut_name_entry.grid(row=1, column=0, padx=20, pady=5)
+
         window.shortcut_ipadress_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="IP Address (192.168.1.2)")
-        window.shortcut_ipadress_entry.grid(row=1, column=0, padx=20, pady=5)
+        window.shortcut_ipadress_entry.grid(row=2, column=0, padx=20, pady=5)
 
         window.shortcut_subnetmask_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="Subnet Mask (255.255.255.0)")
-        window.shortcut_subnetmask_entry.grid(row=2, column=0, padx=20, pady=5)
+        window.shortcut_subnetmask_entry.grid(row=3, column=0, padx=20, pady=5)
 
         window.shortcut_Gateway_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="Gateway (192.168.1.1)")
-        window.shortcut_Gateway_entry.grid(row=3, column=0, padx=20, pady=5)
+        window.shortcut_Gateway_entry.grid(row=4, column=0, padx=20, pady=5)
 
         window.shortcut_DNS_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="DNS (1.1.1.1)")
-        window.shortcut_DNS_entry.grid(row=4, column=0, padx=20, pady=5)
+        window.shortcut_DNS_entry.grid(row=5, column=0, padx=20, pady=5)
 
         window.shortcut_DNS2_entry = customtkinter.CTkEntry(window, width=200, placeholder_text="DNS (8.8.8.8)")
-        window.shortcut_DNS2_entry.grid(row=5, column=0, padx=20, pady=5)
+        window.shortcut_DNS2_entry.grid(row=6, column=0, padx=20, pady=5)
 
         window.shortcut_entry_button = customtkinter.CTkButton(window, text="Add Shortcut", command=lambda: write_entries_to_json(window))
-        window.shortcut_entry_button.grid(row=6, column=0, padx=20, pady=10)
+        window.shortcut_entry_button.grid(row=7, column=0, padx=20, pady=10)
 
 
 
@@ -411,11 +412,14 @@ class App(customtkinter.CTk):
         window.network_custom_message_entry.grid(row=6, column=0, padx=20, pady=10)
 
         # shortcut frame
-        window.network_shortcut_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
-        window.network_shortcut_frame.grid_columnconfigure(0, weight=1)
+        window.network_shortcut_frame = customtkinter.CTkScrollableFrame(window.network_frame, corner_radius=0, fg_color="transparent")
+        window.network_shortcut_frame.grid_columnconfigure(1, weight=1)
+        window.network_shortcut_frame.grid_rowconfigure(0, weight=1)
 
         window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
-        window.network_shortcut_add_button.grid(row=7, column=0, padx=20, pady=5, sticky="we")
+        window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
+
+        create_buttons_from_entries(window)
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
