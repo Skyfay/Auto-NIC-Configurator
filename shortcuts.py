@@ -59,6 +59,14 @@ def write_entries_to_json(window):
     dns = window.shortcut_DNS_entry.get()
     dns2 = window.shortcut_DNS2_entry.get()
 
+    # Überprüfe, ob bereits ein Eintrag mit demselben Namen vorhanden ist
+    with open(CONFIG_FILE, 'r') as file:
+        existing_entries = json.load(file)
+        for entry in existing_entries.values():
+            if entry['name'] == name:
+                print("Es gibt bereits einen Eintrag mit diesem Namen.")
+                return
+
     # Überprüfe die höchste vorhandene Nummer in der JSON-Datei
     max_number = 0
     if os.path.exists(CONFIG_FILE):
@@ -93,7 +101,6 @@ def write_entries_to_json(window):
     window.destroy()
 
     update_entry_numbers()
-    #create_buttons_from_entries(window)
 
 def create_buttons_from_entries(window, selected_adapter):
     # Pfad zur JSON-Datei
@@ -239,3 +246,41 @@ def create_buttons_from_entries(window, selected_adapter):
                 start_row += 1
     else:
         print("Es gibt derzeit keine Shortcuts.")
+
+
+def get_shortcut_names_from_json():
+    CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+    CONFIG_FILE = os.path.join(CONFIG_DIR, 'shortcuts.json')
+
+    with open(CONFIG_FILE, 'r') as file:
+        data = json.load(file)
+
+    names = [data[key]['name'] for key in data]
+
+    return names
+
+def delete_shortcut_by_name(window):
+    CONFIG_DIR = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator')
+    CONFIG_FILE = os.path.join(CONFIG_DIR, 'shortcuts.json')
+
+    shortcut_name = window.shortcut_name_menu.get()
+
+    with open(CONFIG_FILE, 'r') as file:
+        data = json.load(file)
+
+    # Durchsuche den Inhalt der JSON-Datei nach dem Namen
+    keys_to_delete = []
+    for key in data:
+        if data[key]['name'] == shortcut_name:
+            keys_to_delete.append(key)
+
+    # Lösche die entsprechenden Einträge aus dem Datenobjekt
+    for key in keys_to_delete:
+        del data[key]
+
+    # Speichere die aktualisierten Daten in der JSON-Datei
+    with open(CONFIG_FILE, 'w') as file:
+        json.dump(data, file, indent=4)
+
+    update_entry_numbers()
+    window.destroy()

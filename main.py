@@ -12,7 +12,7 @@ from appearance import save_color_mode_support
 from settings import delete_database_dir
 from version import check_for_updates, download_and_install, show_download_button
 from log import display_log_in_frame, update_log_display, delete_log_file, check_create_log_file, count_log_entries, log_info
-from shortcuts import write_entries_to_json, create_buttons_from_entries
+from shortcuts import write_entries_to_json, create_buttons_from_entries, get_shortcut_names_from_json, delete_shortcut_by_name
 
 # Aufruf der Funktion, um die Informationen der Netzwerk Adapter zu aktuallisieren abzurufen
 get_network_adapters_info()
@@ -24,8 +24,35 @@ def initialize_adapter_select_placeholder(window):
     window.network_adapter_select.set(placeholder_text)
     window.network_adapter_select.configure(state="readonly")
 
+class ShortcutDeleteToplevelWindow(customtkinter.CTkToplevel):
+    def __init__(window, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        window.attributes("-topmost", True) # set the window always on top
+
+        # Gui
+        window.title("Delete Shortcut") # Windows titel
+        window.minsize(300, 250) # minimum size from the window length, height
+        window.geometry("300x300") # startup size from the window
+        #window.iconbitmap("assets/icon/ethernet.ico") # set the icon from the window
+        #customtkinter.set_default_color_theme("blue") # set default color theme
+
+        # set main grid layout 1x2
+        window.grid_rowconfigure(4, weight=1)
+        window.grid_columnconfigure(0, weight=1)
+
+        window.shortcut_description_label = customtkinter.CTkLabel(window, text="Here you can delete your shortcuts")
+        window.shortcut_description_label.grid(row=1, column=0, padx=20, pady=5)
+
+        shortcut_names = get_shortcut_names_from_json()
+
+        window.shortcut_name_menu = customtkinter.CTkOptionMenu(window, width=200, values=shortcut_names)
+        window.shortcut_name_menu.grid(row=2, column=0, padx=20, pady=5)
+
+        window.shortcut_delete_button = customtkinter.CTkButton(window, text="Delete Shortcut", command=lambda: delete_shortcut_by_name(window))
+        window.shortcut_delete_button.grid(row=3, column=0, padx=20, pady=10)
+
 class ShortcutAddToplevelWindow(customtkinter.CTkToplevel):
-    def __init__(window, adapter, *args, **kwargs):
+    def __init__(window, *args, **kwargs):
         super().__init__(*args, **kwargs)
         window.attributes("-topmost", True) # set the window always on top
 
@@ -421,7 +448,7 @@ class App(customtkinter.CTk):
         window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
         window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5)
 
-        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
         window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
 
         create_buttons_from_entries(window, window.network_adapter_select.get())
@@ -526,6 +553,12 @@ class App(customtkinter.CTk):
     def open_shortcut_add_window(window):
         if window.toplevel_window is None or not window.toplevel_window.winfo_exists():
             window.toplevel_window = ShortcutAddToplevelWindow(window)  # create window if its None or destroyed
+        else:
+            window.toplevel_window.focus()  # if window exists focus it
+
+    def open_shortcut_delete_window(window):
+        if window.toplevel_window is None or not window.toplevel_window.winfo_exists():
+            window.toplevel_window = ShortcutDeleteToplevelWindow(window)  # create window if its None or destroyed
         else:
             window.toplevel_window.focus()  # if window exists focus it
 
