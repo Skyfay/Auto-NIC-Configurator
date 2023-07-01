@@ -445,12 +445,6 @@ class App(customtkinter.CTk):
         window.network_shortcut_frame.grid_columnconfigure(1, weight=1)
         window.network_shortcut_frame.grid_rowconfigure(0, weight=1)
 
-        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
-        window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5)
-
-        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
-        window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
-
         create_buttons_from_entries(window, window.network_adapter_select.get())
 
 

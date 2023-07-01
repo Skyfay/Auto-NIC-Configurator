@@ -114,8 +114,22 @@ def create_buttons_from_entries(window, selected_adapter):
             entries = json.load(file)
 
         # Definiere den Startwert für die row- und column-Position
-        start_row = 2
+        start_row = 3
         start_column = 0
+
+        # Entferne alle vorhandenen Buttons im network_shortcut_frame
+        for widget in window.network_shortcut_frame.grid_slaves():
+            widget.grid_forget()
+
+        # Add Buttons to Add, Delete and Refresh the Network Shortcuts
+        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5)
+
+        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
+        window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
+
+        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
+        window.network_shortcut_reload_button.grid(row=2, column=0, padx=20, pady=5, columnspan=2, sticky="w")
 
         # Iteriere über die Einträge und erstelle Buttons
         for index, entry in enumerate(entries.values()):
@@ -244,6 +258,9 @@ def create_buttons_from_entries(window, selected_adapter):
             else:
                 start_column = 0
                 start_row += 1
+
+        # Aktualisiere das Layout des network_shortcut_frame
+        window.network_shortcut_frame.update()
     else:
         print("Es gibt derzeit keine Shortcuts.")
 
