@@ -295,6 +295,8 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "add_box_light.png")), size=(20, 20))
         window.remove_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "remove_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "remove_light.png")), size=(20, 20))
+        window.refresh_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "refresh_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "refresh_light.png")), size=(20, 20))
 
         # create left navigation frame
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
@@ -452,7 +454,7 @@ class App(customtkinter.CTk):
         window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
         window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
 
-        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
+        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.refresh_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
         window.network_shortcut_reload_button.grid(row=2, column=0, padx=20, pady=5, columnspan=2, sticky="w")
 
         create_buttons_from_entries(window, window.network_adapter_select.get())

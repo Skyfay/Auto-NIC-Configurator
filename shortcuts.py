@@ -5,6 +5,7 @@ import ctypes
 import wmi
 import ipaddress
 import sys
+import re
 
 from network_viewer import network_adapter_select_event
 from network_edit import get_adapter_index_from_json
@@ -70,6 +71,34 @@ def write_entries_to_json(window):
     dns = window.shortcut_DNS_entry.get()
     dns2 = window.shortcut_DNS2_entry.get()
 
+    if not name:
+        log_error("Name field is missing!")
+        print("Name-Feld ist leer!")
+        error_label = customtkinter.CTkLabel(window,
+                                             text="Name field is missing!",
+                                             text_color="#ff4155",
+                                             font=("TkDefaultFont", 12, "bold"))
+        error_label.grid(row=8, column=0, padx=20, pady=5)
+        window.shortcut_name_entry.configure(fg_color="#cc3444")
+        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+        window.after(3000, lambda: window.shortcut_name_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        return
+
+    # Überprüfen, ob der Name ungültige Zeichen enthält
+    if not re.match(r'^[a-zA-Z0-9-_]+$', name):
+        log_error("Invalid characters in name field!")
+        invalid_chars = re.findall(r'[^a-zA-Z0-9-_]', name)
+        invalid_chars = ', '.join(invalid_chars)
+        error_msg = "Invalid characters in name field!\nDisallowed characters are: " + invalid_chars
+        if ' ' in name:
+            error_msg += "\nSpace key between characters is not allowed."
+        error_label = customtkinter.CTkLabel(window, text=error_msg, text_color="#ff4155", font=("TkDefaultFont", 12, "bold"))
+        error_label.grid(row=8, column=0, padx=20, pady=5)
+        window.shortcut_name_entry.configure(fg_color="#cc3444")
+        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+        window.after(3000, lambda: window.shortcut_name_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        return False
+
     # Überprüfe, ob bereits ein Eintrag mit demselben Namen vorhanden ist
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as file:
@@ -78,6 +107,126 @@ def write_entries_to_json(window):
                 if entry['name'] == name:
                     print("Es gibt bereits einen Eintrag mit diesem Namen.")
                     return
+
+    # Überprüfen, ob mindestens eines der anderen Felder ausgefüllt ist
+    if not any([ip_address, subnet_mask, gateway, dns, dns2]):
+        error_msg = "Please fill in at least one additional field,\n besides the name."
+        error_label = customtkinter.CTkLabel(window, text=error_msg, text_color="#ff4155", font=("TkDefaultFont", 12, "bold"))
+        error_label.grid(row=9, column=0, padx=20, pady=5)
+        window.after(100, lambda: window.shortcut_ipadress_entry.configure(fg_color="#cc3444"))
+        window.after(300, lambda: window.shortcut_subnetmask_entry.configure(fg_color="#cc3444"))
+        window.after(500, lambda: window.shortcut_Gateway_entry.configure(fg_color="#cc3444"))
+        window.after(700, lambda: window.shortcut_DNS_entry.configure(fg_color="#cc3444"))
+        window.after(900, lambda: window.shortcut_DNS2_entry.configure(fg_color="#cc3444"))
+
+        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+
+        window.after(1500, lambda: window.shortcut_ipadress_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        window.after(1700, lambda: window.shortcut_subnetmask_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        window.after(1900, lambda: window.shortcut_Gateway_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        window.after(2100, lambda: window.shortcut_DNS_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        window.after(2300, lambda: window.shortcut_DNS2_entry.configure(fg_color=("#f9f9fa", "#343638")))
+        return False
+
+    if ip_address or subnet_mask or gateway:
+        if not (ip_address and subnet_mask and gateway):
+            print("Eines oder mehrere Felder sind leer!")
+            log_error("One or more input fields are missing!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="One or more input fields are missing!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_ipadress_entry.configure(fg_color="#cc3444")
+            window.shortcut_subnetmask_entry.configure(fg_color="#cc3444")
+            window.shortcut_Gateway_entry.configure(fg_color="#cc3444")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_ipadress_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            window.after(3000, lambda: window.shortcut_subnetmask_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            window.after(3000, lambda: window.shortcut_Gateway_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
+
+    # Überprüfen der IP-Adresse
+    if ip_address:
+        try:
+            ipaddress.ip_address(ip_address)
+        except ValueError:
+            log_error("Invalid IP Address!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="Invalid IP Address!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_ipadress_entry.configure(fg_color="#a13f48")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_ipadress_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
+
+    # Überprüfen der Subnetzmaske
+    if subnet_mask:
+        try:
+            ipaddress.ip_network(ip_address + "/" + subnet_mask, strict=False)
+        except ValueError:
+            log_error("Invalid Subnet Mask!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="Invalid Subnet Mask!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_subnetmask_entry.configure(fg_color="#a13f48")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_subnetmask_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
+
+    # Überprüfen des Gateways
+    if gateway:
+        try:
+            ipaddress.ip_address(gateway)
+        except ValueError:
+            log_error("Invalid Gateway!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="Invalid Gateway!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_Gateway_entry.configure(fg_color="#a13f48")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_Gateway_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
+
+    # Überprüfen der DNS-Server
+    dns_servers = []
+    if dns:
+        try:
+            ipaddress.ip_address(dns)
+            dns_servers.append(dns)
+        except ValueError:
+            log_error("Invalid DNS Server!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="Invalid DNS Server!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_DNS_entry.configure(fg_color="#a13f48")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_DNS_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
+
+    if dns2:
+        try:
+            ipaddress.ip_address(dns2)
+            dns_servers.append(dns2)
+        except ValueError:
+            log_error("Invalid DNS Server!")
+            error_label = customtkinter.CTkLabel(window,
+                                                 text="Invalid DNS Server!",
+                                                 text_color="#ff4155",
+                                                 font=("TkDefaultFont", 12, "bold"))
+            error_label.grid(row=8, column=0, padx=20, pady=5)
+            window.shortcut_DNS2_entry.configure(fg_color="#a13f48")
+            window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+            window.after(3000, lambda: window.shortcut_DNS2_entry.configure(fg_color=("#f9f9fa", "#343638")))
+            return
 
     # Überprüfe die höchste vorhandene Nummer in der JSON-Datei
     max_number = 0
@@ -142,7 +291,7 @@ def create_buttons_from_entries(window, selected_adapter):
         window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
         window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
 
-        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
+        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.refresh_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
         window.network_shortcut_reload_button.grid(row=2, column=0, padx=20, pady=5, columnspan=2, sticky="w")
 
         # Iteriere über die Einträge und erstelle Buttons
@@ -182,6 +331,7 @@ def create_buttons_from_entries(window, selected_adapter):
                         if ip and subnetmask and gateway:
                             # Überprüfen, ob die anderen beiden Werte ebenfalls ausgefüllt sind
                             if not (subnetmask and gateway) or not (ip and gateway) or not (ip and subnetmask):
+                                print("One or more input fields are missing!")
                                 log_error("One or more input fields are missing!")
                                 return
 
@@ -189,6 +339,7 @@ def create_buttons_from_entries(window, selected_adapter):
                             try:
                                 ipaddress.ip_address(ip)
                             except ValueError:
+                                print("Invalid IP Address!")
                                 log_error("Invalid IP Address!")
                                 return
 
@@ -196,6 +347,7 @@ def create_buttons_from_entries(window, selected_adapter):
                             try:
                                 ipaddress.ip_network(ip + "/" + subnetmask, strict=False)
                             except ValueError:
+                                print("Invalid Subnet Mask!")
                                 log_error("Invalid Subnet Mask!")
                                 return
 
@@ -203,11 +355,13 @@ def create_buttons_from_entries(window, selected_adapter):
                             try:
                                 ipaddress.ip_address(gateway)
                             except ValueError:
+                                print("Invalid Gateway!")
                                 log_error("Invalid Gateway!")
 
                             try:
                                 ipaddress.ip_address(gateway)
                             except ValueError:
+                                print("Invalid Gateway!")
                                 log_error("Invalid Gateway!")
                                 return
 
@@ -218,6 +372,7 @@ def create_buttons_from_entries(window, selected_adapter):
                                 ipaddress.ip_address(dns1)
                                 dns_servers.append(dns1)
                             except ValueError:
+                                print("Invalid DNS Server!")
                                 log_error("Invalid DNS Server!")
                                 return
 
@@ -226,6 +381,7 @@ def create_buttons_from_entries(window, selected_adapter):
                                 ipaddress.ip_address(dns2)
                                 dns_servers.append(dns2)
                             except ValueError:
+                                print("Invalid DNS Server!")
                                 log_error("Invalid DNS Server!")
                                 return
 
@@ -239,7 +395,6 @@ def create_buttons_from_entries(window, selected_adapter):
                             nic = nic_configs[adapter_index]
 
                             nic.EnableStatic(IPAddress=[ip], SubnetMask=[subnetmask])
-                            nic.SetGateways(DefaultIPGateway=[gateway])
                             nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
 
                             get_network_adapters_info()  # Reload the Json file with the Adapter Information
