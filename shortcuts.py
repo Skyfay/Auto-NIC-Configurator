@@ -50,6 +50,17 @@ def write_entries_to_json(window):
     # Pfad zur JSON-Datei
     CONFIG_FILE = os.path.join(CONFIG_DIR, 'shortcuts.json')
 
+    try:
+        file = open(CONFIG_FILE, "a+")
+        file.seek(0)  # Gehe zum Anfang der Datei
+        if file.read(1):  # Überprüfe, ob die Datei bereits Inhalt hat
+            print("Die Datei existiert bereits.")
+        else:
+            file.write("{}")
+            print("Die Datei wurde erstellt.")
+        file.close()
+    except FileExistsError:
+        print("Die Datei existiert bereits.")
 
     # Lese die Werte aus den Entry-Feldern aus
     name = window.shortcut_name_entry.get()
@@ -60,19 +71,21 @@ def write_entries_to_json(window):
     dns2 = window.shortcut_DNS2_entry.get()
 
     # Überprüfe, ob bereits ein Eintrag mit demselben Namen vorhanden ist
-    with open(CONFIG_FILE, 'r') as file:
-        existing_entries = json.load(file)
-        for entry in existing_entries.values():
-            if entry['name'] == name:
-                print("Es gibt bereits einen Eintrag mit diesem Namen.")
-                return
+    if os.path.exists(CONFIG_FILE):
+        with open(CONFIG_FILE, 'r') as file:
+            existing_entries = json.load(file)
+            for entry in existing_entries.values():
+                if entry['name'] == name:
+                    print("Es gibt bereits einen Eintrag mit diesem Namen.")
+                    return
 
     # Überprüfe die höchste vorhandene Nummer in der JSON-Datei
     max_number = 0
     if os.path.exists(CONFIG_FILE):
         with open(CONFIG_FILE, 'r') as file:
             entries = json.load(file)
-            max_number = max(map(int, entries.keys()))
+            if entries:
+                max_number = max(map(int, entries.keys()))
 
     # Erstelle ein Dictionary mit den ausgelesenen Werten und der nächsten Nummer
     entry_number = str(max_number + 1)
@@ -101,6 +114,7 @@ def write_entries_to_json(window):
     window.destroy()
 
     update_entry_numbers()
+
 
 def create_buttons_from_entries(window, selected_adapter):
     # Pfad zur JSON-Datei
