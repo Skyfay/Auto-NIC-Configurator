@@ -37,11 +37,11 @@ def update_entry_numbers():
             with open(CONFIG_FILE, 'w') as file:
                 json.dump(entries, file, indent=4)
 
-            print("Einträge wurden aktualisiert und neu nummeriert.")
+            log_info("The Shortcuts DB has been renumbered")
         else:
-            print("Einträge sind bereits in aufsteigender Reihenfolge.")
+            log_info("Entries are already in ascending order in Shortcuts DB")
     else:
-        print("Die JSON-Datei existiert nicht.")
+        log_warning("The JSON file shortcuts.json does not exist.")
 
 def write_entries_to_json(window):
     # Erstelle das Verzeichnis, falls es nicht existiert
@@ -55,13 +55,13 @@ def write_entries_to_json(window):
         file = open(CONFIG_FILE, "a+")
         file.seek(0)  # Gehe zum Anfang der Datei
         if file.read(1):  # Überprüfe, ob die Datei bereits Inhalt hat
-            print("Die Datei existiert bereits.")
+            log_info("The shortcuts.json file already exists")
         else:
             file.write("{}")
-            print("Die Datei wurde erstellt.")
+            log_info("The shortcuts.json file has been created")
         file.close()
     except FileExistsError:
-        print("Die Datei existiert bereits.")
+        log_info("The shortcuts.json file already exists")
 
     # Lese die Werte aus den Entry-Feldern aus
     name = window.shortcut_name_entry.get()
@@ -72,8 +72,7 @@ def write_entries_to_json(window):
     dns2 = window.shortcut_DNS2_entry.get()
 
     if not name:
-        log_error("Name field is missing!")
-        print("Name-Feld ist leer!")
+        log_error("Name field is missing in adding shortcut!")
         error_label = customtkinter.CTkLabel(window,
                                              text="Name field is missing!",
                                              text_color="#ff4155",
@@ -86,7 +85,7 @@ def write_entries_to_json(window):
 
     # Überprüfen, ob der Name ungültige Zeichen enthält
     if not re.match(r'^[a-zA-Z0-9-_]+$', name):
-        log_error("Invalid characters in name field!")
+        log_error("Invalid characters in name field in adding shortcut!")
         invalid_chars = re.findall(r'[^a-zA-Z0-9-_]', name)
         invalid_chars = ', '.join(invalid_chars)
         error_msg = "Invalid characters in name field!\nDisallowed characters are: " + invalid_chars
@@ -105,11 +104,19 @@ def write_entries_to_json(window):
             existing_entries = json.load(file)
             for entry in existing_entries.values():
                 if entry['name'] == name:
-                    print("Es gibt bereits einen Eintrag mit diesem Namen.")
+                    log_error("There is already an shortcut entry with this name")
+                    error_msg = "There is already an shortcut with this name"
+                    error_label = customtkinter.CTkLabel(window, text=error_msg, text_color="#ff4155",
+                                                         font=("TkDefaultFont", 12, "bold"))
+                    error_label.grid(row=9, column=0, padx=20, pady=5)
+                    window.shortcut_name_entry.configure(fg_color="#cc3444")
+                    window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+                    window.after(3000, lambda: window.shortcut_name_entry.configure(fg_color=("#f9f9fa", "#343638")))
                     return
 
     # Überprüfen, ob mindestens eines der anderen Felder ausgefüllt ist
     if not any([ip_address, subnet_mask, gateway, dns, dns2]):
+        log_error("Please fill in at least one additional field, besides the name.")
         error_msg = "Please fill in at least one additional field,\n besides the name."
         error_label = customtkinter.CTkLabel(window, text=error_msg, text_color="#ff4155", font=("TkDefaultFont", 12, "bold"))
         error_label.grid(row=9, column=0, padx=20, pady=5)
@@ -130,7 +137,6 @@ def write_entries_to_json(window):
 
     if ip_address or subnet_mask or gateway:
         if not (ip_address and subnet_mask and gateway):
-            print("Eines oder mehrere Felder sind leer!")
             log_error("One or more input fields are missing!")
             error_label = customtkinter.CTkLabel(window,
                                                  text="One or more input fields are missing!",
@@ -259,7 +265,7 @@ def write_entries_to_json(window):
     with open(CONFIG_FILE, 'w') as file:
         json.dump(entries, file, indent=4)
 
-    print("Einträge wurden in die JSON-Datei geschrieben.")
+    log_success("Entries in shortcut add were written successfully to the JSON file.")
     window.destroy()
 
     update_entry_numbers()
@@ -395,12 +401,19 @@ def create_buttons_from_entries(window, selected_adapter):
                             nic = nic_configs[adapter_index]
 
                             nic.EnableStatic(IPAddress=[ip], SubnetMask=[subnetmask])
+                            nic.SetGateways(DefaultIPGateway=[gateway])
                             nic.SetDNSServerSearchOrder(DNSServerSearchOrder=dns_servers)
 
                             get_network_adapters_info()  # Reload the Json file with the Adapter Information
                             network_adapter_select_event(window,
                                                          selected_adapter)  # Get the new Adapter Information from the Json
                             log_success("The network adapter was successfully configured")
+                            success_label = customtkinter.CTkLabel(window,
+                                                                   text="Your information was successfully entered",
+                                                                   text_color="#44ff41",
+                                                                   font=("TkDefaultFont", 12, "bold"))
+                            success_label.grid(row=8, column=1, padx=20, pady=5)
+                            window.after(3000, success_label.destroy)  # Remove the success message after 3 seconds
                         else:
                             # Adapterindex nicht gefunden
                             log_error("The adapter " + adapter_name + " was not found.")
@@ -410,7 +423,19 @@ def create_buttons_from_entries(window, selected_adapter):
                             "Invalid input! Please enter at least one of the following: IP Address, Subnet Mask, Gateway, or DNS.")
 
                     # Ungültiger Adaptername ausgewählt
+                else:
+                    # Ungültiger Adaptername ausgewählt
                     log_warning("You have not selected a network adapter yet!")
+                    error_label = customtkinter.CTkLabel(window,
+                                                         text="You have not selected a network adapter yet!",
+                                                         text_color="#ff4155",
+                                                         font=("TkDefaultFont", 12, "bold"))
+                    error_label.grid(row=8, column=1, padx=20, pady=5)
+                    window.network_adapter_select.configure(fg_color="#ff4155", button_color="#a13f48")
+                    window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+                    window.after(3000, lambda: window.network_adapter_select.configure(fg_color=("#3b8ed0", "#1f6aa5"),
+                                                                                       button_color=("#36719f",
+                                                                                                     "#144870")))  # Remove the error message after 3 seconds
 
 
             # Erstelle einen benutzerdefinierten Button mit dem Platzhaltertext
@@ -431,7 +456,7 @@ def create_buttons_from_entries(window, selected_adapter):
         # Aktualisiere das Layout des network_shortcut_frame
         window.network_shortcut_frame.update()
     else:
-        print("Es gibt derzeit keine Shortcuts.")
+        log_info("There are no shorcuts at the moment.")
 
 
 def get_shortcut_names_from_json():
@@ -470,3 +495,4 @@ def delete_shortcut_by_name(window):
 
     update_entry_numbers()
     window.destroy()
+    log_success("The shortcut " + shortcut_name + " was successfully deleted.")
