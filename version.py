@@ -14,7 +14,7 @@ repo_owner = "Skyfay"
 repo_name = "Auto-NIC-Configurator"
 
 # Aktuelle Version des Programms
-current_version = "1.2.0"
+current_version = "1.3.0"
 
 
 def check_for_updates(window):
