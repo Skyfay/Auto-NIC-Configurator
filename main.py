@@ -6,7 +6,7 @@ import requests
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
-from network_edit import selected_adapter_set_custom_values
+from network_edit import selected_adapter_set_custom_values, selected_adapter_enable_dhcp
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
@@ -297,6 +297,10 @@ class App(customtkinter.CTk):
                                                      dark_image=Image.open(os.path.join(image_path, "remove_light.png")), size=(20, 20))
         window.refresh_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "refresh_dark.png")),
                                                      dark_image=Image.open(os.path.join(image_path, "refresh_light.png")), size=(20, 20))
+        window.presettings_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "presettings_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "presettings_light.png")), size=(20, 20))
+        window.click_image = customtkinter.CTkImage(light_image=Image.open(os.path.join(image_path, "click_dark.png")),
+                                                     dark_image=Image.open(os.path.join(image_path, "click_light.png")), size=(20, 20))
 
         # create left navigation frame
         window.navigation_frame = customtkinter.CTkFrame(window, corner_radius=0)
@@ -364,10 +368,12 @@ class App(customtkinter.CTk):
 
         window.network_information_button = customtkinter.CTkButton(window.network_frame, hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.information_image, anchor="w", command=window.information_button_event)
         window.network_information_button.grid(row=2, column=0, padx=20, pady=10)
-        window.network_custom_button = customtkinter.CTkButton(window.network_frame,hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.custom_image, anchor="w", command=window.custom_button_event)
-        window.network_custom_button.grid(row=3, column=0, padx=20, pady=10)
-        window.network_shortcut_button = customtkinter.CTkButton(window.network_frame,hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.shortcut_image, anchor="w", command=window.shortcut_frame_button_event)
-        window.network_shortcut_button.grid(row=4, column=0, padx=20, pady=10)
+        window.network_presettings_button = customtkinter.CTkButton(window.network_frame, hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.presettings_image, anchor="w", command=window.presettings_frame_button_event)
+        window.network_presettings_button.grid(row=3, column=0, padx=20, pady=10)
+        window.network_custom_button = customtkinter.CTkButton(window.network_frame, hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.custom_image, anchor="w", command=window.custom_button_event)
+        window.network_custom_button.grid(row=4, column=0, padx=20, pady=10)
+        window.network_shortcut_button = customtkinter.CTkButton(window.network_frame, hover_color=("gray70", "gray30"), corner_radius=5, height=40, width=10, border_spacing=10, text="", image=window.shortcut_image, anchor="w", command=window.shortcut_frame_button_event)
+        window.network_shortcut_button.grid(row=5, column=0, padx=20, pady=10)
 
         # create network page frames
         # information frame
@@ -458,6 +464,16 @@ class App(customtkinter.CTk):
         window.network_shortcut_reload_button.grid(row=2, column=0, padx=20, pady=5, columnspan=2, sticky="w")
 
         create_buttons_from_entries(window, window.network_adapter_select.get())
+
+        # custom frame
+        window.network_presettings_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
+        window.network_presettings_frame.grid_columnconfigure(0, weight=1)
+
+        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Enable DHCP", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: selected_adapter_enable_dhcp(window, window.network_adapter_select.get()))
+        window.network_presettings_dhcp_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
+
+        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Clear DNS Cache", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=window.open_shortcut_add_window)
+        window.network_presettings_dhcp_button.grid(row=2, column=0, padx=20, pady=5, sticky="we")
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss
@@ -619,6 +635,7 @@ class App(customtkinter.CTk):
         window.network_information_button.configure(fg_color=("gray75", "gray25") if name == "network_information_frame" else "transparent")
         window.network_custom_button.configure(fg_color=("gray75", "gray25") if name == "network_custom_frame" else "transparent")
         window.network_shortcut_button.configure(fg_color=("gray75", "gray25") if name == "network_shortcut_frame" else "transparent")
+        window.network_presettings_button.configure(fg_color=("gray75", "gray25") if name == "network_presettings_frame" else "transparent")
 
         # show selected frame
         if name == "network_information_frame":
@@ -633,6 +650,10 @@ class App(customtkinter.CTk):
             window.network_shortcut_frame.grid(row=1, column=1, sticky="nsew", rowspan=5)
         else:
             window.network_shortcut_frame.grid_forget()
+        if name == "network_presettings_frame":
+            window.network_presettings_frame.grid(row=1, column=1, sticky="nsew", rowspan=5)
+        else:
+            window.network_presettings_frame.grid_forget()
 
     def information_button_event(window):
         window.select_network_by_name("network_information_frame")
@@ -642,6 +663,9 @@ class App(customtkinter.CTk):
 
     def shortcut_frame_button_event(window):
         window.select_network_by_name("network_shortcut_frame")
+
+    def presettings_frame_button_event(window):
+        window.select_network_by_name("network_presettings_frame")
 
 if __name__ == "__main__":
     app = App()
