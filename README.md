@@ -1,7 +1,14 @@
 # Auto-NIC-Configurator
+![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/Skyfay/Auto-Nic-Configurator?label=Version)
+![GitHub contributors](https://img.shields.io/github/contributors/Skyfay/Auto-Nic-Configurator)
+![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/Skyfay/Auto-Nic-Configurator)
+![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Skyfay/Auto-Nic-Configurator)
+![GitHub all releases](https://img.shields.io/github/downloads/Skyfay/Auto-Nic-Configurator/total)
+![Discord](https://img.shields.io/discord/580801656707350529?label=Discord&color=%235865f2&link=https%3A%2F%2Fdiscord.com%2Finvite%2FYvgPyky)
+![GitHub](https://img.shields.io/github/license/Skyfay/Auto-Nic-Configurator)
 
-### With this script you can easily set your network interface to a certain value!
-### Now also new with GUI!
+##### With this script you can easily set your network interface to a certain value!
+##### Now also new with GUI!
 ----------------------------------------------------------------------------------------------
 <p float="left">
   <img src="https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/1f12ec6f-b5e9-42a6-bee5-7f78ac27d71d" width="40%" />
