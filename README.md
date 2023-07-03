@@ -1,5 +1,6 @@
 # Auto-NIC-Configurator
 ![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/Skyfay/Auto-Nic-Configurator?label=Version)
+![GitHub (Pre-)Release Date](https://img.shields.io/github/release-date-pre/Skyfay/Auto-Nic-Configurator)
 ![GitHub contributors](https://img.shields.io/github/contributors/Skyfay/Auto-Nic-Configurator)
 ![GitHub commit activity (branch)](https://img.shields.io/github/commit-activity/t/Skyfay/Auto-Nic-Configurator)
 ![GitHub last commit (by committer)](https://img.shields.io/github/last-commit/Skyfay/Auto-Nic-Configurator)
