@@ -27,9 +27,10 @@
 - Everything is controllable via a graphical interface. 
 - You can retrieve information about the individual interfaces.
 - The script can load predefined settings to your network map or you can define your own settings in a guide.
-- You can set the network card to "DHCP", which is the default value. (**coming soon**)
+- You can set the network card to "DHCP", which is the default value.
+- There is a global log with the possibility to filter. 
 - You can contact us via a small support form if you need help.
-- You will be notified if you attempt an incorrect configuration. 
+- You will be notified if you attempt an incorrect configuration.
 ----------------------------------------------------------------------------------------------
 **Restrictions?**
 - Currently there are no known restrictions.
