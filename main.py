@@ -6,7 +6,7 @@ import requests
 
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event, initialize_adapter_select_placeholder, update_adapter_select_values
-from network_edit import selected_adapter_set_custom_values, selected_adapter_enable_dhcp
+from network_edit import selected_adapter_set_custom_values, selected_adapter_enable_dhcp, flush_dns, selected_adapter_release_renew
 from support import send_message_to_webhook
 from appearance import save_color_mode_support
 from settings import delete_database_dir
@@ -472,8 +472,11 @@ class App(customtkinter.CTk):
         window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Enable DHCP", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: selected_adapter_enable_dhcp(window, window.network_adapter_select.get()))
         window.network_presettings_dhcp_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
 
-        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Clear DNS Cache", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=window.open_shortcut_add_window)
+        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Renew / Release DHCP", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: selected_adapter_release_renew(window, window.network_adapter_select.get()))
         window.network_presettings_dhcp_button.grid(row=2, column=0, padx=20, pady=5, sticky="we")
+
+        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Clear DNS Cache", width=150, height=100, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: flush_dns(window))
+        window.network_presettings_dhcp_button.grid(row=3, column=0, padx=20, pady=5, sticky="we")
 
 
         # Aufruf der Funktion zum Initialisieren des Platzhalterss

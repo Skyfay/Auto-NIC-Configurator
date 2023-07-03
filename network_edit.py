@@ -6,6 +6,7 @@ import customtkinter
 import ctypes
 import sys
 import ipaddress
+import subprocess
 from network_collector import get_network_adapters_info
 from network_viewer import network_adapter_select_event
 from log import log_warning, log_info, log_error, log_success
@@ -48,6 +49,93 @@ def get_adapter_index_from_json(adapter_name, json_file_path):
 
     return None
 
+def selected_adapter_release_renew(window, selected_adapter):
+    if ctypes.windll.shell32.IsUserAnAdmin():
+        log_info("The Application already got admin privileges.")
+    else:
+        # Überprüfen, ob die Anwendung mit Administratorrechten gestartet wurde
+        if ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1) != 42:
+            log_warning("The application needs to be run with administrator privileges. Restarting the application...")
+        window.destroy()
+
+    adapter_name = window.network_adapter_select.get()
+    log_info("The selected adapter in network tab is: " + adapter_name)
+
+    if adapter_name != "Select Adapter":
+        json_file_path = os.path.join(os.environ['LOCALAPPDATA'], 'Skyfay', 'AutoNicConfigurator',
+                                      'network_adapters.json')
+        adapter_index = get_adapter_index_from_json(adapter_name, json_file_path)
+        log_info("The adapter index from the selected adapter is: " + str(adapter_index))
+
+        if adapter_index is not None:
+
+            wait_label = customtkinter.CTkLabel(window.network_presettings_frame,
+                                                   text="This can take a few seconds please wait...",
+                                                   text_color="#ffaa41",
+                                                   font=("TkDefaultFont", 12, "bold"))
+            wait_label.grid(row=7, column=0, padx=20, pady=5)
+            window.update()
+
+            # Adapterindex gefunden
+            nic = nic_configs[adapter_index]
+
+            # IP-Adresse freigeben
+            nic.ReleaseDHCPLease()
+            # IP-Adresse erneuern
+            nic.RenewDHCPLease()
+
+            get_network_adapters_info()  # Reload the Json file with the Adapter Information
+            network_adapter_select_event(window, selected_adapter)  # Get the new Adapter Information from th
+
+            log_success("The IP address of the adapter " + adapter_name + " was successfully released and renewed.")
+
+            success_label = customtkinter.CTkLabel(window.network_presettings_frame,
+                                                   text="The adapter was successfully released and renewed.",
+                                                   text_color="#44ff41",
+                                                   font=("TkDefaultFont", 12, "bold"))
+            success_label.grid(row=7, column=0, padx=20, pady=5)
+            window.after(3000, success_label.destroy)  # Remove the success message after 3 seconds
+            wait_label.destroy()
+        else:
+            # Adapterindex nicht gefunden
+            log_error("The adapter " + adapter_name + " was not found.")
+
+    else:
+        # Ungültiger Adaptername ausgewählt
+        log_warning("You have not selected a network adapter yet!")
+        error_label = customtkinter.CTkLabel(window.network_presettings_frame,
+                                             text="You have not selected a network adapter yet!",
+                                             text_color="#ff4155",
+                                             font=("TkDefaultFont", 12, "bold"))
+        error_label.grid(row=7, column=0, padx=20, pady=5)
+        window.network_adapter_select.configure(fg_color="#ff4155", button_color="#a13f48")
+        window.after(3000, error_label.destroy)  # Remove the error message after 3 seconds
+        window.after(3000, lambda: window.network_adapter_select.configure(fg_color=("#3b8ed0", "#1f6aa5"),
+                                                                           button_color=("#36719f",
+                                                                                         "#144870")))  # Remove the error message after 3 seconds
+
+def flush_dns(window):
+    if ctypes.windll.shell32.IsUserAnAdmin():
+        log_info("The application already has admin privileges.")
+    else:
+        # Überprüfen, ob die Anwendung mit Administratorrechten gestartet wurde
+        if ctypes.windll.shell32.ShellExecuteW(None, "runas", sys.executable, __file__, None, 1) != 42:
+            log_warning("The application needs to be run with administrator privileges. Restarting the application...")
+        window.destroy()
+
+    try:
+        # Befehl "ipconfig /flushdns" ausführen
+        subprocess.run(["ipconfig", "/flushdns"], check=True, shell=True)
+        log_success("The DNS cache was successfully flushed.")
+        success_label = customtkinter.CTkLabel(window.network_presettings_frame,
+                                               text="The DNS cache was successfully flushed.",
+                                               text_color="#44ff41",
+                                               font=("TkDefaultFont", 12, "bold"))
+        success_label.grid(row=7, column=0, padx=20, pady=5)
+        window.after(3000, success_label.destroy)  # Remove the success message after 3 seconds
+    except subprocess.CalledProcessError as e:
+        log_error("Failed to flush DNS cache:", e)
+
 # This need Administrator privileges
 def selected_adapter_enable_dhcp(window, selected_adapter):
     if ctypes.windll.shell32.IsUserAnAdmin():
@@ -71,12 +159,14 @@ def selected_adapter_enable_dhcp(window, selected_adapter):
             # Adapterindex gefunden
             nic = nic_configs[adapter_index]
 
+            # Remove default gateway
+            nic.SetGateways(DefaultIPGateway=[], GatewayCostMetric=[])
             # Enable DHCP
             nic.EnableDHCP()
             # Reset DNS server to obtain automatically (DHCP)
             nic.SetDNSServerSearchOrder(DNSServerSearchOrder=[])
             # IP-Adresse freigeben
-            #nic.adapter.ReleaseDHCPLease()
+            #nic.ReleaseDHCPLease()
             # IP-Adresse erneuern
             #nic.RenewDHCPLease()
 
