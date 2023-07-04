@@ -10,6 +10,7 @@
 
 ##### With this script you can easily set your network interface to a certain value!
 ##### Now also new with GUI!
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y4MVAUG)
 ----------------------------------------------------------------------------------------------
 <p float="left">
   <img src="https://github.com/Skyfay/Auto-NIC-Configurator/assets/76796007/1f12ec6f-b5e9-42a6-bee5-7f78ac27d71d" width="40%" />
