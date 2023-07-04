@@ -9,7 +9,7 @@
 ![GitHub](https://img.shields.io/github/license/Skyfay/Auto-Nic-Configurator)
 
 ##### With this script you can easily set your network interface to a certain value! It is mainly intended for companies that need to change the IP address to configure e.g. firewalls etc. With this software you can solve the whole thing much faster than always going into the network settings of Windows and changing the adapter information. Just create shortcuts with which you can change the information within a few seconds. 
-##### Now also new with GUI!
+##### Now also new with GUI written in Python!
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Y8Y4MVAUG)
 ----------------------------------------------------------------------------------------------
 <p float="left">
