@@ -542,7 +542,7 @@ class App(customtkinter.CTk):
         window.settings_frame_appearance_mode_menu.grid(row=1, column=0, padx=20, pady=10)
 
         # Clear the cache
-        window.settings_frame_clear_cache_label = customtkinter.CTkLabel(window.settings_pre_frame1, text="In case of problems it may help to clear the cache",
+        window.settings_frame_clear_cache_label = customtkinter.CTkLabel(window.settings_pre_frame1, text="In case of problems it may help to clear the cache (That also deleted all shortcuts!)",
                                                                     font=customtkinter.CTkFont(size=12))
         window.settings_frame_clear_cache_label.grid(row=0, column=0, padx=10, pady=5)
         # Button Clear the cache
