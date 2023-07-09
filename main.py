@@ -342,17 +342,17 @@ class App(customtkinter.CTk):
         window.home_frame_large_image_label.grid(row=0, column=0, padx=20, pady=10)
 
         window.home_frame_network_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=125, width=210, border_spacing=10, text="Network",
-                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("#dbdbdb", "gray30"),
                                                    image=window.network_image, command=window.network_button_event)
         window.home_frame_network_button.grid(row=1, column=0, padx=30, pady=10, sticky="w")
 
         window.home_frame_support_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=125, width=210, border_spacing=10, text="Support",
-                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("#dbdbdb", "gray30"),
                                                    image=window.support_image, command=window.support_frame_button_event)
         window.home_frame_support_button.grid(row=1, column=0, padx=30, pady=10, sticky="e")
 
         window.home_frame_settings_button = customtkinter.CTkButton(window.home_frame, corner_radius=5, height=80, width=210, border_spacing=10, text="Settings",
-                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("gray70", "gray30"),
+                                                   fg_color=("#f9f9fa", "#343638"), text_color=("gray10", "gray90"), hover_color=("#dbdbdb", "gray30"),
                                                    image=window.settings_image, command=window.settings_frame_button_event)
         window.home_frame_settings_button.grid(row=2, column=0, padx=30, pady=10, sticky="we")
 
@@ -454,13 +454,13 @@ class App(customtkinter.CTk):
         window.network_shortcut_frame.grid_rowconfigure(0, weight=1)
 
         # Add Buttons to Add, Delete and Refresh the Network Shortcuts
-        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
+        window.network_shortcut_add_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Add Shortcut", text_color=("#1a1a1a", "#dce4ee"), width=150, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), image=window.add_box_image, command=window.open_shortcut_add_window)
         window.network_shortcut_add_button.grid(row=1, column=0, padx=20, pady=5)
 
-        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", width=150, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
+        window.network_shortcut_remove_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Remove", text_color=("#1a1a1a", "#dce4ee"), width=150, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), image=window.remove_image, command=window.open_shortcut_delete_window)
         window.network_shortcut_remove_button.grid(row=1, column=1, padx=20, pady=5)
 
-        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", width=355, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), image=window.refresh_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
+        window.network_shortcut_reload_button = customtkinter.CTkButton(window.network_shortcut_frame, text="Reload", text_color=("#1a1a1a", "#dce4ee"), width=355, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), image=window.refresh_image, command=lambda: create_buttons_from_entries(window, window.network_adapter_select.get()))
         window.network_shortcut_reload_button.grid(row=2, column=0, padx=20, pady=5, columnspan=2, sticky="w")
 
         create_buttons_from_entries(window, window.network_adapter_select.get())
@@ -469,16 +469,16 @@ class App(customtkinter.CTk):
         window.network_presettings_frame = customtkinter.CTkFrame(window.network_frame, corner_radius=0, fg_color="transparent")
         window.network_presettings_frame.grid_columnconfigure(0, weight=1)
 
-        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Enable DHCP", width=150, height=75, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: selected_adapter_enable_dhcp(window, window.network_adapter_select.get()))
+        window.network_presettings_dhcp_button = customtkinter.CTkButton(window.network_presettings_frame, text="Enable DHCP", text_color=("#1a1a1a", "#dce4ee"), width=150, height=75, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), command=lambda: selected_adapter_enable_dhcp(window, window.network_adapter_select.get()))
         window.network_presettings_dhcp_button.grid(row=1, column=0, padx=20, pady=5, sticky="we")
 
-        window.network_presettings_renew_release_button = customtkinter.CTkButton(window.network_presettings_frame, text="Renew / Release DHCP", width=150, height=75, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: selected_adapter_release_renew(window, window.network_adapter_select.get()))
+        window.network_presettings_renew_release_button = customtkinter.CTkButton(window.network_presettings_frame, text="Renew / Release DHCP", text_color=("#1a1a1a", "#dce4ee"), width=150, height=75, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), command=lambda: selected_adapter_release_renew(window, window.network_adapter_select.get()))
         window.network_presettings_renew_release_button.grid(row=2, column=0, padx=20, pady=5, sticky="we")
 
-        window.network_presettings_clear_dns_cache_button = customtkinter.CTkButton(window.network_presettings_frame, text="Clear DNS Cache", width=150, height=75, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: flush_dns(window))
+        window.network_presettings_clear_dns_cache_button = customtkinter.CTkButton(window.network_presettings_frame, text="Clear DNS Cache", text_color=("#1a1a1a", "#dce4ee"), width=150, height=75, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), command=lambda: flush_dns(window))
         window.network_presettings_clear_dns_cache_button.grid(row=3, column=0, padx=20, pady=5, sticky="we")
 
-        window.network_presettings_open_windows_settings_button = customtkinter.CTkButton(window.network_presettings_frame, text="Open Windows Network Settings", width=150, height=75, hover_color=("gray70", "gray30"), fg_color=("gray75", "gray25"), command=lambda: open_network_adapter_settings())
+        window.network_presettings_open_windows_settings_button = customtkinter.CTkButton(window.network_presettings_frame, text="Open Windows Network Settings", text_color=("#1a1a1a", "#dce4ee"), width=150, height=75, hover_color=("#dbdbdb", "gray30"), fg_color=("#f9f9fa", "gray25"), command=lambda: open_network_adapter_settings())
         window.network_presettings_open_windows_settings_button.grid(row=4, column=0, padx=20, pady=5, sticky="we")
 
 
