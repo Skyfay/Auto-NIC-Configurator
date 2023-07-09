@@ -55,7 +55,7 @@ def display_log_in_frame(window):
         no_logs_label.grid(row=0, column=0, padx=2, pady=2, sticky='we')
     else:
         # Neue Log-Einträge anzeigen
-        for row_num, log in enumerate(filtered_logs):
+        for row_num, log in enumerate(reversed(filtered_logs)): # reversed() to display the newest log entries at the top
             log_label = customtkinter.CTkLabel(window.log_frame, text=log)
             log_label.grid(row=row_num, column=0, padx=2, pady=2, sticky='we')
 
