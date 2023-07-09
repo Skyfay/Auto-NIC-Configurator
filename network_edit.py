@@ -372,4 +372,10 @@ def selected_adapter_set_custom_values(window, selected_adapter):
 
 
 
+def open_network_adapter_settings():
+    try:
+        result = subprocess.run(['ncpa.cpl'], check=False, shell=True)
+        return result
+    except subprocess.CalledProcessError as e:
+        log_error("Fehler beim Öffnen der Netzwerkadaptereinstellungen:", e)
 
