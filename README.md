@@ -47,4 +47,4 @@
 ----------------------------------------------------------------------------------------------
 **Contact & Help**
 - You can use the support area directly in the software to contact us. You will get an answer back by e-mail.
-- Otherwise, you can create an "issues" on Github.
+- Otherwise, you can create an "issues" on Github..
