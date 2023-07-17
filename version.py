@@ -75,6 +75,7 @@ def download_and_install(window):
     window.update_progress = customtkinter.CTkProgressBar(window.navigation_frame, width=200, height=25,
                                                           fg_color="#57965c", progress_color="#83e28a")
     window.update_progress.grid(row=6, column=0, padx=20, pady=20, sticky="s")
+    self.update_progress.update()  # Anzeige aktualisieren
 
     # GitHub Repository-Informationen
     repo_owner = "Skyfay"
