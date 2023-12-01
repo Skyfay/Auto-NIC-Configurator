@@ -23,7 +23,7 @@
 ----------------------------------------------------------------------------------------------
 **Requirements:**
 - You need a Windows x64 system. 
-- For some features like edit network interface you need admin rights.
+- For some features like edit network interface you need admin permission.
 ----------------------------------------------------------------------------------------------
 **How to use?**<br/>
 1. Download the latest release (exe file) 
